@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SISemhas - Universitas Andalas</title>
+    <link rel="stylesheet" href="/stylesheets/output.css">
+</head>
+<body class="bg-gray-100 font-sans">
+
+    <!-- Header -->
+    <header class="bg-gradient-to-br from-orange-700 to-orange-500 text-white px-8 py-4 flex items-center shadow-md">
+        <div class="w-10 h-10 bg-white rounded-md mr-4 flex items-center justify-center">
+            <span class="text-orange-600 font-bold text-sm">UA</span>
+        </div>
+        <div class="text-lg font-semibold">SISemhas - Universitas Andalas</div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="bg-gradient-to-br from-yellow-600 to-yellow-400 px-8 min-h-[50px] flex justify-between items-center">
+        <div class="flex">
+            <a href="#" class="px-6 py-3 rounded-t-lg font-medium bg-white text-gray-800 shadow-sm">Dashboard</a>
+            <a href="#" class="px-6 py-3 rounded-t-lg font-medium text-gray-800 hover:bg-white hover:bg-opacity-20 transition-colors duration-200">Pendaftaran</a>
+            <a href="#" class="px-6 py-3 rounded-t-lg font-medium text-gray-800 hover:bg-white hover:bg-opacity-20 transition-colors duration-200">Riwayat Semhas</a>
+        </div>
+        <a href="#" class="bg-orange-700 text-white px-4 py-2 rounded-md flex items-center gap-2 hover:bg-orange-800 hover:-translate-y-0.5 transition-all duration-200 shadow-md">
+            <span>📖</span>Buku Panduan
+        </a>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-6xl mx-auto p-8">
+
+        <!-- Welcome Section -->
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+            <div>
+                <h1 class="text-2xl font-semibold text-gray-800 mb-1">Halo, User Name</h1>
+                <p class="text-gray-600 text-base">Segera Daftar Seminar Online</p>
+            </div>
+            <a href="#" class="bg-gradient-to-br from-orange-700 to-orange-500 text-white px-5 py-3 rounded-lg font-medium flex items-center gap-2 shadow-md hover:-translate-y-0.5 hover:shadow-lg transition-all duration-200">
+                <span>📋</span> Daftar Seminar Hasil
+            </a>
+        </div>
+
+        <!-- Content Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+            <!-- Left Section - Riwayat Seminar -->
+            <div class="bg-white rounded-xl p-6 shadow-md">
+                <div class="bg-gradient-to-br from-yellow-600 to-yellow-400 text-gray-800 px-5 py-3 rounded-lg font-semibold mb-6 flex items-center gap-2">
+                    <span>🖨️</span> Riwayat - Seminar Hasil
+                </div>
+
+                <div class="bg-gray-100 border-2 border-gray-200 rounded-lg p-5 mb-4 hover:border-orange-700 hover:-translate-y-1 hover:shadow-md transition-all duration-200 cursor-pointer">
+                    <div class="font-semibold text-gray-800 text-base mb-1">Seminar Hasil - dd/mm/yy</div>
+                    <div class="text-gray-600 text-sm">Status : Lulus / Revisi</div>
+                </div>
+
+                <div class="bg-gray-100 border-2 border-gray-200 rounded-lg p-5 mb-4 hover:border-orange-700 hover:-translate-y-1 hover:shadow-md transition-all duration-200 cursor-pointer">
+                    <div class="font-semibold text-gray-800 text-base mb-1">Seminar Hasil - dd/mm/yy</div>
+                    <div class="text-gray-600 text-sm">Status : Lulus / Revisi</div>
+                </div>
+            </div>
+
+            <!-- Right Section - Menu -->
+            <div class="bg-white rounded-xl p-6 shadow-md">
+                <div class="bg-gradient-to-br from-yellow-600 to-yellow-400 text-gray-800 px-5 py-3 rounded-lg font-semibold mb-6">
+                    Seminar Hasil - Menu
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <button class="bg-gradient-to-br from-orange-700 to-orange-500 text-white p-5 rounded-xl font-semibold shadow-md hover:-translate-y-1 hover:shadow-lg transition-all duration-200">
+                        Penilaian SemHas
+                    </button>
+                    <button class="bg-gradient-to-br from-orange-700 to-orange-500 text-white p-5 rounded-xl font-semibold shadow-md hover:-translate-y-1 hover:shadow-lg transition-all duration-200">
+                        Detail Jadwal
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Evaluation Section -->
+        <div class="flex justify-end">
+            <button class="bg-gradient-to-br from-orange-700 to-orange-500 text-white px-5 py-3 rounded-lg font-medium flex items-center gap-2 shadow-md hover:-translate-y-1 hover:shadow-lg transition-all duration-200">
+                <span>✉️</span> Evaluasi SISemhas
+            </button>
+        </div>
+    </div>
+
+    <script src="/mahasiswa/JS/dashboard.js"></script>
+</body>
+</html>
