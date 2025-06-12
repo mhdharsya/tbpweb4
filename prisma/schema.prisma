@@ -11,3 +11,4 @@ model user {
   username String @id @db.VarChar(99)
   password String @db.VarChar(99)
 }
+

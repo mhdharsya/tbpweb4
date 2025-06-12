@@ -1,0 +1,405 @@
+/* General Styling & Reset */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap'); /* Contoh Font, bisa diganti */
+
+:root {
+    --primary-bg: #E0E0E0; /* Warna latar belakang utama */
+    --header-bg: #d2691e; /* Gradient Oranye */
+    --text-light: #fff;
+    --text-dark: #333;
+    --sidebar-bg: #F0F0F0; /* Latar belakang sidebar */
+    --sidebar-link-active-bg: #E0E0E0; /* Latar belakang link aktif di sidebar */
+    --card-bg: #fff;
+    --border-color: #ddd;
+    --button-bg: #FF8C00; /* Oranye untuk tombol Update Role */
+    --button-text: #fff;
+    --table-header-bg: #F0F0F0; /* Latar belakang header tabel */
+    --table-border: #ccc;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: var(--primary-bg);
+    color: var(--text-dark);
+    line-height: 1.6;
+}
+
+.container {
+    display: flex; /* Untuk layout utama header + main content */
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Header Styling */
+.header {
+    background-color: var(--header-bg);
+    color: var(--text-light);
+    padding: 15px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header-left span {
+    font-size: 1.2em;
+    font-weight: 500;
+}
+
+.header-right .user-icon {
+    font-size: 1.8em;
+    cursor: pointer;
+}
+
+.mobile-sidebar-toggle {
+    display: none; /* Sembunyikan di desktop, akan muncul di mobile */
+    font-size: 1.5em;
+    margin-right: 15px;
+    cursor: pointer;
+}
+
+
+/* Main Content Area */
+.main-content {
+    display: flex;
+    flex: 1; /* Mengisi sisa ruang vertikal */
+}
+
+/* Sidebar Styling */
+.sidebar {
+    background-color: var(--sidebar-bg);
+    width: 250px; /* Lebar sidebar */
+    padding: 20px 0;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-menu {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar-menu li a {
+    display: block;
+    padding: 12px 25px;
+    color: var(--text-dark);
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+}
+
+.sidebar-menu li a:hover {
+    background-color: var(--sidebar-link-active-bg);
+}
+
+.sidebar-menu li a.active {
+    background-color: var(--sidebar-link-active-bg);
+    font-weight: bold;
+    border-left: 5px solid var(--header-bg); /* Garis merah di link aktif */
+    padding-left: 20px; /* Sesuaikan padding setelah border */
+}
+
+/* Content Area (Right Side) */
+.content-area {
+    flex: 1; /* Mengisi sisa ruang horizontal */
+    padding: 25px;
+    background-color: var(--primary-bg); /* Latar belakang abu-abu muda */
+}
+
+.card {
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden; /* Penting untuk tabel */
+}
+
+.card-header {
+    padding: 20px 25px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--table-header-bg); /* Agak lebih gelap dari card body */
+}
+
+.card-header h2 {
+    font-size: 1.5em;
+    font-weight: 500;
+}
+
+.role-filter label {
+    margin-right: 10px;
+    font-weight: 500;
+}
+
+.role-filter select {
+    padding: 8px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    background-color: #fff;
+    font-size: 0.95em;
+    cursor: pointer;
+}
+
+.card-body {
+    padding: 0 25px; /* Padding samping untuk tabel */
+    overflow-x: auto; /* Untuk scroll horizontal jika tabel terlalu lebar */
+}
+
+.user-table {
+    width: 100%;
+    border-collapse: collapse; /* Menghilangkan spasi antar border sel */
+    margin: 20px 0; /* Jarak atas bawah tabel */
+}
+
+.user-table th,
+.user-table td {
+    border: 1px solid var(--table-border);
+    padding: 12px 15px;
+    text-align: left;
+}
+
+.user-table thead th {
+    background-color: var(--table-header-bg);
+    font-weight: bold;
+    color: var(--text-dark);
+}
+
+.user-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9; /* Warna latar belakang sel genap */
+}
+
+.user-table tbody tr:hover {
+    background-color: #f1f1f1; /* Efek hover pada baris */
+}
+
+.user-table td select {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    background-color: #fff;
+    font-size: 0.9em;
+    cursor: pointer;
+}
+
+.card-footer {
+    padding: 15px 25px;
+    border-top: 1px solid var(--border-color);
+    text-align: right;
+    background-color: var(--table-header-bg); /* Sama seperti header tabel */
+}
+
+.btn-update {
+    background-color: var(--button-bg);
+    color: var(--button-text);
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-update:hover {
+    background-color: #e67e00; /* Sedikit lebih gelap saat hover */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .main-content {
+        flex-direction: column; /* Sidebar di atas konten utama */
+    }
+
+    .sidebar {
+        width: 100%;
+        height: auto; /* Tinggi otomatis */
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        position: fixed; /* Membuat sidebar tetap di atas saat di-scroll */
+        top: 60px; /* Di bawah header */
+        left: 0;
+        transform: translateX(-100%); /* Sembunyikan sidebar di luar layar */
+        transition: transform 0.3s ease-in-out;
+        z-index: 1000; /* Pastikan di atas konten lain */
+        background-color: var(--sidebar-bg); /* Pastikan background terlihat */
+    }
+
+    .sidebar.active {
+        transform: translateX(0); /* Tampilkan sidebar */
+    }
+
+    .mobile-sidebar-toggle {
+        display: block; /* Tampilkan ikon toggle di header */
+    }
+
+    .header-left {
+        display: flex;
+        align-items: center;
+    }
+
+    .content-area {
+        margin-top: 0; /* Hapus margin atas di mobile */
+        padding: 15px;
+    }
+
+    .card-header {
+        flex-direction: column;
+        align-items: flex-start;
+        padding-top: 15px;
+        padding-bottom: 15px;
+    }
+
+    .role-filter {
+        margin-top: 15px;
+        width: 100%; /* Agar select box penuh */
+        display: flex;
+        align-items: center;
+    }
+    .role-filter select {
+        flex: 1; /* Agar select box memenuhi sisa ruang */
+    }
+}
+
+/* JavaScript untuk toggle sidebar di mobile */
+/* Anda perlu menambahkan ini di bagian <script> di HTML atau di file JS terpisah */
+/*
+document.addEventListener('DOMContentLoaded', function() {
+    const sidebarToggle = document.querySelector('.mobile-sidebar-toggle');
+    const sidebar = document.querySelector('.sidebar');
+
+    if (sidebarToggle && sidebar) {
+        sidebarToggle.addEventListener('click', function() {
+            sidebar.classList.toggle('active');
+        });
+    }
+});
+*//* Styling for action buttons in tables (Terima/Tolak, Konfirmasi/Batal) */
+.action-buttons {
+    display: flex;
+    gap: 5px; /* Jarak antar tombol */
+    flex-wrap: wrap; /* Agar tombol bisa pindah baris jika layar kecil */
+}
+
+.btn-action {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.85em;
+    white-space: nowrap; /* Mencegah teks tombol pecah */
+    transition: background-color 0.2s ease;
+}
+
+.btn-accept, .btn-confirm {
+    background-color: #28a745; /* Hijau */
+    color: white;
+}
+
+.btn-accept:hover, .btn-confirm:hover {
+    background-color: #218838;
+}
+
+.btn-reject, .btn-cancel {
+    background-color: #dc3545; /* Merah */
+    color: white;
+}
+
+.btn-reject:hover, .btn-cancel:hover {
+    background-color: #c82333;
+}
+
+/* Styling for Panduan Seminar Hasil page */
+.panduan-upload-section {
+    display: flex;
+    justify-content: space-around;
+    gap: 30px;
+    margin-bottom: 30px;
+    flex-wrap: wrap; /* Agar responsif */
+}
+
+.panduan-card {
+    background-color: #f8f8f8;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    width: 45%; /* Hampir setengah lebar */
+    min-width: 280px; /* Lebar minimum */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.panduan-card h3 {
+    margin-bottom: 15px;
+    color: var(--text-dark);
+}
+
+.panduan-image-container {
+    border: 1px solid #eee;
+    background-color: #fff;
+    padding: 10px;
+    border-radius: 5px;
+    display: inline-block; /* Agar border pas di gambar */
+    max-width: 100%;
+}
+
+.panduan-thumbnail {
+    max-width: 150px; /* Ukuran thumbnail buku */
+    height: auto;
+    display: block;
+    margin: 0 auto;
+    border-radius: 3px;
+}
+
+.upload-area {
+    border: 2px dashed #ccc;
+    padding: 30px;
+    border-radius: 8px;
+    background-color: #fafafa;
+    margin-top: 15px;
+}
+
+.upload-icon {
+    font-size: 3em;
+    color: #aaa;
+    margin-bottom: 15px;
+    display: block;
+}
+
+.btn-upload-file {
+    background-color: #007bff; /* Warna biru */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+    display: inline-block;
+    margin-top: 10px;
+}
+
+.btn-upload-file:hover {
+    background-color: #0056b3;
+}
+
+/* Responsive adjustments for Panduan Seminar Hasil */
+@media (max-width: 768px) {
+    .panduan-upload-section {
+        flex-direction: column;
+        align-items: center;
+    }
+    .panduan-card {
+        width: 90%; /* Ambil lebih banyak ruang di mobile */
+    }
+}
+
+/* Optional: Untuk membuat tabel panduan sedikit berbeda jika diperlukan */
+.panduan-table th:first-child,
+.panduan-table td:first-child {
+    width: 80px; /* Untuk kolom "Riwayat" */
+}
