@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/dosen/CSS/dashboard.css">
+    <title>SISemhas - Universitas Andalas</title>
+</head>
+<body>
+    <header class="header">
+        <div class="header-left">
+            <img src="/dosen/IMG/logo-unand.png" alt="Logo Universitas Andalas" class="logo">
+            <h1 class="header-title">SISemhas - Universitas Andalas</h1>
+        </div>
+    </header>
+
+    <div class="dashboard-banner">
+        DASHBOARD
+    </div>
+
+    <div class="main-content">
+        <div class="welcome-section">
+            <div class="welcome-text">
+                <h2>Halo, Nama Dosen</h2>
+                <p>Membimbing dengan Hati, Menguji dengan Integritas</p>
+            </div>
+            <button class="notification-btn">
+                Notifikasi 🔔
+            </button>
+        </div>
+
+        <div class="today-section">
+            <!-- Bagian 1: Kalender dan Events -->
+            <div class="calendar-container">
+                <h3 class="today-title">Today</h3>
+                <div class="month-header" id="monthHeader"></div>
+                
+                <div class="calendar-grid" id="calendarGrid">
+                    <div class="calendar-day-header">S</div>
+                    <div class="calendar-day-header">M</div>
+                    <div class="calendar-day-header">T</div>
+                    <div class="calendar-day-header">W</div>
+                    <div class="calendar-day-header">T</div>
+                    <div class="calendar-day-header">F</div>
+                    <div class="calendar-day-header">S</div>
+                </div>
+
+                <div class="events-list">
+                    <div class="event-item">
+                        <div class="event-dot"></div>
+                        <div class="event-text">Bimbingan dengan...</div>
+                        <div class="event-time">10:00 AM - 11:00 AM</div>
+                    </div>
+                    <div class="event-item">
+                        <div class="event-dot"></div>
+                        <div class="event-text">Seminar Hasil Ma...</div>
+                        <div class="event-time">2:00 PM - 3:00 PM</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bagian 2: Action Buttons (Vertikal dalam Satu Box Abu-abu) -->
+       <div class="action-buttons-container">
+    <a href="http://localhost/PWEB-DOSEN/listmahasiswa.php" class="action-btn" style="text-decoration: none; display: inline-block; text-align: center; color: inherit;">Pengujian</a>
+    <button class="action-btn">Bimbingan</button>
+</div>
+        </div>
+
+    <script>
+        // Real-time calendar generator
+        function generateCalendar() {
+            const now = new Date();
+            const currentMonth = now.getMonth();
+            const currentYear = now.getFullYear();
+            const today = now.getDate();
+            
+            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                              'July', 'August', 'September', 'October', 'November', 'December'];
+            
+            // Set month header
+            document.getElementById('monthHeader').textContent = monthNames[currentMonth];
+            
+            // Get first day of month and number of days
+            const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+            
+            const calendarGrid = document.getElementById('calendarGrid');
+            
+            // Clear existing calendar days (keep headers)
+            const existingDays = calendarGrid.querySelectorAll('.calendar-day');
+            existingDays.forEach(day => day.remove());
+            
+            // Add empty cells for days before month starts
+            for (let i = 0; i < firstDay; i++) {
+                const emptyDay = document.createElement('div');
+                emptyDay.className = 'calendar-day';
+                calendarGrid.appendChild(emptyDay);
+            }
+            
+            // Add days of the month
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day';
+                dayElement.textContent = day;
+                
+                // Highlight today
+                if (day === today) {
+                    dayElement.classList.add('today');
+                }
+                
+                // Add click event
+                dayElement.addEventListener('click', function() {
+                    if (this.textContent.trim()) {
+                        document.querySelectorAll('.calendar-day').forEach(d => d.classList.remove('selected'));
+                        this.classList.add('selected');
+                    }
+                });
+                
+                calendarGrid.appendChild(dayElement);
+            }
+        }
+        
+        // Generate calendar when page loads
+        generateCalendar();
+        
+        // Update calendar every minute to keep it current
+        setInterval(generateCalendar, 60000);
+    </script>
+</body>
+</html>

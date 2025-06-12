@@ -1,0 +1,193 @@
+<?php
+// Database connection
+$host = 'localhost';
+$dbname = 'list mahasiswa seminar';
+$username = 'root';
+$password = '';
+
+// Cek koneksi database
+try {
+    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    
+    // Query data mahasiswa
+    $sql = "SELECT nim, nama, judul_seminar, tanggal_seminar, waktu_mulai, waktu_selesai 
+            FROM mahasiswa_seminar 
+            ORDER BY tanggal_seminar ASC";
+    
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
+    $mahasiswa_list = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+} catch(PDOException $e) {
+    // Jika error, tampilkan pesan
+    $error_message = "Database Error: " . $e->getMessage();
+    $mahasiswa_list = [];
+}
+?>
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>List Mahasiswa Seminar - SISemhas Universitas Andalas</title>
+    <link rel="stylesheet" href="listmhs.css">
+</head>
+<body>
+    <!-- HEADER - SAMA DENGAN DASHBOARD -->
+    <div class="header">
+        SISemhas - Universitas Andalas
+    </div>
+    
+    <!-- PAGE TITLE - SAMA DENGAN DASHBOARD -->
+    <div class="page-title">
+        LIST MAHASISWA SEMINAR
+    </div>
+    
+    <!-- MAIN CONTENT AREA -->
+    <div class="main-content">
+        <div class="content-area">
+            <!-- SIDEBAR - SAMA DENGAN DASHBOARD -->
+            <div class="sidebar-section">
+                <div class="sidebar-item active" onclick="window.location.href='listmahasiswa.php'">
+                    List Mahasiswa Seminar
+                </div>
+                <div class="sidebar-item" onclick="window.location.href='penilaian.html'">
+                    Penilaian
+                </div>
+                <div class="sidebar-item" onclick="window.location.href='riwayat.html'">
+                    Riwayat Seminar
+                </div>
+                <div class="sidebar-item" onclick="window.location.href='upload.html'">
+                    Upload Jadwal
+                </div>
+            </div>
+            
+            <!-- TABLE SECTION -->
+            <div class="table-section">
+                <?php if (isset($error_message)): ?>
+                    <!-- ERROR MESSAGE -->
+                    <div class="error-message">
+                        <div class="error-content">
+                            <h3>⚠️ Koneksi Database Gagal</h3>
+                            <p class="error-text"><?php echo htmlspecialchars($error_message); ?></p>
+                            <div class="error-solutions">
+                                <h4>Pastikan:</h4>
+                                <ul>
+                                    <li>MySQL sudah berjalan di XAMPP/WAMP</li>
+                                    <li>Database 'list mahasiswa seminar' sudah dibuat</li>
+                                    <li>Tabel 'mahasiswa_seminar' sudah ada dengan struktur yang benar</li>
+                                    <li>Ada data di dalam tabel</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                <?php elseif (count($mahasiswa_list) > 0): ?>
+                    <!-- DATA TABLE -->
+                    <div class="table-header">
+                        <h2>Daftar Mahasiswa Seminar</h2>
+                        <p class="table-info">Total: <?php echo count($mahasiswa_list); ?> mahasiswa</p>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th class="row-number">No</th>
+                                    <th class="nim-header">NIM</th>
+                                    <th class="name-header">Nama Mahasiswa</th>
+                                    <th class="title-header">Judul Seminar</th>
+                                    <th class="date-header">Tanggal</th>
+                                    <th class="time-header">Waktu</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php 
+                                $no = 1;
+                                foreach ($mahasiswa_list as $mahasiswa): 
+                                    // Format tanggal dari YYYY-MM-DD ke DD/MM/YYYY
+                                    $tanggal_formatted = date('d/m/Y', strtotime($mahasiswa['tanggal_seminar']));
+                                    
+                                    // Format waktu
+                                    $waktu_mulai = date('H.i', strtotime($mahasiswa['waktu_mulai']));
+                                    $waktu_selesai = date('H.i', strtotime($mahasiswa['waktu_selesai']));
+                                    $waktu_formatted = $waktu_mulai . ' - ' . $waktu_selesai . ' WIB';
+                                ?>
+                                <tr class="data-row">
+                                    <td class="row-number"><?php echo $no; ?></td>
+                                    <td class="nim-column"><?php echo htmlspecialchars($mahasiswa['nim']); ?></td>
+                                    <td class="name-column"><?php echo htmlspecialchars($mahasiswa['nama']); ?></td>
+                                    <td class="title-column" title="<?php echo htmlspecialchars($mahasiswa['judul_seminar']); ?>">
+                                        <?php echo htmlspecialchars($mahasiswa['judul_seminar']); ?>
+                                    </td>
+                                    <td class="date-column"><?php echo $tanggal_formatted; ?></td>
+                                    <td class="time-column"><?php echo $waktu_formatted; ?></td>
+                                </tr>
+                                <?php 
+                                $no++;
+                                endforeach; 
+                                ?>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                <?php else: ?>
+                    <!-- NO DATA MESSAGE -->
+                    <div class="no-data">
+                        <div class="no-data-content">
+                            <div class="no-data-icon">📊</div>
+                            <h3>Tidak Ada Data</h3>
+                            <p>Belum ada data mahasiswa seminar yang tersedia.</p>
+                            <div class="no-data-actions">
+                                <button class="btn-refresh" onclick="window.location.reload()">
+                                    🔄 Refresh Halaman
+                                </button>
+                                <button class="btn-upload" onclick="window.location.href='upload.html'">
+                                    📤 Upload Jadwal
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER (OPTIONAL) -->
+    <div class="footer">
+        <p>&copy; 2025 Universitas Andalas - Sistem Informasi Seminar Hasil</p>
+    </div>
+
+    <!-- JAVASCRIPT UNTUK INTERAKTIVITAS -->
+    <script>
+        // Highlight active sidebar item
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentPage = window.location.pathname.split('/').pop();
+            const sidebarItems = document.querySelectorAll('.sidebar-item');
+            
+            sidebarItems.forEach(item => {
+                item.classList.remove('active');
+                if (item.textContent.includes('List Mahasiswa') && currentPage.includes('listmahasiswa')) {
+                    item.classList.add('active');
+                }
+            });
+        });
+
+        // Auto refresh setiap 5 menit untuk update data terbaru
+        setInterval(function() {
+            // Optional: bisa ditambahkan AJAX untuk refresh data tanpa reload page
+        }, 300000);
+
+        // Tooltip untuk judul seminar yang panjang
+        document.querySelectorAll('.title-column').forEach(function(cell) {
+            cell.addEventListener('mouseenter', function() {
+                if (this.scrollWidth > this.clientWidth) {
+                    this.setAttribute('data-tooltip', this.textContent);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
