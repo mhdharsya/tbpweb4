@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SISemhas - Universitas Andalas</title>
+    <link rel="stylesheet" href="/mahasiswa/css/melihatdandownloadnilai.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-left">
+                <img src="logo.png" alt="Logo" class="logo">
+                <span class="app-title">SISemhas - Universitas Andalas</span>
+            </div>
+        </header>
+
+    <!-- Navigation -->
+        <nav class="nav-tabs">
+            <div class="tab">Dasboard</div>
+            <div class="tab">Pendaftaran</div>
+            <div class="tab">Riwayat Semhas</div>
+            <div class="tab">Buku Panduan</div>
+        </nav>
+
+        <main class="main-content">
+            <div class="back-button">&#8592;</div>
+            <h2 class="section-title">Penilaian Seminar Hasil</h2>
+
+            <div class="form-info">
+                <input type="text" id="nama" placeholder="Nama" readonly>
+                <input type="text" id="nim" placeholder="NIM" readonly>
+                <input type="text" id="nim-mhs" placeholder="NIM Mahasiswa" readonly>
+                <input type="text" id="judul" placeholder="Judul Tugas Akhir" readonly>
+                <input type="text" id="judul-mhs" placeholder="Judul Tugas Akhir Mahasiswa" readonly>
+            </div>
+
+            <table class="nilai-table">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Kategori</th>
+                        <th>Nilai</th>
+                    </tr>
+                </thead>
+                <tbody id="nilai-body">
+                    <!-- Data nilai akan dimasukkan dengan JavaScript -->
+                </tbody>
+            </table>
+
+            <div class="button-wrapper">
+                <button class="btn-submit" onclick="cetakNilai()">Cetak Nilai</button>
+            </div>
+        </main>
+    </div>
+
+    <script src="/mahasiswa/js/melihatdandownloadnilai.js"></script>
+</body>
+</html>

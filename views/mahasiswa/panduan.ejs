@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SISemhas - Buku Panduan</title>
+  <link rel="stylesheet" href="/mahasiswa/css/panduan.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-left">
+                <div class="logo">📚</div>
+                <span class="title">SISemhas - Universitas Andalas</span>
+            </div>
+        </div>
+
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs">
+      <div class="tab">Dashboard</div>
+      <div class="tab">Pendaftaran</div>
+      <div class="tab" data-tab="riwayat">Riwayat Semhas</div>
+      <div class="tab active"onclick="window.location.href='panduan'">Buku Panduan 📖</div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <!-- Panduan Content -->
+      <div class="page-content active" data-content="panduan">
+        <div class="pdf-container" id="pdfContainer">
+          <div class="pdf-icon">📄</div>
+          <span class="pdf-text">Klik untuk membuka PDF Panduan SISemhas</span>
+        </div>
+
+        <iframe class="pdf-viewer" id="pdfViewer" src="panduan.pdf" style="display: none;"></iframe>
+
+        <div class="pdf-controls" id="pdfControls" style="display: none;">
+          <a href="panduan.pdf" class="btn btn-primary" id="downloadBtn" download>
+            💾 Download PDF
+          </a>
+          <button class="btn btn-secondary" id="closeBtn">
+            ❌ Tutup PDF
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/mahasiswa/js/panduan.js"></script>
+</body>
+</html>
