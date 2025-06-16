@@ -32,15 +32,16 @@ model dosen {
 }
 
 model evaluasi_sistem {
-  id_evaluasi    Int       @id
-  kualitas_ui    String    @db.VarChar(100)
-  kinerja_sistem String    @db.VarChar(100)
-  kritik_saran   String    @db.Text
-  tanggal_isi    DateTime  @db.Date
-  nim            Int
-  mahasiswa      mahasiswa @relation(fields: [nim], references: [nim], onDelete: NoAction, onUpdate: NoAction, map: "fk_mahasiswa_evaluasi_sistem")
+   id              Int      @id @default(autoincrement())
 
-  @@index([nim], map: "fk_mahasiswa_evaluasi_sistem")
+  fitur           Int
+  konten          Int
+  responsif       Int
+  kemudahan       Int
+  dokumentasi     Int
+  saran           String?
+  kritik          String?
+  createdAt       DateTime @default(now())
 }
 
 model jadwal_dosen {
@@ -86,7 +87,7 @@ model mahasiswa {
   nama_lengkap    String            @db.VarChar(99)
   email           String            @db.VarChar(100)
   status          String            @db.VarChar(99)
-  evaluasi_sistem evaluasi_sistem[]
+ 
   user            user              @relation(fields: [email], references: [email], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_mahasiswa")
   pendaftaran     pendaftaran[]
 

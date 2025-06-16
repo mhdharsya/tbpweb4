@@ -79,19 +79,7 @@ body {
 
 .book-guide {
     margin-left: auto;
-}
-
-/* Gaya untuk tab aktif */
-.tab.active {
     background-color: white;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-/* Opsional: hanya jika ingin styling berbeda untuk tab panduan secara spesifik */
-.tab.active[data-tab="panduan"] {
-    background-color: white;
-    color: #333;
-    font-weight: bold;
 }
 
 /* Main Content */

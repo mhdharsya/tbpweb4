@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check Berkas - SISemhas</title>
+    <link rel="stylesheet" href="/mahasiswa/css/checkberkas.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <span class="logo-icon">📋</span>
+                <span class="logo-text">SISemhas - Universitas Andalas</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="navigation">
+        <div class="nav-container">
+            <a href="/dashboard" class="nav-item">Dashboard</a>
+            <a href="/pendaftaran" class="nav-item">Pendaftaran</a>
+            <a href="/riwayat-semhas" class="nav-item nav-active">Riwayat Semhas</a>
+            <a href="/buku-panduan" class="nav-item nav-guide">
+                📖 Buku Panduan
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <div class="page-header">
+                <h1 class="page-title">Check Berkas</h1>
+                <p class="page-subtitle">File Harus Berupa PDF - Minimal 20MB</p>
+            </div>
+
+            <div class="berkas-grid">
+                <!-- KRS -->
+                <div class="berkas-item">
+                    <h3 class="berkas-title">KRS</h3>
+                    <div class="berkas-card">
+                        <button class="btn-view" onclick="viewFile('krs')">
+                            Melihat berkas
+                        </button>
+                    </div>
+                </div>
+
+                <!-- PPT Penelitian -->
+                <div class="berkas-item">
+                    <h3 class="berkas-title">PPT_Penelitian</h3>
+                    <div class="berkas-card">
+                        <button class="btn-view" onclick="viewFile('ppt_penelitian')">
+                            Melihat berkas
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Lampiran Pengesahan -->
+                <div class="berkas-item">
+                    <h3 class="berkas-title">Lampiran_Pengesahan</h3>
+                    <div class="berkas-card">
+                        <button class="btn-view" onclick="viewFile('lampiran_pengesahan')">
+                            Melihat berkas
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Laporan Penelitian -->
+                <div class="berkas-item">
+                    <h3 class="berkas-title">Laporan_Penelitian</h3>
+                    <div class="berkas-card">
+                        <button class="btn-view" onclick="viewFile('laporan_penelitian')">
+                            Melihat berkas
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal untuk melihat berkas -->
+    <div id="fileModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Melihat Berkas</h2>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p>Berkas sedang dimuat...</p>
+                <div class="file-info">
+                    <p><strong>Nama File:</strong> <span id="fileName">-</span></p>
+                    <p><strong>Ukuran:</strong> <span id="fileSize">-</span></p>
+                    <p><strong>Status:</strong> <span id="fileStatus" class="status-approved">✓ Disetujui</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/mahasiswa/js/checkberkas.js"></script>
+</body>
+</html>

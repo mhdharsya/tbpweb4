@@ -1,50 +1,133 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const tabs = document.querySelectorAll(".tab");
+// Script untuk menangani form evaluasi sistem
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form'); // Sesuaikan dengan selector form Anda
+    const submitButton = document.querySelector('button[type="submit"]');
 
-    tabs.forEach((tab) => {
-        tab.addEventListener("click", () => {
-            tabs.forEach((t) => t.classList.remove("active"));
-            tab.classList.add("active");
-            const selectedTab = tab.getAttribute("data-tab");
-            alert(`Navigasi ke halaman ${selectedTab}`);
-            // Ganti alert dengan window.location.href jika ingin pindah halaman:
-            // window.location.href = `${selectedTab}.html`;
-        });
-    });
+    // Fungsi untuk mengumpulkan data form (NIM dihilangkan dari sini)
+    function getFormData() {
+        const formData = {
+            // UBAH NAMA PROPERTI INI SESUAI DENGAN SCHEMA BARU
+            // q1 -> fitur
+            fitur: document.querySelector('input[name="q1"]:checked')?.value,
+            // q2 -> konten
+            konten: document.querySelector('input[name="q2"]:checked')?.value,
+            // q3 -> responsif
+            responsif: document.querySelector('input[name="q3"]:checked')?.value,
+            // q4 -> kemudahan
+            kemudahan: document.querySelector('input[name="q4"]:checked')?.value,
+            // q5 -> dokumentasi
+            dokumentasi: document.querySelector('input[name="q5"]:checked')?.value,
+            kritik: document.querySelector('textarea[name="kritik"]')?.value || '',
+            saran: document.querySelector('textarea[name="saran"]')?.value || ''
+        };
+        
+        return formData;
+    }
 
-    const evaluationForm = document.getElementById("evaluationForm");
+    // Fungsi validasi form (tetap sama, karena masih memvalidasi q1-q5 dari input HTML)
+    function validateForm(data) {
+        const errors = [];
+        
+        if (!data.fitur) errors.push('Silakan pilih rating untuk pertanyaan 1'); // Perbarui pengecekan properti
+        if (!data.konten) errors.push('Silakan pilih rating untuk pertanyaan 2');
+        if (!data.responsif) errors.push('Silakan pilih rating untuk pertanyaan 3');
+        if (!data.kemudahan) errors.push('Silakan pilih rating untuk pertanyaan 4');
+        if (!data.dokumentasi) errors.push('Silakan pilih rating untuk pertanyaan 5');
+        
+        return errors;
+    }
 
-    evaluationForm.addEventListener("submit", (e) => {
-        e.preventDefault();
+    // Fungsi untuk menampilkan loading state (tetap sama)
+    function setLoadingState(isLoading) {
+        if (isLoading) {
+            submitButton.disabled = true;
+            submitButton.textContent = 'Menyimpan...';
+        } else {
+            submitButton.disabled = false;
+            submitButton.textContent = 'Submit';
+        }
+    }
 
-        const ratings = ["q1", "q2", "q3", "q4", "q5"];
-        let isValid = true;
-
-        ratings.forEach((question) => {
-            const selected = document.querySelector(`input[name="${question}"]:checked`);
-            if (!selected) {
-                isValid = false;
-            }
-        });
-
-        if (!isValid) {
-            alert("Silakan isi semua pertanyaan sebelum mengirim.");
-            return;
+    // Fungsi untuk menampilkan pesan (tetap sama)
+    function showMessage(message, type = 'info') {
+        const existingMessage = document.querySelector('.message');
+        if (existingMessage) {
+            existingMessage.remove();
         }
 
-        const data = {
-            q1: document.querySelector('input[name="q1"]:checked').value,
-            q2: document.querySelector('input[name="q2"]:checked').value,
-            q3: document.querySelector('input[name="q3"]:checked').value,
-            q4: document.querySelector('input[name="q4"]:checked').value,
-            q5: document.querySelector('input[name="q5"]:checked').value,
-            saran: document.getElementById("saran").value,
-            kritik: document.getElementById("kritik").value,
-        };
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${type}`;
+        messageDiv.style.cssText = `
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-weight: bold;
+            ${type === 'success' ? 'background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb;' : ''}
+            ${type === 'error' ? 'background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb;' : ''}
+            ${type === 'info' ? 'background-color: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb;' : ''}
+        `;
+        messageDiv.textContent = message;
+        
+        form.parentNode.insertBefore(messageDiv, form);
+        
+        setTimeout(() => {
+            messageDiv.remove();
+        }, 5000);
+    }
 
-        console.log("Data evaluasi:", data);
+    // Event listener untuk submit form
+    if (form) {
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = getFormData();
+            const errors = validateForm(formData);
+            
+            if (errors.length > 0) {
+                showMessage(errors.join('\n'), 'error');
+                return;
+            }
+            
+            setLoadingState(true);
+            
+            try {
+                // URL masih '/mahasiswa' sesuai log POST sebelumnya
+                const response = await fetch('/mahasiswa', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData) // Data yang dikirim dengan nama kolom baru
+                });
+                
+                let result;
+                try {
+                    result = await response.json();
+                } catch (jsonError) {
+                    const textError = await response.text();
+                    console.error('JSON Parse Error:', jsonError);
+                    console.error('Raw Server Response (not JSON):', textError);
+                    showMessage('Terjadi kesalahan data dari server. Mohon coba lagi.', 'error');
+                    setLoadingState(false);
+                    return;
+                }
 
-        alert("Terima kasih atas evaluasi Anda!");
-        evaluationForm.reset();
-    });
+                if (response.ok) {
+                    showMessage('Evaluasi sistem berhasil disimpan. Terima kasih atas feedback Anda!', 'success');
+                    form.reset();
+                    setTimeout(() => {
+                        window.location.href = '/dashboard';
+                    }, 2000);
+                } else {
+                    showMessage(result.message || 'Terjadi kesalahan saat menyimpan evaluasi', 'error');
+                }
+                
+            } catch (error) {
+                console.error('Network Error or Other Fetch Issue:', error);
+                showMessage('Terjadi kesalahan koneksi. Silakan coba lagi.', 'error');
+            } finally {
+                setLoadingState(false);
+            }
+        });
+    }
 });

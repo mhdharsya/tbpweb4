@@ -45,12 +45,11 @@ body {
 }
 
 .nav-tabs {
-    background: linear-gradient(135deg, #F3C85A, #E6B84A);
+    background: linear-gradient(135deg, #F3C85A);
     display: flex;
     padding: 10px 15px;
-    margin-bottom: 5px;
+    margin: 5px;
     border-radius: 12px;
-    gap: 10px;
 }
 
 .tab {
@@ -68,10 +67,20 @@ body {
     transform: translateY(-2px);
 }
 
-.tab.active {
-    background-color: white;
+.book-guide {
+    margin-left: auto;
+}
+
+/* Breadcrumb */
+.breadcrumb {
+    background: linear-gradient(135deg, #F3C85A);
+    padding: 10px 20px;
+    color: #333;
+    font-size: 16px;
     font-weight: bold;
-    box-shadow: inset 0 -3px 0 #ccc;
+    text-align: center;
+    margin: 5px;
+    border-radius: 10px;
 }
 
 .main-content {

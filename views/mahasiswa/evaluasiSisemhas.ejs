@@ -8,31 +8,27 @@
 </head>
 <body>
     <div class="container">
-        <!-- Header -->
         <div class="header">
             <div class="header-left">
                 <div class="logo">📚</div>
                 <span class="title">SISemhas - Universitas Andalas</span>
             </div>
         </div>
+        
+        <!-- Navigation Tabs -->
+        <nav class="nav-tabs">
+        <div class="tab">Dashboard</div>
+        <div class="tab">Pendaftaran</div>
+        <div class="tab" data-tab="riwayat">Riwayat Semhas</div>
+        <div class="tab book-guide"onclick="window.location.href='panduan'">Buku Panduan 📖</div>
+        </nav>
 
-        <!-- Navigation -->
-        <div class="nav-tabs">
-            <div class="tab" data-tab="dashboard">Dasboard</div>
-            <div class="tab" data-tab="pendaftaran">Pendaftaran</div>
-            <div class="tab" data-tab="riwayat">Riwayat Semhas</div>
-            <div class="tab book-guide" data-tab="panduan">Buku Panduan 📄</div>
-        </div>
-
-        <!-- Breadcrumb -->
         <div class="breadcrumb">
             <span>Evaluasi Sistem</span>
         </div>
 
-        <!-- Main Content -->
         <div class="main-content">
-            <form id="evaluationForm">
-                <!-- Rating Table -->
+            <form id="evaluationForm" action="/mahasiswa" method="POST">
                 <table class="rating-table">
                     <thead>
                         <tr>
@@ -91,7 +87,6 @@
                     </tbody>
                 </table>
 
-                <!-- Penjelasan Skor -->
                 <div class="rating-explanation">
                     <h4>Penjelasan Skor:</h4>
                     <ul>
@@ -103,7 +98,6 @@
                     </ul>
                 </div>
 
-                <!-- Comment Section -->
                 <div class="comment-section">
                     <div class="comment-left">
                         <label for="saran" class="comment-label">Saran</label>
@@ -115,7 +109,6 @@
                     </div>
                 </div>
 
-                <!-- Submit Button -->
                 <div class="submit-section">
                     <button type="submit" class="submit-btn">Submit</button>
                 </div>

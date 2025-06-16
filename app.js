@@ -9,6 +9,7 @@ var usersRouter = require('./routes/users');
 var evaluasiRouter = require('./routes/mahasiswa/evaluasiSisemhas');
 var melihatRouter = require('./routes/mahasiswa/melihatdandownloadnilai');
 var panduanRouter = require('./routes/mahasiswa/panduan');
+var checkRouter = require('./routes/mahasiswa/checkberkas');
 
 var app = express();
 
@@ -27,10 +28,12 @@ app.use('/users', usersRouter);
 app.use('/mahasiswa', evaluasiRouter);
 app.use('/melihat', melihatRouter);
 app.use('/panduan', panduanRouter);
+app.use('/check', checkRouter);
 
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
+  console.log(`[APP.JS] Request method: ${req.method}, URL: ${req.url}`);
   next(createError(404));
 });
 
