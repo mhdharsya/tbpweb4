@@ -18,27 +18,25 @@ model admin {
 }
 
 model dosen {
-  nip_dosen       Int           @id
-  nama_dosen      String        @db.VarChar(255)
-  email           String        @db.VarChar(100)
-  bidang_keahlian String        @db.VarChar(99)
+  nip_dosen       BigInt       @id
+  nama_dosen      String       @db.VarChar(255)
+  email           String       @db.VarChar(100)
+  bidang_keahlian String       @db.VarChar(99)
   id_jadwal_dosen Int
-  jadwal_dosen    jadwal_dosen  @relation(fields: [id_jadwal_dosen], references: [id_jadwal_dosen], onDelete: NoAction, onUpdate: NoAction, map: "fk_jadwal_dosen_dosen")
-  user            user          @relation(fields: [email], references: [email], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_dosen")
-  pendaftaran     pendaftaran[]
+  jadwal_dosen    jadwal_dosen @relation(fields: [id_jadwal_dosen], references: [id_jadwal_dosen], onDelete: NoAction, onUpdate: NoAction, map: "fk_jadwal_dosen_dosen")
+  user            user         @relation(fields: [email], references: [email], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_dosen")
 
   @@index([id_jadwal_dosen], map: "fk_jadwal_dosen_dosen")
   @@index([email], map: "fk_user_dosen")
 }
 
 model evaluasi_sistem {
-  id_evaluasi    Int       @id
-  kualitas_ui    String    @db.VarChar(100)
-  kinerja_sistem String    @db.VarChar(100)
-  kritik_saran   String    @db.Text
-  tanggal_isi    DateTime  @db.Date
-  nim            Int
-  mahasiswa      mahasiswa @relation(fields: [nim], references: [nim], onDelete: NoAction, onUpdate: NoAction, map: "fk_mahasiswa_evaluasi_sistem")
+  id_evaluasi    Int      @id
+  kualitas_ui    String   @db.VarChar(100)
+  kinerja_sistem String   @db.VarChar(100)
+  kritik_saran   String   @db.Text
+  tanggal_isi    DateTime @db.Date
+  nim            BigInt
 
   @@index([nim], map: "fk_mahasiswa_evaluasi_sistem")
 }
@@ -59,14 +57,14 @@ model jadwal_pendaftaran {
   dosen_penguji  String       @db.VarChar(99)
   id_kuota       Int
   kuota_semhas   kuota_semhas @relation(fields: [id_kuota], references: [id_kuota], onDelete: NoAction, onUpdate: NoAction, map: "fk_kuota_semhas_jadwal_pendaftaran")
-  pendaftaran    pendaftaran  @relation(fields: [id_pendaftaran], references: [id_pendaftaran], onDelete: NoAction, onUpdate: NoAction, map: "fk_pendaftaran_jadwal_pendaftaran")
+  pendaftaran    pendaftaran  @relation(fields: [id_pendaftaran], references: [id_pendaftaran], onUpdate: Restrict, map: "fk_pendaftaran_jadwal_pendaftaran")
 
   @@index([id_kuota], map: "fk_kuota_semhas_jadwal_pendaftaran")
   @@index([id_pendaftaran], map: "fk_pendaftaran_jadwal_pendaftaran")
 }
 
 model kadep {
-  nip_kadep  Int    @id
+  nip_kadep  BigInt @id
   nama_kadep String @db.VarChar(99)
   email      String @db.VarChar(100)
   user       user   @relation(fields: [email], references: [email], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_kadep")
@@ -82,13 +80,11 @@ model kuota_semhas {
 }
 
 model mahasiswa {
-  nim             Int               @id
-  nama_lengkap    String            @db.VarChar(99)
-  email           String            @db.VarChar(100)
-  status          String            @db.VarChar(99)
-  evaluasi_sistem evaluasi_sistem[]
-  user            user              @relation(fields: [email], references: [email], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_mahasiswa")
-  pendaftaran     pendaftaran[]
+  nim          BigInt @id
+  nama_lengkap String @db.VarChar(99)
+  email        String @db.VarChar(100)
+  status       String @db.VarChar(99)
+  user         user   @relation(fields: [email], references: [email], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_mahasiswa")
 
   @@index([email], map: "fk_user_mahasiswa")
 }
@@ -100,7 +96,7 @@ model nilai_semhas {
   komentar        String      @db.Text
   id_rubik        Int
   id_pendaftaran  Int
-  pendaftaran     pendaftaran @relation(fields: [id_pendaftaran], references: [id_pendaftaran], onDelete: NoAction, onUpdate: NoAction, map: "fk_pendaftaran_nilai_semhas")
+  pendaftaran     pendaftaran @relation(fields: [id_pendaftaran], references: [id_pendaftaran], onUpdate: Restrict, map: "fk_pendaftaran_nilai_semhas")
   rubik           rubik       @relation(fields: [id_rubik], references: [id_rubik], onDelete: NoAction, onUpdate: NoAction, map: "fk_rubik_nilai_semhas")
 
   @@index([id_pendaftaran], map: "fk_pendaftaran_nilai_semhas")
@@ -119,27 +115,25 @@ model panduan {
 }
 
 model pendaftaran {
-  id_pendaftaran     Int                  @id
-  nim                Int
+  id_pendaftaran     Int                  @id @default(autoincrement())
+  nim                Int?
   nama_lengkap       String               @db.VarChar(255)
   judul              String               @db.VarChar(799)
   bidang_penelitian  String               @db.VarChar(99)
   nip_dosen          Int
   nim_mhs            Int
-  nama_laporan       String               @db.VarChar(255)
-  file_laporan       Bytes                @db.Blob
-  nama_krs           String               @db.VarChar(255)
-  file_krs           Bytes                @db.Blob
-  nama_pengesahan    String               @db.VarChar(255)
-  file_pengesahan    Bytes                @db.Blob
-  nama_ppt           String               @db.VarChar(255)
-  file_ppt           Bytes                @db.Blob
-  id_periode         Int
+  nama_laporan       String?               @db.VarChar(255)
+  file_laporan       Bytes?                @db.Blob
+  nama_krs           String?               @db.VarChar(255)
+  file_krs           Bytes?                @db.Blob
+  nama_pengesahan    String?               @db.VarChar(255)
+  file_pengesahan    Bytes?                @db.Blob
+  nama_ppt           String?               @db.VarChar(255)
+  file_ppt           Bytes?                @db.Blob
+  id_periode         Int?
   jadwal_pendaftaran jadwal_pendaftaran[]
   nilai_semhas       nilai_semhas[]
-  dosen              dosen                @relation(fields: [nip_dosen], references: [nip_dosen], onDelete: NoAction, onUpdate: NoAction, map: "fk_dosen_pendaftaran")
-  mahasiswa          mahasiswa            @relation(fields: [nim], references: [nim], onDelete: NoAction, onUpdate: NoAction, map: "fk_mahasiswa_pendaftaran")
-  periode_semhas     periode_semhas       @relation(fields: [id_periode], references: [id_periode], onDelete: NoAction, onUpdate: NoAction, map: "fk_periode_semhas_pendaftaran")
+  periode_semhas     periode_semhas?       @relation(fields: [id_periode], references: [id_periode], onDelete: NoAction, onUpdate: NoAction, map: "fk_periode_semhas_pendaftaran")
 
   @@index([nip_dosen], map: "fk_dosen_pendaftaran")
   @@index([nim], map: "fk_mahasiswa_pendaftaran")
@@ -163,8 +157,8 @@ model rubik {
 }
 
 model user {
-  email     String      @id @db.VarChar(100)
   password  String      @db.VarChar(99)
+  email     String      @id @db.VarChar(100)
   role      String      @db.VarChar(50)
   admin     admin[]
   dosen     dosen[]
