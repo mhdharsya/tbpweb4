@@ -10,7 +10,7 @@ datasource db {
 model admin {
   niku       Int       @id
   nama_admin String    @db.VarChar(255)
-  email      String    @db.VarChar(100)
+  email      String    @unique @db.VarChar(100)  // Tambahkan @unique
   user       user      @relation(fields: [email], references: [email], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_admin")
   panduan    panduan[]
 
@@ -20,7 +20,7 @@ model admin {
 model dosen {
   nip_dosen       Int           @id
   nama_dosen      String        @db.VarChar(255)
-  email           String        @db.VarChar(100)
+  email           String        @unique @db.VarChar(100)  // Tambahkan @unique
   bidang_keahlian String        @db.VarChar(99)
   id_jadwal_dosen Int
   jadwal_dosen    jadwal_dosen  @relation(fields: [id_jadwal_dosen], references: [id_jadwal_dosen], onDelete: NoAction, onUpdate: NoAction, map: "fk_jadwal_dosen_dosen")
@@ -68,7 +68,7 @@ model jadwal_pendaftaran {
 model kadep {
   nip_kadep  Int    @id
   nama_kadep String @db.VarChar(99)
-  email      String @db.VarChar(100)
+  email      String @unique @db.VarChar(100)
   user       user   @relation(fields: [email], references: [email], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_kadep")
 
   @@index([email], map: "fk_user_kadep")
@@ -84,7 +84,7 @@ model kuota_semhas {
 model mahasiswa {
   nim             Int               @id
   nama_lengkap    String            @db.VarChar(99)
-  email           String            @db.VarChar(100)
+  email           String            @unique @db.VarChar(100)  // Tambahkan @unique
   status          String            @db.VarChar(99)
   evaluasi_sistem evaluasi_sistem[]
   user            user              @relation(fields: [email], references: [email], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_mahasiswa")
@@ -162,12 +162,19 @@ model rubik {
   nilai_semhas nilai_semhas[]
 }
 
+enum Role {
+  ADMIN
+  DOSEN
+  KADEP
+  MAHASISWA
+}
+
 model user {
-  email     String      @id @db.VarChar(100)
-  password  String      @db.VarChar(99)
-  role      String      @db.VarChar(50)
-  admin     admin[]
-  dosen     dosen[]
-  kadep     kadep[]
-  mahasiswa mahasiswa[]
+  email     String @id @db.VarChar(100)
+  password  String @db.VarChar(99)
+  role      Role
+  admin     admin?
+  dosen     dosen?
+  kadep     kadep?
+  mahasiswa mahasiswa?
 }

@@ -4,11 +4,11 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 const login = async (req, res) => {
-  const { username, password } = req.body;
+  const { email, password, role } = req.body;
 
   try {
     const user = await prisma.user.findUnique({
-      where: { username },
+      where: { email },
     });
 
     if (!user) {
@@ -22,7 +22,7 @@ const login = async (req, res) => {
     }
 
     const token = jwt.sign(
-      { userId: user.id, username: user.username },
+      { userId: user.id, email: user.email, role: user.role },
       process.env.JWT_SECRET,
       { expiresIn: '1h' }
     );
