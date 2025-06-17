@@ -1,23 +1,14 @@
 const multer = require('multer');
-const path = require('path');
 
-// Menentukan lokasi dan nama file yang diupload
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'uploads/'); // Pastikan folder 'uploads/' ada
-  },
-  filename: function (req, file, cb) {
-    const uniqueName = Date.now() + '-' + file.originalname;
-    cb(null, uniqueName); // Memberikan nama file yang unik
-  }
-});
+// Menggunakan memoryStorage untuk menyimpan file di memory (buffer)
+const storage = multer.memoryStorage();
 
-// Konfigurasi multer dengan batasan file size dan tipe file
+// Konfigurasi multer dengan batasan ukuran file dan filter tipe file
 const upload = multer({
-  storage: storage,
-  limits: { fileSize: 20 * 1024 * 1024 }, // Set ukuran maksimal file menjadi 20MB
+  storage: storage,  // Menyimpan file di memory
+  limits: { fileSize: 20 * 1024 * 1024 },  // Membatasi ukuran file maksimal 20MB
   fileFilter: (req, file, cb) => {
-    const allowedTypes = ['application/pdf']; // Hanya menerima file PDF
+    const allowedTypes = ['application/pdf']; // Membatasi hanya file PDF
     if (!allowedTypes.includes(file.mimetype)) {
       return cb(new Error('Only PDF files are allowed.'));
     }

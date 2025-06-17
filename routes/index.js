@@ -16,7 +16,7 @@ router.get('/dashboard', auth, (req, res) =>{
   } else if (req.user.role === 'KADEP') {
     return res.render('kadep');
   } else if (req.user.role === 'MAHASISWA') {
-    return res.render('dashboard mahasiswa');
+    return res.render('mahasiswa/dashboardMhs');
   } else {
     return res.status(403).json({ message: 'Access denied. Invalid role.' });
   }

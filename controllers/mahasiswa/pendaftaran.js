@@ -11,6 +11,10 @@ exports.getFormPendaftaran = async (req, res) => {
       }
     });
 
+    console.log("id cookie dari JWT : ", req.user.userId);
+    console.log("email cookie dari JWT : ", req.user.email);
+    console.log("role cookie dari JWT : ", req.user.role);
+
     const bidangList = [
       'Sistem Informasi',
       'Rekayasa Perangkat Lunak',
@@ -32,16 +36,25 @@ exports.getFormPendaftaran = async (req, res) => {
 exports.submitFormPendaftaran = async (req, res) => {
   try {
     console.log('DATA YANG DITERIMA:', req.body); // Debugging
-    const { nim, nama_lengkap, judul, bidangPenelitian, nipDosen } = req.body;
+    const { judul, bidangPenelitian, nipDosen } = req.body;
 
-    if (!nim || !nama_lengkap || !judul || !bidangPenelitian || !nipDosen) {
+    if (!judul || !bidangPenelitian || !nipDosen) {
       return res.status(400).send('Semua field wajib diisi.');
     }
 
+    const id_user = req.user.userId;
+
+    const nama = await prisma.mahasiswa.findUnique({
+      where: {nim: id_user},
+      select: {
+        nama_lengkap:true
+      }
+    })
+
     await prisma.pendaftaran.create({
       data: {
-        nama_lengkap: nama_lengkap,
-        nim_mhs: parseInt(nim),
+        nama_lengkap: nama.nama_lengkap,
+        nim_mhs: id_user,
         judul: judul.trim(),
         bidang_penelitian: bidangPenelitian,
         nip_dosen: parseInt(nipDosen),
