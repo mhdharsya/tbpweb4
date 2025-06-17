@@ -50,14 +50,14 @@ model jadwal_dosen {
 
 model jadwal_pendaftaran {
   id_jadwal      String       @id @db.VarChar(100)
-  id_pendaftaran Int
+  id_pendaftaran Int?
   jam_mulai      DateTime     @db.Time(0)
   jam_selesai    DateTime     @db.Time(0)
   status         String       @db.VarChar(50)
   dosen_penguji  String       @db.VarChar(99)
   id_kuota       Int
   kuota_semhas   kuota_semhas @relation(fields: [id_kuota], references: [id_kuota], onDelete: NoAction, onUpdate: NoAction, map: "fk_kuota_semhas_jadwal_pendaftaran")
-  pendaftaran    pendaftaran  @relation(fields: [id_pendaftaran], references: [id_pendaftaran], onUpdate: Restrict, map: "fk_pendaftaran_jadwal_pendaftaran")
+  pendaftaran    pendaftaran?  @relation(fields: [id_pendaftaran], references: [id_pendaftaran], onUpdate: Restrict, map: "fk_pendaftaran_jadwal_pendaftaran")
 
   @@index([id_kuota], map: "fk_kuota_semhas_jadwal_pendaftaran")
   @@index([id_pendaftaran], map: "fk_pendaftaran_jadwal_pendaftaran")
@@ -117,11 +117,11 @@ model panduan {
 model pendaftaran {
   id_pendaftaran     Int                  @id @default(autoincrement())
   nim                Int?
-  nama_lengkap       String               @db.VarChar(255)
-  judul              String               @db.VarChar(799)
-  bidang_penelitian  String               @db.VarChar(99)
-  nip_dosen          Int
-  nim_mhs            Int
+  nama_lengkap       String?               @db.VarChar(255)
+  judul              String?               @db.VarChar(799)
+  bidang_penelitian  String?               @db.VarChar(99)
+  nip_dosen          Int?
+  nim_mhs            Int?
   nama_laporan       String?               @db.VarChar(255)
   file_laporan       Bytes?                @db.Blob
   nama_krs           String?               @db.VarChar(255)

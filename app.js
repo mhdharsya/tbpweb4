@@ -11,6 +11,7 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var mahasiswaRouter = require('./routes/mahasiswa/dashboardMhs');
 var pendaftaranRouter = require('./routes/mahasiswa/pendaftaran');
+var uploadRouter = require('./routes/mahasiswa/upload');
 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -20,6 +21,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static('public'));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -29,6 +31,7 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/dashboardMhs', mahasiswaRouter);
 app.use('/daftar', pendaftaranRouter);
+app.use('/mahasiswa/upload', uploadRouter);
 
 app.use((req, res, next) => {
   console.log('🔥 DEBUG Middleware:', req.method, req.url, req.body);
