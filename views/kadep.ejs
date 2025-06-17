@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Kadep - Sistem Manajemen Seminar</title>
+    <link rel='stylesheet' href='/stylesheets/output.css'/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.29.0/feather.min.js"></script>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg border-b-4 border-blue-600">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-4">
+                    <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+                        <i data-feather="graduation-cap" class="text-white w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold text-gray-800">Dashboard Kadep</h1>
+                        <p class="text-sm text-gray-600">Sistem Manajemen Seminar</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="relative">
+                        <button class="p-2 rounded-lg hover:bg-gray-100 relative">
+                            <i data-feather="bell" class="w-5 h-5 text-gray-600"></i>
+                            <span class="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full text-xs text-white flex items-center justify-center">3</span>
+                        </button>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <img src="https://via.placeholder.com/32x32/4F46E5/FFFFFF?text=KD" alt="Profile" class="w-8 h-8 rounded-full">
+                        <span class="text-sm font-medium text-gray-700">Prof. Dr. Kadep</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto px-4 py-6">
+        <!-- Quick Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white rounded-xl shadow-sm p-6 border-l-4 border-blue-500">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-600">Seminar Minggu Ini</p>
+                        <p class="text-2xl font-bold text-gray-800">12</p>
+                    </div>
+                    <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                        <i data-feather="calendar" class="w-6 h-6 text-blue-600"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm p-6 border-l-4 border-green-500">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-600">Dosen Penguji Aktif</p>
+                        <p class="text-2xl font-bold text-gray-800">25</p>
+                    </div>
+                    <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                        <i data-feather="users" class="w-6 h-6 text-green-600"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm p-6 border-l-4 border-yellow-500">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-600">Pendaftar Menunggu</p>
+                        <p class="text-2xl font-bold text-gray-800">8</p>
+                    </div>
+                    <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
+                        <i data-feather="clock" class="w-6 h-6 text-yellow-600"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm p-6 border-l-4 border-purple-500">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-600">Periode Aktif</p>
+                        <p class="text-2xl font-bold text-gray-800">1</p>
+                    </div>
+                    <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                        <i data-feather="activity" class="w-6 h-6 text-purple-600"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Left Column -->
+            <div class="lg:col-span-2 space-y-6">
+                <!-- Kuota Per Minggu -->
+                <div class="bg-white rounded-xl shadow-sm p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-lg font-semibold text-gray-800 flex items-center">
+                            <i data-feather="settings" class="w-5 h-5 mr-2 text-blue-600"></i>
+                            Pengaturan Kuota Seminar
+                        </h2>
+                        <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                            <i data-feather="edit-2" class="w-4 h-4 inline mr-1"></i>
+                            Ubah
+                        </button>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="p-4 bg-gray-50 rounded-lg">
+                            <p class="text-sm text-gray-600">Kuota Seminar/Minggu</p>
+                            <p class="text-xl font-bold text-gray-800">15 Seminar</p>
+                        </div>
+                        <div class="p-4 bg-gray-50 rounded-lg">
+                            <p class="text-sm text-gray-600">Durasi Presentasi</p>
+                            <p class="text-xl font-bold text-gray-800">30 Menit</p>
+                        </div>
+                        <div class="p-4 bg-gray-50 rounded-lg">
+                            <p class="text-sm text-gray-600">Jumlah Slide Max</p>
+                            <p class="text-xl font-bold text-gray-800">25 Slide</p>
+                        </div>
+                        <div class="p-4 bg-gray-50 rounded-lg">
+                            <p class="text-sm text-gray-600">Format Laporan</p>
+                            <p class="text-xl font-bold text-gray-800">PDF</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Penentuan Dosen Penguji -->
+                <div class="bg-white rounded-xl shadow-sm p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-lg font-semibold text-gray-800 flex items-center">
+                            <i data-feather="user-check" class="w-5 h-5 mr-2 text-green-600"></i>
+                            Penentuan Dosen Penguji
+                        </h2>
+                        <button onclick="assignDosen()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+                            <i data-feather="plus" class="w-4 h-4 inline mr-1"></i>
+                            Auto Assign
+                        </button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead>
+                                <tr class="border-b">
+                                    <th class="text-left py-2 text-sm font-medium text-gray-600">Mahasiswa</th>
+                                    <th class="text-left py-2 text-sm font-medium text-gray-600">Bidang</th>
+                                    <th class="text-left py-2 text-sm font-medium text-gray-600">Penguji 1</th>
+                                    <th class="text-left py-2 text-sm font-medium text-gray-600">Penguji 2</th>
+                                    <th class="text-left py-2 text-sm font-medium text-gray-600">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-sm">
+                                <tr class="border-b">
+                                    <td class="py-3">Ahmad Rizki</td>
+                                    <td class="py-3">Machine Learning</td>
+                                    <td class="py-3">Dr. Budi S.</td>
+                                    <td class="py-3">Dr. Sari M.</td>
+                                    <td class="py-3"><span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">Assigned</span></td>
+                                </tr>
+                                <tr class="border-b">
+                                    <td class="py-3">Siti Nurhaliza</td>
+                                    <td class="py-3">Data Mining</td>
+                                    <td class="py-3">-</td>
+                                    <td class="py-3">-</td>
+                                    <td class="py-3"><span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs">Pending</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="py-3">Joko Widodo</td>
+                                    <td class="py-3">Computer Vision</td>
+                                    <td class="py-3">Dr. Andi P.</td>
+                                    <td class="py-3">-</td>
+                                    <td class="py-3"><span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">Partial</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Periode Pendaftaran -->
+                <div class="bg-white rounded-xl shadow-sm p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-lg font-semibold text-gray-800 flex items-center">
+                            <i data-feather="calendar" class="w-5 h-5 mr-2 text-purple-600"></i>
+                            Periode Pendaftaran
+                        </h2>
+                        <div class="space-x-2">
+                            <button class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
+                                <i data-feather="play" class="w-4 h-4 inline mr-1"></i>
+                                Buka Periode
+                            </button>
+                            <button class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+                                <i data-feather="pause" class="w-4 h-4 inline mr-1"></i>
+                                Tutup Periode
+                            </button>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="p-4 bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg border border-purple-200">
+                            <h3 class="font-medium text-gray-800 mb-2">Periode Aktif</h3>
+                            <p class="text-sm text-gray-600">Batch Genap 2024/2025</p>
+                            <p class="text-sm text-gray-600">1 Feb - 28 Feb 2025</p>
+                            <div class="mt-2">
+                                <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">Aktif</span>
+                            </div>
+                        </div>
+                        <div class="p-4 bg-gray-50 rounded-lg">
+                            <h3 class="font-medium text-gray-800 mb-2">Periode Berikutnya</h3>
+                            <p class="text-sm text-gray-600">Batch Ganjil 2025/2026</p>
+                            <p class="text-sm text-gray-600">1 Aug - 31 Aug 2025</p>
+                            <div class="mt-2">
+                                <span class="px-2 py-1 bg-gray-100 text-gray-800 rounded-full text-xs">Belum Aktif</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column -->
+            <div class="space-y-6">
+                <!-- Bidang Keahlian Dosen -->
+                <div class="bg-white rounded-xl shadow-sm p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-lg font-semibold text-gray-800 flex items-center">
+                            <i data-feather="book" class="w-5 h-5 mr-2 text-indigo-600"></i>
+                            Bidang Keahlian
+                        </h2>
+                        <button class="px-3 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">
+                            <i data-feather="plus" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                            <div>
+                                <p class="font-medium text-gray-800">Machine Learning</p>
+                                <p class="text-sm text-gray-600">5 Dosen</p>
+                            </div>
+                            <div class="flex space-x-1">
+                                <button class="p-1 text-blue-600 hover:bg-blue-100 rounded">
+                                    <i data-feather="edit-2" class="w-4 h-4"></i>
+                                </button>
+                                <button class="p-1 text-red-600 hover:bg-red-100 rounded">
+                                    <i data-feather="trash-2" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                            <div>
+                                <p class="font-medium text-gray-800">Data Mining</p>
+                                <p class="text-sm text-gray-600">3 Dosen</p>
+                            </div>
+                            <div class="flex space-x-1">
+                                <button class="p-1 text-blue-600 hover:bg-blue-100 rounded">
+                                    <i data-feather="edit-2" class="w-4 h-4"></i>
+                                </button>
+                                <button class="p-1 text-red-600 hover:bg-red-100 rounded">
+                                    <i data-feather="trash-2" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                            <div>
+                                <p class="font-medium text-gray-800">Computer Vision</p>
+                                <p class="text-sm text-gray-600">4 Dosen</p>
+                            </div>
+                            <div class="flex space-x-1">
+                                <button class="p-1 text-blue-600 hover:bg-blue-100 rounded">
+                                    <i data-feather="edit-2" class="w-4 h-4"></i>
+                                </button>
+                                <button class="p-1 text-red-600 hover:bg-red-100 rounded">
+                                    <i data-feather="trash-2" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Rubrik Nilai -->
+                <div class="bg-white rounded-xl shadow-sm p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-lg font-semibold text-gray-800 flex items-center">
+                            <i data-feather="clipboard" class="w-5 h-5 mr-2 text-orange-600"></i>
+                            Rubrik Penilaian
+                        </h2>
+                        <button class="px-3 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors">
+                            <i data-feather="edit" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-600">Presentasi</span>
+                            <span class="text-sm font-medium text-gray-800">40%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-orange-600 h-2 rounded-full" style="width: 40%"></div>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-600">Laporan</span>
+                            <span class="text-sm font-medium text-gray-800">35%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-orange-600 h-2 rounded-full" style="width: 35%"></div>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-600">Tanya Jawab</span>
+                            <span class="text-sm font-medium text-gray-800">25%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-orange-600 h-2 rounded-full" style="width: 25%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="bg-white rounded-xl shadow-sm p-6">
+                    <h2 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                        <i data-feather="zap" class="w-5 h-5 mr-2 text-yellow-600"></i>
+                        Aksi Cepat
+                    </h2>
+                    <div class="space-y-3">
+                        <button class="w-full flex items-center justify-between p-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors">
+                            <div class="flex items-center">
+                                <i data-feather="bar-chart-2" class="w-5 h-5 text-blue-600 mr-3"></i>
+                                <span class="text-sm font-medium text-gray-800">Statistik Seminar</span>
+                            </div>
+                            <i data-feather="chevron-right" class="w-4 h-4 text-gray-400"></i>
+                        </button>
+                        <button class="w-full flex items-center justify-between p-3 bg-green-50 hover:bg-green-100 rounded-lg transition-colors">
+                            <div class="flex items-center">
+                                <i data-feather="file-text" class="w-5 h-5 text-green-600 mr-3"></i>
+                                <span class="text-sm font-medium text-gray-800">Rekapitulasi PDF</span>
+                            </div>
+                            <i data-feather="chevron-right" class="w-4 h-4 text-gray-400"></i>
+                        </button>
+                        <button class="w-full flex items-center justify-between p-3 bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors">
+                            <div class="flex items-center">
+                                <i data-feather="download" class="w-5 h-5 text-purple-600 mr-3"></i>
+                                <span class="text-sm font-medium text-gray-800">Export Data</span>
+                            </div>
+                            <i data-feather="chevron-right" class="w-4 h-4 text-gray-400"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics Modal (Hidden by default) -->
+        <div id="statisticsModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden">
+            <div class="flex items-center justify-center min-h-screen p-4">
+                <div class="bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+                    <div class="flex items-center justify-between p-6 border-b">
+                        <h2 class="text-xl font-semibold text-gray-800">Statistik Seminar</h2>
+                        <button onclick="closeModal('statisticsModal')" class="p-2 hover:bg-gray-100 rounded-lg">
+                            <i data-feather="x" class="w-5 h-5 text-gray-600"></i>
+                        </button>
+                    </div>
+                    <div class="p-6">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                            <div class="bg-blue-50 p-4 rounded-lg">
+                                <h3 class="font-medium text-blue-800">Total Seminar</h3>
+                                <p class="text-2xl font-bold text-blue-600">156</p>
+                                <p class="text-sm text-blue-600">Semester ini</p>
+                            </div>
+                            <div class="bg-green-50 p-4 rounded-lg">
+                                <h3 class="font-medium text-green-800">Rata-rata Nilai</h3>
+                                <p class="text-2xl font-bold text-green-600">82.5</p>
+                                <p class="text-sm text-green-600">Dari 100</p>
+                            </div>
+                            <div class="bg-yellow-50 p-4 rounded-lg">
+                                <h3 class="font-medium text-yellow-800">Tingkat Kelulusan</h3>
+                                <p class="text-2xl font-bold text-yellow-600">94.2%</p>
+                                <p class="text-sm text-yellow-600">147/156</p>
+                            </div>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <h3 class="font-medium text-gray-800 mb-3">Distribusi per Bidang Keahlian</h3>
+                            <div class="space-y-2">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-sm">Machine Learning</span>
+                                    <span class="text-sm font-medium">45 seminar</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-sm">Data Mining</span>
+                                    <span class="text-sm font-medium">38 seminar</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-sm">Computer Vision</span>
+                                    <span class="text-sm font-medium">42 seminar</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-sm">Natural Language Processing</span>
+                                    <span class="text-sm font-medium">31 seminar</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PDF Export Modal (Hidden by default) -->
+        <div id="pdfModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden">
+            <div class="flex items-center justify-center min-h-screen p-4">
+                <div class="bg-white rounded-xl shadow-2xl max-w-md w-full">
+                    <div class="flex items-center justify-between p-6 border-b">
+                        <h2 class="text-xl font-semibold text-gray-800">Rekapitulasi PDF</h2>
+                        <button onclick="closeModal('pdfModal')" class="p-2 hover:bg-gray-100 rounded-lg">
+                            <i data-feather="x" class="w-5 h-5 text-gray-600"></i>
+                        </button>
+                    </div>
+                    <div class="p-6">
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Periode</label>
+                                <select class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                    <option>Februari 2025</option>
+                                    <option>Januari 2025</option>
+                                    <option>Desember 2024</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Jenis Laporan</label>
+                                <select class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                    <option>Jadwal Seminar</option>
+                                    <option>Hasil Penilaian</option>
+                                    <option>Ringkasan Statistik</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="flex space-x-3 mt-6">
+                            <button onclick="closeModal('pdfModal')" class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">
+                                Batal
+                            </button>
+                            <button onclick="validatePdfForm()" class="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
+                                <i data-feather="download" class="w-4 h-4 inline mr-1"></i>
+                                Download PDF
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Feather Icons
+        feather.replace();
+
+        // Modal functions
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.remove('hidden');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+        }
+
+        // Add event listeners for quick action buttons
+        document.addEventListener('DOMContentLoaded', function() {
+            // Statistics button
+            const statisticsBtn = document.querySelector('button[data-action="statistics"]') || 
+                document.querySelector('.bg-blue-50');
+            if (statisticsBtn) {
+                statisticsBtn.addEventListener('click', () => openModal('statisticsModal'));
+            }
+
+            // PDF export button
+            const pdfBtn = document.querySelector('button[data-action="pdf"]') || 
+                document.querySelector('.bg-green-50');
+            if (pdfBtn) {
+                pdfBtn.addEventListener('click', () => openModal('pdfModal'));
+            }
+
+            // Close modals when clicking outside
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('bg-black')) {
+                    const modals = document.querySelectorAll('[id$="Modal"]');
+                    modals.forEach(modal => {
+                        modal.classList.add('hidden');
+                    });
+                }
+            });
+
+            // Add functionality to notification bell
+            const notificationBtn = document.querySelector('button[data-feather="bell"]').parentElement;
+            notificationBtn.addEventListener('click', function() {
+                showNotifications();
+            });
+
+            // Add responsive behavior for mobile
+            const mobileMenuBtn = document.createElement('button');
+            mobileMenuBtn.className = 'lg:hidden p-2 rounded-lg hover:bg-gray-100';
+            mobileMenuBtn.innerHTML = '<i data-feather="menu" class="w-5 h-5 text-gray-600"></i>';
+            
+            // Add auto-refresh for stats every 30 seconds
+            setInterval(updateStats, 30000);
+        });
+
+        // Sample interactive functions
+        function togglePeriod() {
+            alert('Fungsi toggle periode akan diimplementasi');
+        }
+
+        function assignDosen() {
+            alert('Fungsi auto assign dosen akan diimplementasi');
+        }
+
+        function updateRubrik() {
+            alert('Fungsi update rubrik akan diimplementasi');
+        }
+
+        function exportData() {
+            alert('Fungsi export data akan diimplementasi');
+        }
