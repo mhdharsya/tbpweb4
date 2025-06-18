@@ -109,7 +109,6 @@ model nilai_semhas {
 model panduan {
   id_panduan     Int      @id @default(autoincrement())
   nama_file      String   @db.VarChar(255)
-  deskripsi      String   @db.Text
   tanggal_unggah DateTime @db.Date
   niku           String
   file          Bytes    @db.Blob
