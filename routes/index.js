@@ -8,6 +8,11 @@ router.get('/', (req, res) => {
   res.render('index');
 });
 
+router.get('/register', (req, res) => {
+  res.render('register', { title: 'Register' });
+});
+
+
 router.get('/dashboard', auth, (req, res) =>{
   if (req.user.role === 'ADMIN') {
     return res.render('dashboard admin');
