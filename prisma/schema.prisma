@@ -10,11 +10,11 @@ datasource db {
 model admin {
   niku       String    @id @db.VarChar(50)    // Mengubah dari Int ke String
   nama_admin String    @db.VarChar(255)
-  email      String    @db.VarChar(100)
-  user       user      @relation(fields: [email], references: [email], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_admin")
+  email      String    @unique @db.VarChar(100)
+  user        user     @relation(fields: [email], references: [email], map: "fk_user_admin") // Link kembali ke user
   panduan    panduan[]
 
-  @@index([email], map: "fk_user_admin")
+  @@index([email])
 }
 
 model dosen {
@@ -29,12 +29,13 @@ model dosen {
 }
 
 model evaluasi_sistem {
-  id_evaluasi    String    @id @db.VarChar(50)     // Mengubah dari Int ke String
-  kualitas_ui    String   @db.VarChar(100)
-  kinerja_sistem String   @db.VarChar(100)
-  kritik_saran   String   @db.Text
-  tanggal_isi    DateTime @db.Date
-  nim            String   @db.VarChar(50)          // Mengubah dari BigInt ke String
+  id_evaluasi    Int       @id
+  kualitas_ui    String    @db.VarChar(100)
+  kinerja_sistem String    @db.VarChar(100)
+  kritik_saran   String    @db.Text
+  tanggal_isi    DateTime  @db.Date
+  nim            Int
+  mahasiswa      mahasiswa @relation(fields: [nim], references: [nim], onDelete: NoAction, onUpdate: NoAction, map: "fk_mahasiswa_evaluasi_sistem")
 
   @@index([nim], map: "fk_mahasiswa_evaluasi_sistem")
 }
@@ -64,10 +65,10 @@ model jadwal_pendaftaran {
 model kadep {
   nip_kadep  String @id @db.VarChar(50)   // Mengubah dari BigInt ke String
   nama_kadep String @db.VarChar(99)
-  email      String @db.VarChar(100)
-  user       user   @relation(fields: [email], references: [email], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_kadep")
+  email      String @unique @db.VarChar(100)
+  user        user     @relation(fields: [email], references: [email], map: "fk_user_kadep") // Link kembali ke user
 
-  @@index([email], map: "fk_user_kadep")
+  @@index([email])
 }
 
 model kuota_semhas {
@@ -92,11 +93,11 @@ model nilai_semhas {
 }
 
 model panduan {
-  id_panduan     String    @id @db.VarChar(50)    // Mengubah dari Int ke String
+  id_panduan     Int      @id
   nama_file      String   @db.VarChar(255)
   deskripsi      String   @db.Text
   tanggal_unggah DateTime @db.Date
-  niku           String   @db.VarChar(50)   // Mengubah dari Int ke String
+  niku           Int
   admin          admin    @relation(fields: [niku], references: [niku], onDelete: NoAction, onUpdate: NoAction, map: "fk_admin_panduan")
 
   @@index([niku], map: "fk_admin_panduan")
@@ -143,6 +144,13 @@ model rubik {
   nilai_semhas nilai_semhas[]
 }
 
+enum Role {
+  ADMIN
+  DOSEN
+  KADEP
+  MAHASISWA
+}
+
 model user {
   password      String      @db.VarChar(99)
   email         String      @id @db.VarChar(100)
@@ -154,3 +162,4 @@ model user {
   kadep         kadep[]
   pendaftaran   pendaftaran[]
 }
+
