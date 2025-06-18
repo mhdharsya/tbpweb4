@@ -43,14 +43,15 @@ model dosen {
 }
 
 model evaluasi_sistem {
-  id_evaluasi    String    @id @db.VarChar(50)     // Mengubah dari Int ke String
-  kualitas_ui    String   @db.VarChar(100)
-  kinerja_sistem String   @db.VarChar(100)
-  kritik_saran   String   @db.Text
-  tanggal_isi    DateTime @db.Date
-  nim            String   @db.VarChar(50)          // Mengubah dari BigInt ke String
-
-  @@index([nim], map: "fk_mahasiswa_evaluasi_sistem")
+  id               String       @id @default(cuid()) @db.VarChar(50)
+  fitur            Int
+  konten           Int
+  responsif        Int
+  kemudahan        Int
+  dokumentasi      Int
+  saran            String?
+  kritik           String?
+  createdAt        DateTime     @default(now())
 }
 
 model jadwal_dosen {
