@@ -50,7 +50,7 @@ model jadwal_dosen {
 
 model jadwal_pendaftaran {
   id_jadwal      String       @id @db.VarChar(100)
-  id_pendaftaran String?      @db.VarChar(50)   // Ubah menjadi opsional dengan `?`
+  id_pendaftaran Int
   jam_mulai      DateTime     @db.Time(0)
   jam_selesai    DateTime     @db.Time(0)
   status         String       @db.VarChar(50)
@@ -95,7 +95,7 @@ model nilai_semhas {
   bobot_penilaian Int
   komentar        String      @db.Text
   id_rubik        String      @db.VarChar(50)   // Mengubah dari Int ke String
-  id_pendaftaran  String      @db.VarChar(50)   // Mengubah dari Int ke String
+  id_pendaftaran  Int
   pendaftaran     pendaftaran @relation(fields: [id_pendaftaran], references: [id_pendaftaran], onUpdate: Restrict, map: "fk_pendaftaran_nilai_semhas")
   rubik           rubik       @relation(fields: [id_rubik], references: [id_rubik], onDelete: NoAction, onUpdate: NoAction, map: "fk_rubik_nilai_semhas")
 
@@ -115,7 +115,7 @@ model panduan {
 }
 
 model pendaftaran {
-  id_pendaftaran     String   @id @db.VarChar(50)   // Mengubah dari Int ke String
+  id_pendaftaran     Int      @id @default(autoincrement())  // Mengubah dari String ke Int dan menambahkan auto-increment
   nim                String?  @db.VarChar(50)       // Menjadi opsional
   nama_lengkap       String?  @db.VarChar(255)
   judul              String?  @db.VarChar(799)
