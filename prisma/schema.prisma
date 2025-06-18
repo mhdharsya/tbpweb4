@@ -111,6 +111,7 @@ model panduan {
   deskripsi      String   @db.Text
   tanggal_unggah DateTime @db.Date
   niku           String
+  file          Bytes    @db.Blob
   admin          admin    @relation(fields: [niku], references: [niku], onDelete: NoAction, onUpdate: NoAction, map: "fk_admin_panduan")
 
   @@index([niku], map: "fk_admin_panduan")
