@@ -4,7 +4,7 @@ const { login, register } = require('../controllers/authController');
 const { auth } = require('../middleware/authMiddleware');
 
 /* GET home page. */
-router.get('/', (req, res) => {
+router.get('/login', (req, res) => {
   res.render('index');
 });
 
