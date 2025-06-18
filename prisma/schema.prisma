@@ -7,6 +7,20 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model berkas_pdf {
+  id            Int      @id @default(autoincrement())
+  nama_file     String   @db.VarChar(255)
+  tipe          String   @db.VarChar(50)  // contoh: "KRS", "Laporan", "PPT"
+  file          Bytes    @db.Blob
+  uploaded_by   String   @db.VarChar(100) // email user pengunggah
+  createdAt     DateTime @default(now())
+
+  user          user     @relation(fields: [uploaded_by], references: [email], onDelete: Cascade)
+
+  @@index([uploaded_by])
+}
+
+
 model admin {
   niku       Int       @id
   nama_admin String    @db.VarChar(255)

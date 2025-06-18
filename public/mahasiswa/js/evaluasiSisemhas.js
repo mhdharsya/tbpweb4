@@ -82,6 +82,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             const formData = getFormData();
             const errors = validateForm(formData);
+            const token = localStorage.getItem('jwt_token'); 
             
             if (errors.length > 0) {
                 showMessage(errors.join('\n'), 'error');
@@ -100,7 +101,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     body: JSON.stringify(formData) // Data yang dikirim dengan nama kolom baru
                 });
                 
-                let result;
+                let results;
                 try {
                     result = await response.json();
                 } catch (jsonError) {

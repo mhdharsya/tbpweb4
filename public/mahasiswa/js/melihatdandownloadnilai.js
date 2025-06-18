@@ -1,6 +1,4 @@
 document.addEventListener("DOMContentLoaded", function () {
-    
-
     const tbody = document.getElementById("nilai-body");
 
     dataNilai.forEach((item) => {
@@ -20,9 +18,33 @@ document.addEventListener("DOMContentLoaded", function () {
 
         tbody.appendChild(row);
     });
+});
 
+function getCookieValue(name) {
+    const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+    if (match) return decodeURIComponent(match[2]);
+    return null;
+}
+
+function downloadPDF() {
+    const nama = getCookieValue("nama") || "Mahasiswa";
+
+    const doc = new window.jspdf.jsPDF();
+    doc.setFontSize(16);
+    doc.text(`Nilai ${nama} - Seminar Akhir`, 14, 15);
+
+    const headers = [["No", "Kategori", "Nilai"]];
+    const rows = dataNilai.map(item => [item.no, item.kategori, item.nilai]);
+
+    doc.autoTable({
+        head: headers,
+        body: rows,
+        startY: 25,
+        styles: { fontSize: 12 },
+        headStyles: { fillColor: [41, 128, 185] },
+        alternateRowStyles: { fillColor: [245, 245, 245] }
     });
 
-function cetakNilai() {
-    window.print();
+    const filename = `nilai_${nama.replace(/\s+/g, "_")}.pdf`;
+    doc.save(filename);
 }

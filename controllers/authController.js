@@ -27,9 +27,17 @@ const login = async (req, res) => {
       { expiresIn: '1h' }
     );
 
-    res.cookie('token', token, { httpOnly: true, maxAge: 3600000 }); // 1 hour expiration
+    // ✅ Tambahan penting: opsi lengkap cookie
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: false, // ubah ke true di production pakai HTTPS
+      sameSite: 'lax',
+      maxAge: 60 * 60 * 1000, // 1 jam
+    });
+
     return res.redirect('/dashboard');
   } catch (error) {
+    console.error('Login Error:', error);
     return res.status(500).json({ message: 'Server error' });
   }
 };
@@ -43,7 +51,7 @@ const register = async (req, res) => {
     });
 
     if (existingUser) {
-      return res.status(400).json({ message: 'username already exists' });
+      return res.status(400).json({ message: 'Username already exists' });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -54,8 +62,10 @@ const register = async (req, res) => {
 
     return res.status(201).json({ message: 'User created successfully' });
   } catch (error) {
+    console.error('Register Error:', error);
     return res.status(500).json({ message: 'Server error' });
   }
 };
 
 module.exports = { login, register };
+

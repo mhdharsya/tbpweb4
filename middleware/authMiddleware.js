@@ -1,8 +1,6 @@
 const jwt = require('jsonwebtoken');
 
-
 const auth = (req, res, next) => {
-  console.log('[AUTH_MIDDLEWARE] Auth middleware dipanggil.'); 
   const token = req.cookies.token;
 
   if (!token) {

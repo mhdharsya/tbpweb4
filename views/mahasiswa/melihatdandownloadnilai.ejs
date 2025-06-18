@@ -7,21 +7,19 @@
     <link rel="stylesheet" href="/mahasiswa/css/melihatdandownloadnilai.css">
 </head>
 <body>
-    <div class="container">
-        <header class="header">
-            <div class="header-left">
-                <img src="logo.png" alt="Logo" class="logo">
-                <span class="app-title">SISemhas - Universitas Andalas</span>
-            </div>
-        </header>
+    <!-- Header -->
+    <header class="header">
+        <img class="logo" src="/mahasiswa/asset/image/logo.png" alt="Logo Universitas Andalas">
+        <div class="header-title">SISemhas - Universitas Andalas</div>
+    </header>
 
-    <!-- Navigation -->
-    <!-- Navigation Tabs -->
+        <!-- Navigation Tabs -->
         <nav class="nav-tabs">
-        <div class="tab">Dashboard</div>
-        <div class="tab">Pendaftaran</div>
-        <div class="tab" data-tab="riwayat">Riwayat Semhas</div>
-        <div class="tab book-guide"onclick="window.location.href='panduan'">Buku Panduan 📖</div>
+          <div class="nav-left">
+            <a href="/dashboardMhs" class="nav-tab">Dashboard</a>
+            <a href="/daftar/" class="nav-tab">Pendaftaran</a>
+            <a href="/riwayat/" class="nav-tab">Riwayat Semhas</a>
+          </div>
         </nav>
         
          <div class="breadcrumb">
@@ -49,11 +47,14 @@
             </table>
 
             <div class="button-wrapper">
-                <button class="btn-submit" onclick="cetakNilai()">Cetak Nilai</button>
+                <button class="btn-submit" onclick="downloadPDF()">Download PDF</button>
             </div>
         </main>
     </div>
 
     <script src="/mahasiswa/js/melihatdandownloadnilai.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+
 </body>
 </html>
