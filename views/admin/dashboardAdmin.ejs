@@ -10,6 +10,30 @@
 <body>
     <div id="app"></div>
 
-    <script src="/admin/js/dashboard.js"></script>
+    <!-- <script src="/admin/js/dashboard.js"></script> -->
+
+    <script src="/admin/js/utils.js"></script>
+<script src="/admin/js/layout.js"></script>
+<script src="/admin/js/pages/daftarRoleUser.js"></script>
+<script src="/admin/js/pages/permintaanAkses.js"></script>
+<script src="/admin/js/pages/panduanSeminar.js"></script>
+<script src="/admin/js/pages/evaluasiSistem.js"></script>
+
+
+<script>
+    // Ambil initialPageId yang diluluskan dari backend EJS
+    // Jika tidak ada, fallback ke 'daftarRoleUser' sebagai default
+    const initialPageId = "<%= typeof initialPageId !== 'undefined' ? initialPageId : 'daftarRoleUser' %>";
+
+    document.addEventListener('DOMContentLoaded', async () => {
+        const appContainer = document.getElementById('app');
+        if (appContainer) {
+            await renderPage(initialPageId); // <--- Luluskan ID halaman yang benar
+        } else {
+            console.error("Elemen dengan ID 'app' tidak ditemukan di DOM. Konten tidak dapat dirender.");
+        }
+    });
+</script>
+
 </body>
 </html>

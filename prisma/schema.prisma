@@ -10,38 +10,42 @@ datasource db {
 model admin {
   niku       Int       @id
   nama_admin String    @db.VarChar(255)
-  email      String    @db.VarChar(100)
-  user       user      @relation(fields: [email], references: [email], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_admin")
+  email      String    @unique @db.VarChar(100)
+  user        user     @relation(fields: [email], references: [email], map: "fk_user_admin") // Link kembali ke user
   panduan    panduan[]
 
-  @@index([email], map: "fk_user_admin")
+  @@index([email])
 }
 
 model dosen {
   nip_dosen       Int           @id
   nama_dosen      String        @db.VarChar(255)
-  email           String        @db.VarChar(100)
+  email           String        @unique @db.VarChar(100)
   bidang_keahlian String        @db.VarChar(99)
   id_jadwal_dosen Int
   jadwal_dosen    jadwal_dosen  @relation(fields: [id_jadwal_dosen], references: [id_jadwal_dosen], onDelete: NoAction, onUpdate: NoAction, map: "fk_jadwal_dosen_dosen")
-  user            user          @relation(fields: [email], references: [email], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_dosen")
+  user        user     @relation(fields: [email], references: [email], map: "fk_user_dosen") // Link kembali ke user
   pendaftaran     pendaftaran[]
 
   @@index([id_jadwal_dosen], map: "fk_jadwal_dosen_dosen")
-  @@index([email], map: "fk_user_dosen")
+  @@index([email])
 }
 
 model evaluasi_sistem {
-  id_evaluasi    Int       @id
-  kualitas_ui    String    @db.VarChar(100)
-  kinerja_sistem String    @db.VarChar(100)
-  kritik_saran   String    @db.Text
-  tanggal_isi    DateTime  @db.Date
-  nim            Int
-  mahasiswa      mahasiswa @relation(fields: [nim], references: [nim], onDelete: NoAction, onUpdate: NoAction, map: "fk_mahasiswa_evaluasi_sistem")
+   id              Int      @id @default(autoincrement())
 
-  @@index([nim], map: "fk_mahasiswa_evaluasi_sistem")
+  fitur           Int
+  konten          Int
+  responsif       Int
+  kemudahan       Int
+  dokumentasi     Int
+  saran           String?
+  kritik          String?
+  createdAt       DateTime @default(now())
+
+  
 }
+
 
 model jadwal_dosen {
   id_jadwal_dosen Int      @id
@@ -68,10 +72,10 @@ model jadwal_pendaftaran {
 model kadep {
   nip_kadep  Int    @id
   nama_kadep String @db.VarChar(99)
-  email      String @db.VarChar(100)
-  user       user   @relation(fields: [email], references: [email], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_kadep")
+  email      String @unique @db.VarChar(100)
+  user        user     @relation(fields: [email], references: [email], map: "fk_user_kadep") // Link kembali ke user
 
-  @@index([email], map: "fk_user_kadep")
+  @@index([email])
 }
 
 model kuota_semhas {
@@ -82,15 +86,17 @@ model kuota_semhas {
 }
 
 model mahasiswa {
-  nim             Int               @id
-  nama_lengkap    String            @db.VarChar(99)
-  email           String            @db.VarChar(100)
-  status          String            @db.VarChar(99)
-  evaluasi_sistem evaluasi_sistem[]
-  user            user              @relation(fields: [email], references: [email], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_mahasiswa")
+  nim             Int             @id
+  nama_lengkap    String          @db.VarChar(99)
+  email           String?         @unique @db.VarChar(100) // Ini tetap foreign key opsional ke user.email
+  request_email   String?         @db.VarChar(100) // <-- KOLOM BARU UNTUK EMAIL ASLI PERMINTAAN
+  status          String          @db.VarChar(99)
+  user            user?           @relation(fields: [email], references: [email], map: "fk_mahasiswa_user")
   pendaftaran     pendaftaran[]
 
-  @@index([email], map: "fk_user_mahasiswa")
+  @@index([email]) // Index untuk email (FK)
+  // Anda mungkin juga ingin @unique pada request_email jika setiap permintaan harus dari email unik
+  // @@unique([request_email]) // Opsional, jika request_email juga harus unik
 }
 
 model nilai_semhas {
@@ -108,12 +114,12 @@ model nilai_semhas {
 }
 
 model panduan {
-  id_panduan     Int      @id
-  nama_file      String   @db.VarChar(255)
-  deskripsi      String   @db.Text
+  id_panduan    Int      @id @default(autoincrement()) // Asumsi ID utama adalah autoincrement
+  nama_file     String   @db.VarChar(255)
+  file_data     Bytes?   @db.MediumBlob // <-- KOLOM BARU UNTUK MENYIMPAN DATA PDF ASLI (BISA NULL)
   tanggal_unggah DateTime @db.Date
-  niku           Int
-  admin          admin    @relation(fields: [niku], references: [niku], onDelete: NoAction, onUpdate: NoAction, map: "fk_admin_panduan")
+  niku          Int
+  admin         admin    @relation(fields: [niku], references: [niku], onDelete: NoAction, onUpdate: NoAction, map: "fk_admin_panduan")
 
   @@index([niku], map: "fk_admin_panduan")
 }
@@ -162,13 +168,20 @@ model rubik {
   nilai_semhas nilai_semhas[]
 }
 
+enum Role {
+  ADMIN
+  DOSEN
+  KADEP
+  MAHASISWA
+}
+
 model user {
-  email     String      @id @db.VarChar(100)
-  password  String      @db.VarChar(99)
-  role      String      @db.VarChar(50)
-  admin     admin[]
-  dosen     dosen[]
-  kadep     kadep[]
-  mahasiswa mahasiswa[]
+  email     String @id @db.VarChar(100)
+  password  String @db.VarChar(99)
+  role      Role
+  admin     admin?
+  dosen     dosen?
+  kadep     kadep?
+  mahasiswa mahasiswa?
 }
 
