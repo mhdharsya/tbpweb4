@@ -4,9 +4,14 @@ const { login, register } = require('../controllers/authController');
 const { auth } = require('../middleware/authMiddleware');
 
 /* GET home page. */
-router.get('/', (req, res) => {
+router.get('/login', (req, res) => {
   res.render('index');
 });
+
+router.get('/register', (req, res) => {
+  res.render('register', { title: 'Register' });
+});
+
 
 router.get('/dashboard', auth, (req, res) =>{
   if (req.user.role === 'ADMIN') {

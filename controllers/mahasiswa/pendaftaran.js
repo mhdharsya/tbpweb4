@@ -61,7 +61,7 @@ exports.submitFormPendaftaran = async (req, res) => {
       }
     });
 
-    res.redirect('/dashboardMhs'); // Ganti sesuai halaman setelah submit
+    res.redirect('/mahasiswa/upload'); // Ganti sesuai halaman setelah submit
   } catch (error) {
     console.error('Gagal menyimpan pendaftaran:', error);
     res.status(500).send('Terjadi kesalahan saat menyimpan data.');
