@@ -8,27 +8,24 @@ datasource db {
 }
 
 model admin {
-  niku       Int       @id
+  niku       String    @id @db.VarChar(50)    // Mengubah dari Int ke String
   nama_admin String    @db.VarChar(255)
-  email      String    @db.VarChar(100)
-  user       user      @relation(fields: [email], references: [email], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_admin")
+  email      String    @unique @db.VarChar(100)
+  user        user     @relation(fields: [email], references: [email], map: "fk_user_admin") // Link kembali ke user
   panduan    panduan[]
 
-  @@index([email], map: "fk_user_admin")
+  @@index([email])
 }
 
 model dosen {
-  nip_dosen       Int           @id
-  nama_dosen      String        @db.VarChar(255)
-  email           String        @db.VarChar(100)
-  bidang_keahlian String        @db.VarChar(99)
-  id_jadwal_dosen Int
-  jadwal_dosen    jadwal_dosen  @relation(fields: [id_jadwal_dosen], references: [id_jadwal_dosen], onDelete: NoAction, onUpdate: NoAction, map: "fk_jadwal_dosen_dosen")
-  user            user          @relation(fields: [email], references: [email], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_dosen")
-  pendaftaran     pendaftaran[]
+  id_user        String      @id @db.VarChar(50) // Menjadikan id_user sebagai primary key untuk dosen
+  bidang_keahlian String?    @db.VarChar(99)
+  id_jadwal_dosen String    @db.VarChar(50)    
+  jadwal_dosen   jadwal_dosen @relation(fields: [id_jadwal_dosen], references: [id_jadwal_dosen], onDelete: NoAction, onUpdate: NoAction)
+  user           user        @relation(fields: [id_user], references: [id_user], onDelete: Cascade) // Relasi dengan user (id_user)
 
-  @@index([id_jadwal_dosen], map: "fk_jadwal_dosen_dosen")
-  @@index([email], map: "fk_user_dosen")
+  @@index([id_jadwal_dosen], map: "fk_jadwal_dosen_dosen") 
+  @@index([id_user], map: "fk_user_dosen")  // Relasi dengan id_user di user
 }
 
 model evaluasi_sistem {
@@ -44,10 +41,10 @@ model evaluasi_sistem {
 }
 
 model jadwal_dosen {
-  id_jadwal_dosen Int      @id
-  tanggal_mulai   DateTime @db.Date
-  tanggal_selesai DateTime @db.Date
-  dosen           dosen[]
+  id_jadwal_dosen String      @id @db.VarChar(50)  // Mengubah dari Int ke String
+  tanggal_mulai   DateTime    @db.Date
+  tanggal_selesai DateTime    @db.Date
+  dosen           dosen[] // Relasi dengan dosen
 }
 
 model jadwal_pendaftaran {
@@ -57,50 +54,38 @@ model jadwal_pendaftaran {
   jam_selesai    DateTime     @db.Time(0)
   status         String       @db.VarChar(50)
   dosen_penguji  String       @db.VarChar(99)
-  id_kuota       Int
+  id_kuota       String       @db.VarChar(50)   // Ubah menjadi opsional jika perlu
   kuota_semhas   kuota_semhas @relation(fields: [id_kuota], references: [id_kuota], onDelete: NoAction, onUpdate: NoAction, map: "fk_kuota_semhas_jadwal_pendaftaran")
-  pendaftaran    pendaftaran  @relation(fields: [id_pendaftaran], references: [id_pendaftaran], onDelete: NoAction, onUpdate: NoAction, map: "fk_pendaftaran_jadwal_pendaftaran")
+  pendaftaran    pendaftaran?  @relation(fields: [id_pendaftaran], references: [id_pendaftaran], onUpdate: Restrict, map: "fk_pendaftaran_jadwal_pendaftaran")  // Tambahkan `?` untuk menjadikannya opsional
 
   @@index([id_kuota], map: "fk_kuota_semhas_jadwal_pendaftaran")
   @@index([id_pendaftaran], map: "fk_pendaftaran_jadwal_pendaftaran")
 }
 
 model kadep {
-  nip_kadep  Int    @id
+  nip_kadep  String @id @db.VarChar(50)   // Mengubah dari BigInt ke String
   nama_kadep String @db.VarChar(99)
-  email      String @db.VarChar(100)
-  user       user   @relation(fields: [email], references: [email], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_kadep")
+  email      String @unique @db.VarChar(100)
+  user        user     @relation(fields: [email], references: [email], map: "fk_user_kadep") // Link kembali ke user
 
-  @@index([email], map: "fk_user_kadep")
+  @@index([email])
 }
 
 model kuota_semhas {
-  id_kuota           Int                  @id
+  id_kuota           String    @id @db.VarChar(50)   // Mengubah dari Int ke String
   kuota_max          Int
-  minggu             DateTime             @db.Time(0)
+  minggu             DateTime @db.Time(0)
   jadwal_pendaftaran jadwal_pendaftaran[]
 }
 
-model mahasiswa {
-  nim             Int               @id
-  nama_lengkap    String            @db.VarChar(99)
-  email           String            @db.VarChar(100)
-  status          String            @db.VarChar(99)
-  evaluasi_sistem evaluasi_sistem[]
-  user            user              @relation(fields: [email], references: [email], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_mahasiswa")
-  pendaftaran     pendaftaran[]
-
-  @@index([email], map: "fk_user_mahasiswa")
-}
-
 model nilai_semhas {
-  id_nilai        Int         @id
+  id_nilai        String      @id @db.VarChar(50)   // Mengubah dari Int ke String
   status_semhas   String      @db.VarChar(50)
   bobot_penilaian Int
   komentar        String      @db.Text
-  id_rubik        Int
+  id_rubik        String      @db.VarChar(50)   // Mengubah dari Int ke String
   id_pendaftaran  Int
-  pendaftaran     pendaftaran @relation(fields: [id_pendaftaran], references: [id_pendaftaran], onDelete: NoAction, onUpdate: NoAction, map: "fk_pendaftaran_nilai_semhas")
+  pendaftaran     pendaftaran @relation(fields: [id_pendaftaran], references: [id_pendaftaran], onUpdate: Restrict, map: "fk_pendaftaran_nilai_semhas")
   rubik           rubik       @relation(fields: [id_rubik], references: [id_rubik], onDelete: NoAction, onUpdate: NoAction, map: "fk_rubik_nilai_semhas")
 
   @@index([id_pendaftaran], map: "fk_pendaftaran_nilai_semhas")
@@ -119,35 +104,32 @@ model panduan {
 }
 
 model pendaftaran {
-  id_pendaftaran     Int                  @id
-  nim                Int
-  nama_lengkap       String               @db.VarChar(255)
-  judul              String               @db.VarChar(799)
-  bidang_penelitian  String               @db.VarChar(99)
-  nip_dosen          Int
-  nim_mhs            Int
-  nama_laporan       String               @db.VarChar(255)
-  file_laporan       Bytes                @db.Blob
-  nama_krs           String               @db.VarChar(255)
-  file_krs           Bytes                @db.Blob
-  nama_pengesahan    String               @db.VarChar(255)
-  file_pengesahan    Bytes                @db.Blob
-  nama_ppt           String               @db.VarChar(255)
-  file_ppt           Bytes                @db.Blob
-  id_periode         Int
+  id_pendaftaran     Int      @id @default(autoincrement()) 
+  judul              String?  @db.VarChar(799)
+  bidang_penelitian  String?  @db.VarChar(99)
+  nip_dosen          String?  @db.VarChar(50)      // Menjadi opsional
+  nama_laporan       String?  @db.VarChar(255)
+  file_laporan       Bytes?   @db.Blob
+  nama_krs           String?  @db.VarChar(255)
+  file_krs           Bytes?   @db.Blob
+  nama_pengesahan    String?  @db.VarChar(255)
+  file_pengesahan    Bytes?   @db.Blob
+  nama_ppt           String?  @db.VarChar(255)
+  file_ppt           Bytes?   @db.Blob
+  id_periode         String?  @db.VarChar(50)      // Menjadi opsional
   jadwal_pendaftaran jadwal_pendaftaran[]
   nilai_semhas       nilai_semhas[]
-  dosen              dosen                @relation(fields: [nip_dosen], references: [nip_dosen], onDelete: NoAction, onUpdate: NoAction, map: "fk_dosen_pendaftaran")
-  mahasiswa          mahasiswa            @relation(fields: [nim], references: [nim], onDelete: NoAction, onUpdate: NoAction, map: "fk_mahasiswa_pendaftaran")
-  periode_semhas     periode_semhas       @relation(fields: [id_periode], references: [id_periode], onDelete: NoAction, onUpdate: NoAction, map: "fk_periode_semhas_pendaftaran")
+  periode_semhas     periode_semhas?  @relation(fields: [id_periode], references: [id_periode], onDelete: NoAction, onUpdate: NoAction)
+  user               user     @relation(fields: [id_user], references: [id_user], onDelete: Cascade) // Relasi dengan user
+  id_user            String   @db.VarChar(50) // id_user mahasiswa atau dosen
 
   @@index([nip_dosen], map: "fk_dosen_pendaftaran")
-  @@index([nim], map: "fk_mahasiswa_pendaftaran")
   @@index([id_periode], map: "fk_periode_semhas_pendaftaran")
 }
 
+
 model periode_semhas {
-  id_periode    Int           @id
+  id_periode    String       @id @db.VarChar(50)   // Mengubah dari Int ke String
   semester      Int
   tanggal_buka  DateTime      @db.Date
   tanggal_tutup DateTime      @db.Date
@@ -156,18 +138,28 @@ model periode_semhas {
 }
 
 model rubik {
-  id_rubik     Int            @id
-  kriteria     String         @db.VarChar(255)
+  id_rubik     String    @id @db.VarChar(50)   // Mengubah dari Int ke String
+  kriteria     String   @db.VarChar(255)
   bobot        Int
   nilai_semhas nilai_semhas[]
 }
 
-model user {
-  email     String      @id @db.VarChar(100)
-  password  String      @db.VarChar(99)
-  role      String      @db.VarChar(50)
-  admin     admin[]
-  dosen     dosen[]
-  kadep     kadep[]
-  mahasiswa mahasiswa[]
+enum Role {
+  ADMIN
+  DOSEN
+  KADEP
+  MAHASISWA
 }
+
+model user {
+  password      String      @db.VarChar(99)
+  email         String      @id @db.VarChar(100)
+  role          String      @db.VarChar(50)
+  id_user       String?     @unique(map: "id_user") @db.VarChar(50) // id_user digunakan untuk mahasiswa dan dosen
+  nama_lengkap  String      @db.VarChar(99) // Nama Lengkap untuk semua role (mahasiswa, dosen, admin, dll)
+  admin         admin[]
+  dosen         dosen[]
+  kadep         kadep[]
+  pendaftaran   pendaftaran[]
+}
+

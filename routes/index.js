@@ -4,12 +4,27 @@ const { login, register } = require('../controllers/authController');
 const { auth } = require('../middleware/authMiddleware');
 
 /* GET home page. */
-router.get('/', (req, res) => {
-  res.render('index', { title: 'Express' });
+router.get('/login', (req, res) => {
+  res.render('index');
 });
 
+router.get('/register', (req, res) => {
+  res.render('register', { title: 'Register' });
+});
+
+
 router.get('/dashboard', auth, (req, res) =>{
-  res.render('dashboard', { title: 'Express' });
+  if (req.user.role === 'ADMIN') {
+    return res.render('dashboard admin');
+  } else if (req.user.role === 'DOSEN') {
+    return res.render('dashboard dosen');
+  } else if (req.user.role === 'KADEP') {
+    return res.render('kadep');
+  } else if (req.user.role === 'MAHASISWA') {
+    return res.render('mahasiswa/dashboardMhs');
+  } else {
+    return res.status(403).json({ message: 'Access denied. Invalid role.' });
+  }
 });
 
 router.post('/login', login);

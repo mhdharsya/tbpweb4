@@ -11,6 +11,7 @@ async function main() {
     {
       username: 'admin',
       password: 'admin123',
+      role : 'admin'
     },
   ];
 
@@ -23,6 +24,7 @@ async function main() {
       data: {
         username: userData.username,
         password: hashedPassword,
+        role: userData.role || 'user', // Default role is 'user' if not specified
       },
     });
   }

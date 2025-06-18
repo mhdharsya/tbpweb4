@@ -1,8 +1,11 @@
 var createError = require('http-errors');
 var express = require('express');
+var app = express();
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var bodyParser = require('body-parser');
+var cors = require('cors');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -36,6 +39,12 @@ app.use('/Dosen/riwayatseminar', riwayatseminarRouter);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
+});
+
+app.use((req, res, next) => {
+    console.log('GLOBAL DEBUG: Request URL:', req.url);
+    console.log('GLOBAL DEBUG: req.query (at start):', req.query);
+    next(); // Sangat penting untuk memanggil next()
 });
 
 // error handler
