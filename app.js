@@ -9,6 +9,12 @@ var cors = require('cors');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var dashboardMhsRouter = require('./routes/mahasiswa/dashboardMhs');
+var panduanRouter = require('./routes/mahasiswa/panduan');
+var evaluasiRouter = require('./routes/mahasiswa/evaluasiSisemhas');
+var melihatRouter = require('./routes/mahasiswa/melihatdandownloadnilai');
+var checkRouter = require('./routes/mahasiswa/checkberkas');
+var panduanRouter = require('./routes/mahasiswa/panduan');
 
 var app = express();
 
@@ -27,6 +33,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/evaluasi', evaluasiRouter);
+app.use('/panduan', panduanRouter);
+app.use('/melihat', melihatRouter);
+app.use('/check', checkRouter);
+app.use('/dashboardMhs', dashboardMhsRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
