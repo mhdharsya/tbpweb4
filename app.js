@@ -9,12 +9,7 @@ var cors = require('cors');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-var evaluasiRouter = require('./routes/mahasiswa/evaluasiSisemhas');
-var melihatRouter = require('./routes/mahasiswa/melihatdandownloadnilai');
-var panduanRouter = require('./routes/mahasiswa/panduan');
-var checkRouter = require('./routes/mahasiswa/checkberkas');
 var mahasiswaRouter = require('./routes/mahasiswa/dashboardMhs');
-var perbaikanRouter = require('./routes/mahasiswa/revisi');
 var pendaftaranRouter = require('./routes/mahasiswa/pendaftaran');
 var uploadRouter = require('./routes/mahasiswa/upload');
 
@@ -32,18 +27,17 @@ app.use(express.static('public'));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
+app.use(logger('dev'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
+
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-app.use('/mahasiswa', evaluasiRouter);
-app.use('/melihat', melihatRouter);
-app.use('/panduan', panduanRouter);
-app.use('/check', checkRouter);
-app.use('/revisi', perbaikanRouter);
-
 app.use('/dashboardMhs', mahasiswaRouter);
 app.use('/daftar', pendaftaranRouter);
 app.use('/mahasiswa/upload', uploadRouter);
-
 
 app.use((req, res, next) => {
   console.log('🔥 DEBUG Middleware:', req.method, req.url, req.body);
@@ -54,6 +48,12 @@ app.use((req, res, next) => {
 app.use(function(req, res, next) {
   console.log(`[APP.JS] Request method: ${req.method}, URL: ${req.url}`);
   next(createError(404));
+});
+
+app.use((req, res, next) => {
+    console.log('GLOBAL DEBUG: Request URL:', req.url);
+    console.log('GLOBAL DEBUG: req.query (at start):', req.query);
+    next(); // Sangat penting untuk memanggil next()
 });
 
 // error handler
