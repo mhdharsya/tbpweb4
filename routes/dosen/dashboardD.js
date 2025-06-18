@@ -1,8 +1,12 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 
-router.get('/', (req, res) => {
-  res.render('dosen/dashboardD');
-});
+// Panggil middleware dan controller dengan path & NAMA FILE yang benar
+// Nama file middleware Anda adalah 'dosen.js'
+const dosenMiddleware = require('../../middleware/dosen'); 
+const dosenController = require('../../controllers/dosen/dosen');
+
+router.get('/', dosenMiddleware, dosenController.getDashboard);
+
 
 module.exports = router;

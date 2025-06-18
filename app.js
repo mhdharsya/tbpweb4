@@ -7,6 +7,9 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var dosenRouter = require('./routes/dosen/dashboardD');
+var mahasiswaseminarRouter = require('./routes/dosen/mahasiswaseminar');
+var penilaianRouter = require('./routes/dosen/penilaian');
+var riwayatseminarRouter = require('./routes/dosen/riwayatseminar');
 
 var app = express();
 
@@ -17,11 +20,18 @@ app.set('view engine', 'ejs');
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+// <-- TAMBAHKAN BARIS INI UNTUK MENGAKTIFKAN COOKIE PARSER -->
+app.use(cookieParser());
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/Dosen', dosenRouter);
+app.use('/Dosen/mahasiswaseminar', mahasiswaseminarRouter);
+app.use('/Dosen/penilaian', penilaianRouter);
+app.use('/Dosen/riwayatseminar', riwayatseminarRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
