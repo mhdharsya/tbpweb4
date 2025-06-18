@@ -110,7 +110,7 @@ model panduan {
   nama_file      String   @db.VarChar(255)
   deskripsi      String   @db.Text
   tanggal_unggah DateTime @db.Date
-  niku           Int
+  niku           String
   admin          admin    @relation(fields: [niku], references: [niku], onDelete: NoAction, onUpdate: NoAction, map: "fk_admin_panduan")
 
   @@index([niku], map: "fk_admin_panduan")
@@ -174,5 +174,6 @@ model user {
   dosen         dosen[]
   kadep         kadep[]
   pendaftaran   pendaftaran[]
+  berkas_pdf    berkas_pdf[]
 }
 

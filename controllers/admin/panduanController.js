@@ -1,5 +1,5 @@
 // controllers/panduanController.js
-const panduanService = require('../services/panduanService');
+const panduanService = require('../../services/panduanService');
 // Untuk handle multipart/form-data (upload file)
 const multer = require('multer'); // Pastikan sudah diinstal: npm install multer
 const upload = multer(); // Inisialisasi multer tanpa penyimpanan di disk, file masuk ke req.file/req.files

@@ -4,7 +4,7 @@
 // const { PrismaClient } = require('@prisma/client');
 // const prisma = new PrismaClient();
 
-const userService = require('../services/userService'); // Pastikan path ini benar
+const userService = require('../../services/userService'); // Pastikan path ini benar
 
 
 const getAllUsersWithDetailsOptimized = async (req, res) => {
