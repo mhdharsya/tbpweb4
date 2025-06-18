@@ -1,8 +1,7 @@
-
 var express = require('express');
 var router = express.Router();
 
-const evaluationController = require('../../controllers/evaluationController');
+const evaluationController = require('../../controllers/admin/evaluationController');
 
 /* GET /mahasiswa - Menampilkan form evaluasi */
 router.get('/', (req, res) => {
