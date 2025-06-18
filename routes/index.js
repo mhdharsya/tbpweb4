@@ -15,7 +15,7 @@ router.get('/register', (req, res) => {
 
 router.get('/dashboard', auth, (req, res) =>{
   if (req.user.role === 'ADMIN') {
-    return res.render('dashboard admin');
+    return res.render('admin/dashboardAdmin');
   } else if (req.user.role === 'DOSEN') {
     return res.render('dashboard dosen');
   } else if (req.user.role === 'KADEP') {

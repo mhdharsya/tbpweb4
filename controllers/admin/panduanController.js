@@ -68,11 +68,11 @@ const getPanduanFileApi = async (req, res) => {
     try {
     const panduan = await panduanService.getPanduanFile(id_panduan);
 
-    if (!panduan || !panduan.file_data) {
+    if (!panduan || !panduan.file) {
         console.error(`DEBUG FILE CONTROLLER: Data file tidak ditemukan di service untuk ID: ${id_panduan}`);
         return res.status(404).json({ message: 'File panduan tidak ditemukan.' });
     }
-    console.log(`DEBUG FILE CONTROLLER: Mengirim file: ${panduan.nama_file}, ukuran: ${panduan.file_data.length} bytes`);
+    console.log(`DEBUG FILE CONTROLLER: Mengirim file: ${panduan.nama_file}, ukuran: ${panduan.file.length} bytes`);
 
     // --- TAMBAHKAN KODE DEBUG INI ---
     const tempFileName = `temp_debug_panduan_${Date.now()}.pdf`; // Nama unik
@@ -85,7 +85,7 @@ const getPanduanFileApi = async (req, res) => {
     }
 
     try {
-        fs.writeFileSync(tempFilePath, panduan.file_data);
+        fs.writeFileSync(tempFilePath, panduan.file);
         console.log(`DEBUG FILE CONTROLLER: Buffer PDF dari DB berhasil ditulis ke: ${tempFilePath}`);
     } catch (writeErr) {
         console.error('DEBUG FILE CONTROLLER: Gagal menulis file temp:', writeErr);
@@ -94,7 +94,7 @@ const getPanduanFileApi = async (req, res) => {
 
     res.setHeader('Content-Type', 'application/pdf');
     res.setHeader('Content-Disposition', `attachment; filename="${panduan.nama_file}"`); // Menggunakan attachment
-    res.send(panduan.file_data); // Kirim buffer ke browser
+    res.send(panduan.file); // Kirim buffer ke browser
 
 } catch (error) {
     console.error("Error in panduanController.getPanduanFileApi:", error.message);
