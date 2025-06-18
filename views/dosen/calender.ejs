@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Kalender Bulan <%= month %>/<%= year %></title>
+    <script src="/js/schedule.js" defer></script>
+</head>
+<body>
+    <h1>Kalender <%= month %> - <%= year %></h1>
+    <div id="calendar-grid">
+        <% for (let i = 1; i <= 31; i++) { 
+            const dateStr = `${year}-${month.toString().padStart(2, '0')}-${i.toString().padStart(2, '0')}`;
+            const s = schedules[dateStr]; %>
+            <div class="day-box" data-date="<%= dateStr %>">
+                <strong><%= i %></strong>
+                <% if (s) { %>
+                    <div><%= s.shift1 || '' %></div>
+                    <div><%= s.shift2 || '' %></div>
+                <% } %>
+            </div>
+        <% } %>
+    </div>
+</body>
+</html>

@@ -1,0 +1,251 @@
+/* Import Font (Opsional) */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+:root {
+    --primary-color: #ff6600; /* Oranye Unand */
+    --secondary-color: #005a3a; /* Hijau Unand */
+    --background-color: #f4f7f6;
+    --text-color: #333;
+    --card-bg: #ffffff;
+    --border-color: #e0e0e0;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: var(--secondary-color);
+    color: white;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+}
+
+.logo {
+    height: 50px;
+    margin-right: 15px;
+}
+
+.header-title {
+    font-size: 1.5em;
+    margin: 0;
+}
+
+.top-nav {
+    background-color: var(--card-bg);
+    border-bottom: 2px solid var(--border-color);
+}
+
+.top-nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+}
+
+.top-nav li a {
+    display: block;
+    padding: 15px 20px;
+    text-decoration: none;
+    color: var(--text-color);
+    font-weight: 500;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.top-nav li a:hover, .top-nav li a.active {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+/* --- STRUKTUR UTAMA DASHBOARD --- */
+.main-content {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    align-items: flex-start; /* Menjaga agar kolom mulai dari atas */
+}
+
+/* --- KARTU PROFIL (KIRI) --- */
+.profile-card {
+    flex: 0 0 30%; /* Lebar kolom kiri 30% */
+    background-color: var(--card-bg);
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+}
+
+.profile-card h2 {
+    margin-top: 0;
+    font-size: 1.4em;
+    color: var(--primary-color);
+}
+
+.profile-card hr {
+    border: none;
+    height: 1px;
+    background-color: var(--border-color);
+    margin: 15px 0;
+}
+
+.profile-info .info-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.profile-info .icon {
+    font-size: 28px;
+    color: var(--secondary-color);
+    margin-right: 15px;
+}
+
+.profile-info .info-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.profile-info .info-text strong {
+    font-weight: 600;
+    font-size: 0.9em;
+    color: #555;
+}
+
+.profile-info .info-text p {
+    margin: 0;
+    font-size: 1em;
+}
+
+/* --- BAGIAN JADWAL (KANAN) --- */
+.schedule-section {
+    flex: 1; /* Mengisi sisa ruang */
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.welcome-section {
+    background-color: var(--card-bg);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+}
+
+.welcome-section h2 {
+    margin: 0 0 5px 0;
+}
+.welcome-section p {
+    margin: 0;
+    color: #666;
+}
+
+.calendar-container, .agenda-container {
+    background-color: var(--card-bg);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+}
+
+.month-header {
+    text-align: center;
+    font-size: 1.2em;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+    text-align: center;
+}
+
+.calendar-day-header {
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+/* (Style untuk tanggal dari JS Anda) */
+.calendar-day {
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: background-color 0.2s;
+}
+.calendar-day.today {
+    background-color: var(--primary-color);
+    color: white;
+}
+.calendar-day:hover:not(.today) {
+    background-color: #f0f0f0;
+}
+
+.agenda-container h3 {
+    margin-top: 0;
+}
+
+.event-card {
+    display: flex;
+    gap: 15px;
+    border: 1px solid var(--border-color);
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    transition: box-shadow 0.3s;
+}
+.event-card:hover{
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.event-time {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    color: var(--secondary-color);
+    flex-shrink: 0;
+}
+
+.event-details h4 {
+    margin: 0 0 5px 0;
+    font-size: 1em;
+}
+
+.event-details p {
+    margin: 0;
+    color: #555;
+    font-size: 0.9em;
+}
+
+
+/* --- RESPONSIVE DESIGN --- */
+@media (max-width: 992px) {
+    .main-content {
+        flex-direction: column;
+    }
+    .profile-card {
+        width: 100%;
+        flex: auto;
+        box-sizing: border-box;
+    }
+}
+
+@media (max-width: 768px) {
+    .top-nav ul {
+        flex-direction: column;
+        text-align: center;
+    }
+    .header-title {
+        font-size: 1.2em;
+    }
+}

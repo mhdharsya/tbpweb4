@@ -1,0 +1,151 @@
+/* Styling untuk container utama */
+.content-container {
+    padding: 20px;
+    background-color: #f4f7f6;
+    min-height: calc(100vh - 180px); /* Adjust based on header/footer height */
+}
+
+.content-header {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #0056b3; /* Warna aksen Unand */
+}
+
+/* Styling untuk form container */
+.form-container {
+    background-color: #ffffff;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.form-group {
+    margin-bottom: 25px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #555;
+}
+
+.student-dropdown {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+}
+
+/* Styling untuk tabel penilaian */
+.assessment-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 25px;
+}
+
+.assessment-table th, .assessment-table td {
+    border: 1px solid #e0e0e0;
+    padding: 12px;
+    text-align: left;
+    vertical-align: middle;
+}
+
+.assessment-table thead th {
+    background-color: #f2f2f2;
+    font-weight: 600;
+    color: #333;
+}
+
+.assessment-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.assessment-table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+.score-input {
+    width: 90%;
+    padding: 8px;
+    font-size: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    text-align: center;
+}
+
+/* Styling untuk skor */
+.weighted-score, #finalScore {
+    font-weight: bold;
+    font-size: 16px;
+    color: #0056b3;
+}
+
+.total-score-row {
+    font-weight: bold;
+    background-color: #e9ecef;
+}
+
+.total-score-row td:first-child {
+    text-align: right;
+}
+
+/* Styling untuk grup tombol */
+.button-group {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px; /* Spasi antar tombol */
+    margin-top: 20px;
+}
+
+.btn {
+    padding: 12px 25px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.1s;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+}
+
+.btn-submit {
+    background-color: #007bff; /* Biru */
+    color: white;
+}
+.btn-submit:hover {
+    background-color: #0056b3;
+}
+
+.btn-print {
+    background-color: #6c757d; /* Abu-abu */
+    color: white;
+}
+.btn-print:hover {
+    background-color: #5a6268;
+}
+
+.btn-revise {
+    background-color: #ffc107; /* Kuning */
+    color: #212529;
+}
+.btn-revise:hover {
+    background-color: #e0a800;
+}
+
+/* Styling untuk elemen yang dinonaktifkan */
+.btn:disabled, .score-input:disabled {
+    background-color: #e9ecef;
+    color: #6c757d;
+    cursor: not-allowed;
+    opacity: 0.7;
+    transform: none;
+}
