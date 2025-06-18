@@ -1,5 +1,5 @@
 // controllers/accessRequestController.js
-const accessRequestService = require('../services/accessRequestService');
+const accessRequestService = require('../../services/accessRequestService');
 
 const getAccessRequests = async (req, res) => {
     try {

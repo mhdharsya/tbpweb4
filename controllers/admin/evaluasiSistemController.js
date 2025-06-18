@@ -1,5 +1,5 @@
 // controllers/evaluasiSistemController.js
-const evaluasiSistemService = require('../services/evaluasiSistemService'); 
+const evaluasiSistemService = require('../../services/evaluasiSistemService'); 
 
 const getEvaluationsApi = async (req, res) => { // <--- PASTIKAN NAMA FUNGSI INI BENAR
     try {
