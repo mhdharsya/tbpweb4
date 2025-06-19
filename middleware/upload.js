@@ -1,19 +1,29 @@
 const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
 
-// Menggunakan memoryStorage untuk menyimpan file di memory (buffer)
-const storage = multer.memoryStorage();
+// Tentukan folder untuk menyimpan file yang diupload
+const uploadPath = path.join(__dirname, 'uploads');  // Ganti dengan lokasi folder yang diinginkan
 
-// Konfigurasi multer dengan batasan ukuran file dan filter tipe file
+// Pastikan folder upload ada, jika tidak buat foldernya
+fs.promises.mkdir(uploadPath, { recursive: true }).catch((err) => {
+  console.error('Gagal membuat folder upload:', err);
+});
+
+// Pengaturan penyimpanan dengan multer
+const storage = multer.memoryStorage();  // Menyimpan file dalam buffer di memori
+
+// Pengaturan multer
 const upload = multer({
-  storage: storage,  // Menyimpan file di memory
-  limits: { fileSize: 20 * 1024 * 1024 },  // Membatasi ukuran file maksimal 20MB
+  storage: storage,
+  limits: { fileSize: 20 * 1024 * 1024 },  // Maksimal file 20MB
   fileFilter: (req, file, cb) => {
-    const allowedTypes = ['application/pdf']; // Membatasi hanya file PDF
-    if (!allowedTypes.includes(file.mimetype)) {
-      return cb(new Error('Only PDF files are allowed.'));
+    // Filter untuk hanya menerima file PDF
+    if (file.mimetype !== 'application/pdf') {
+      return cb(new Error('Hanya file PDF yang diperbolehkan'), false);
     }
     cb(null, true);
-  }
+  },
 });
 
 module.exports = upload;

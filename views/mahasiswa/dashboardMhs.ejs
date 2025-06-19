@@ -3,22 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sistem Informasi Seminar Hasil - Universitas Andalas">
     <title>SISemhas - Universitas Andalas</title>
     <link rel="stylesheet" href="/mahasiswa/CSS/dashboard.css">
 </head>
 <body>
     <!-- Header -->
     <header class="header">
-        <img class="logo" src="/mahasiswa/asset/image/logo.png" alt="Logo Universitas Andalas">
+        <img class="logo" src="/mahasiswa/asset/image/logo.png" alt="Logo Universitas Andalas" />
         <div class="header-title">SISemhas - Universitas Andalas</div>
     </header>
 
     <!-- Navigation -->
     <nav class="nav-tabs">
         <div class="nav-left">
-            <a href="/dashboardMhs/" class="nav-tab active">Dashboard</a>
+            <a href="/dashboardMhs/" class="nav-tab active" aria-current="page">Dashboard</a>
             <a href="/daftar/" class="nav-tab">Pendaftaran</a>
-            <a href="" class="nav-tab">Riwayat Semhas</a>
+            <a href="/riwayatseminar/" class="nav-tab">Riwayat Semhas</a>
         </div>
     </nav>
 
@@ -27,7 +28,7 @@
         <!-- Welcome Section -->
         <div class="welcome-section">
             <div class="welcome-text">
-                <h1>Halo, User Name</h1>
+                <h1>Halo, <%= nama_lengkap %></h1>
                 <p>Segera Daftar Seminar Online</p>
             </div>
             <a href="/daftar/" class="register-btn">
@@ -39,11 +40,11 @@
         <!-- Content Grid -->
         <div class="content-grid">
             <!-- Left Section - Riwayat Seminar -->
-            <div class="section">
-                <div class="section-header">
+            <section class="section">
+                <header class="section-header">
                     <span class="icon">🖨️</span>
                     Riwayat - Seminar Hasil
-                </div>
+                </header>
                 
                 <div class="seminar-item">
                     <div class="seminar-title">Seminar Hasil - dd/mm/yy</div>
@@ -54,13 +55,13 @@
                     <div class="seminar-title">Seminar Hasil - dd/mm/yy</div>
                     <div class="seminar-status">Status : Lulus / Revisi</div>
                 </div>
-            </div>
+            </section>
 
             <!-- Right Section - Menu -->
-            <div class="section">
-                <div class="section-header">
+            <section class="section">
+                <header class="section-header">
                     Seminar Hasil - Menu
-                </div>
+                </header>
                 
                 <div class="menu-buttons">
                      <a href="/melihat/">
@@ -68,7 +69,7 @@
                     </a> 
                     <button class="menu-btn">Detail Jadwal</button>
                 </div>
-            </div>
+            </section>
         </div>
 
         <!-- Evaluation Section dan Panduan Section -->

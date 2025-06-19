@@ -5,6 +5,10 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const cors = require('cors');
 
+var bodyParser = require('body-parser');
+var cors = require('cors');
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
 
 // Impor Router & Controller yang dibutuhkan
 // PASTIKAN PATH KE FILE ANDA SUDAH BENAR SESUAI STRUKTUR FOLDER ANDA
@@ -17,6 +21,10 @@ var melihatRouter = require('./routes/mahasiswa/melihatdandownloadnilai');
 
 
 var checkRouter = require('./routes/mahasiswa/checkberkas');
+var daftarRouter = require('./routes/mahasiswa/pendaftaran');
+var dashboardRouter = require('./routes/mahasiswa/dashboardMhs');
+var uploadRouter = require('./routes/mahasiswa/upload');
+var riwayatSeminarRouter = require('./routes/mahasiswa/riwayatseminar');
 var adminRouter = require('./routes/admin/dashboardAdmin')
 const userController = require('./controllers/admin/userController');
 const accessRequestController = require('./controllers/admin/accessRequestController');
@@ -87,6 +95,27 @@ app.use(express.json());
 app.use('/melihat', melihatRouter);
 app.use('/check', checkRouter);
 app.use('/dashboardMhs', dashboardMhsRouter);
+app.use('/daftar', daftarRouter);
+app.use('/dashboard', dashboardRouter);
+app.use('/mahasiswa', uploadRouter);
+app.use('/riwayatseminar', riwayatSeminarRouter);
+
+app.use((req, res, next) => {
+  console.log('Request URL:', req.url);  // Log URL
+  console.log('Request Method:', req.method);  // Log HTTP Method
+  next(); // Jangan lupa panggil next() untuk melanjutkan ke handler berikutnya
+});
+
+// async function checkPrismaConnection() {
+//   try {
+//     await prisma.$connect();
+//     console.log("✅ Prisma connected to the database successfully.");
+//   } catch (error) {
+//     console.error("❌ Prisma connection error:", error);
+//   }
+// }
+
+// checkPrismaConnection();
 app.use('/admin', adminRouter);
 
 // catch 404 and forward to error handler
@@ -94,6 +123,18 @@ app.use(function(req, res, next) {
   next(createError(404));
 });
 
+app.use((req, res, next) => {
+    console.log('GLOBAL DEBUG: Request URL:', req.url);
+    console.log('GLOBAL DEBUG: req.query (at start):', req.query);
+    next(); // Sangat penting untuk memanggil next()
+});
+
+app.use((req, res, next) => {
+  console.log('Request URL:', req.url);  // Log URL
+  next();
+});
+
+// error handler
 // =========================================================
 // ERROR HANDLER - PASTIKAN SUDAH DIPERBAIKI!
 // =========================================================
