@@ -35,7 +35,7 @@ const uploadPanduanApi = async (req, res) => {
 const getAllPanduanApi = async (req, res) => {
     try {
         const panduanList = await panduanService.getAllPanduan();
-        res.status(200).json(panduanList);
+        res.render('mahasiswa/panduanList'),{panduans : panduanList};
     } catch (error) {
         console.error("Error in panduanController.getAllPanduanApi:", error.message);
         res.status(500).json({ message: 'Gagal mengambil daftar panduan.', details: error.message });

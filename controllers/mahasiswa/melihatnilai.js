@@ -1,23 +1,17 @@
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
-
-exports.showNilai = async (req, res) => {
+exports.getFormMelihat = async (req, res) => {
   try {
-    const nim = req.user.nim; // jika login sebagai mahasiswa
-    const data = await prisma.nilai_semhas.findMany({
-      where: {
-        pendaftaran: {
-          nim: nim
-        }
-      },
-      include: {
-        pendaftaran: true
-      }
+    const user = req.user;
+
+    if (!user ||!user.nama_lengkap) {
+      return res.status(400).send('User tidak ditemukan');
+    }
+
+    return res.render('mahasiswa/melihatdandownloadnilai', {
+      nama_lengkap: user.nama_lengkap,
     });
 
-    res.render('mahasiswa/nilai', { data });
   } catch (error) {
-    console.error(error);
-    res.status(500).send('Gagal memuat nilai');
+    console.error('ERROR GET MELIHAT NILAI:', error);
+    return res.status(500).send('Terjadi kesalahan dalam dashboard');
   }
 };

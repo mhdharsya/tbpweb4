@@ -3,22 +3,27 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const cors = require('cors');
+
 
 // Impor Router & Controller yang dibutuhkan
 // PASTIKAN PATH KE FILE ANDA SUDAH BENAR SESUAI STRUKTUR FOLDER ANDA
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var dashboardMhsRouter = require('./routes/mahasiswa/dashboardMhs');
-var panduanRouter = require('./routes/mahasiswa/panduan');
+//var panduanRouter = require('./routes/mahasiswa/panduan');
 var evaluasiRouter = require('./routes/mahasiswa/evaluasiSisemhas');
 var melihatRouter = require('./routes/mahasiswa/melihatdandownloadnilai');
+
+
 var checkRouter = require('./routes/mahasiswa/checkberkas');
-var panduanRouter = require('./routes/mahasiswa/panduan');
 var adminRouter = require('./routes/admin/dashboardAdmin')
 const userController = require('./controllers/admin/userController');
 const accessRequestController = require('./controllers/admin/accessRequestController');
 const evaluasiSistemController = require('./controllers/admin/evaluasiSistemController'); // <--- PASTIKAN INI ADA
 const panduanController = require('./controllers/admin/panduanController'); // <--- PASTIKAN INI ADA
+// ⬇️ Tambahkan baris ini untuk menghubungkan route panduan
+//const panduanRouter = require('./routes/mahasiswa/panduan');
 
 
 var app = express(); // Hanya satu deklarasi 'app' di sini
@@ -77,12 +82,12 @@ app.get('/api/panduan/file/:id', panduanController.getPanduanFileApi);
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/evaluasi', evaluasiRouter);
-app.use('/panduan', panduanRouter);
+app.use(cors());
+app.use(express.json());
 app.use('/melihat', melihatRouter);
 app.use('/check', checkRouter);
 app.use('/dashboardMhs', dashboardMhsRouter);
 app.use('/admin', adminRouter);
-
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
