@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SISemhas - Universitas Andalas</title>
+    <link rel="stylesheet" href="/mahasiswa/css/melihatdandownloadnilai.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <img class="logo" src="/mahasiswa/asset/image/logo.png" alt="Logo Universitas Andalas">
+        <div class="header-title">SISemhas - Universitas Andalas</div>
+    </header>
+
+        <!-- Navigation Tabs -->
+        <nav class="nav-tabs">
+          <div class="nav-left">
+            <a href="/dashboardMhs" class="nav-tab">Dashboard</a>
+            <a href="/daftar/" class="nav-tab">Pendaftaran</a>
+            <a href="/riwayat/" class="nav-tab">Riwayat Semhas</a>
+          </div>
+        </nav>
+        
+         <div class="breadcrumb">
+            <span>Penilaian Seminar Akhir</span>
+        </div>
+
+        <main class="main-content">
+            <div class="form-info">
+                <input type="text" id="nama" placeholder="Nama" readonly>
+                <input type="text" id="nim" placeholder="NIM" readonly>
+                <input type="text" id="judul" placeholder="Judul Tugas Akhir" readonly>
+            </div>
+
+            <table class="nilai-table">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Kategori</th>
+                        <th>Nilai</th>
+                    </tr>
+                </thead>
+                <tbody id="nilai-body">
+                    <!-- Data nilai akan dimasukkan dengan JavaScript -->
+                </tbody>
+            </table>
+
+            <div class="button-wrapper">
+                <button class="btn-submit" onclick="downloadPDF()">Download PDF</button>
+            </div>
+        </main>
+    </div>
+
+    <script src="/mahasiswa/js/melihatdandownloadnilai.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+
+</body>
+</html>

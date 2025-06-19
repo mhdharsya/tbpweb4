@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>List Mahasiswa Seminar - SISemhas</title>
+    <link rel="stylesheet" href="/dosen/CSS/listmhs.css"> 
+</head>
+<body>
+    <header class="header">
+        <div class="header-left">
+            <img src="/dosen/IMG/logo-unand.png" alt="Logo Universitas Andalas" class="logo">
+            <h1 class="header-title">SISemhas - Universitas Andalas</h1>
+        </div>
+    </header>
+
+    <nav class="top-nav">
+        <ul>
+             <li><a href="/dosen/">Dashboard</a></li>
+            <li><a href="/dosen/mahasiswaseminar" class="active">List Mahasiswa Seminar</a></li>
+            <li><a href="/dosen/penilaian">Penilaian</a></li>
+            <li><a href="/dosen/riwayatseminar">Riwayat Seminar</a></li>
+            <li><a href="/dosen/upload">Upload Jadwal</a></li>
+        </ul>
+    </nav>
+
+    <main class="content-container">
+        <div class="content-header">
+            List Mahasiswa Seminar
+        </div>
+
+        <div class="table-container">
+            <% if (typeof errorMessage !== 'undefined') { %>
+                <div class="error-message">
+                    <h3>⚠️ Gagal Memuat Data</h3>
+                    <p><%= errorMessage %></p>
+                </div>
+
+            <% } else if (mahasiswaList && mahasiswaList.length > 0) { %>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>NIM</th>
+                            <th>Nama</th>
+                            <th>Judul</th>
+                            <th>Tanggal</th>
+                            <th>Waktu</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% mahasiswaList.forEach((mhs, index) => { %>
+                            <tr>
+                                <td><%= index + 1 %></td>
+                                <td><%= mhs.nim || '-' %></td>
+                                <td><%= mhs.nama || '-' %></td>
+                                <td><%= mhs.judul_seminar || '-' %></td>
+                                <td>
+                                    <%= mhs.tanggal_seminar ? new Date(mhs.tanggal_seminar).toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric' }) : '-' %>
+                                </td>
+                                <td>
+                                    <%= mhs.waktu_mulai || '-' %> - <%= mhs.waktu_selesai || '-' %>
+                                </td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+
+            <% } else { %>
+                <div class="no-data">
+                    <p>Belum ada data mahasiswa seminar yang tersedia.</p>
+                </div>
+            <% } %>
+        </div>
+    </main>
+
+    <div class="footer">
+        <p>&copy; 2025 Universitas Andalas - Sistem Informasi Seminar Hasil</p>
+    </div>
+</body>
+</html>

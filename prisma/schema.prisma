@@ -7,6 +7,20 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model berkas_pdf {
+  id            Int      @id @default(autoincrement())
+  nama_file     String   @db.VarChar(255)
+  tipe          String   @db.VarChar(50)  // contoh: "KRS", "Laporan", "PPT"
+  file          Bytes    @db.Blob
+  uploaded_by   String   @db.VarChar(100) // email user pengunggah
+  createdAt     DateTime @default(now())
+
+  user          user     @relation(fields: [uploaded_by], references: [email], onDelete: Cascade)
+
+  @@index([uploaded_by])
+}
+
+
 model admin {
   niku       String @id @db.VarChar(50)
   nama_admin String @db.VarChar(255)
@@ -26,11 +40,15 @@ model dosen {
 }
 
 model evaluasi_sistem {
-  id_evaluasi    Int      @id
-  kualitas_ui    String   @db.VarChar(100)
-  kinerja_sistem String   @db.VarChar(100)
-  kritik_saran   String   @db.Text
-  tanggal_isi    DateTime @db.Date
+  id               String       @id @default(cuid()) @db.VarChar(50)
+  fitur            Int
+  konten           Int
+  responsif        Int
+  kemudahan        Int
+  dokumentasi      Int
+  saran            String?
+  kritik           String?
+  createdAt        DateTime     @default(now())
 }
 
 model jadwal_dosen {
@@ -40,7 +58,7 @@ model jadwal_dosen {
 }
 
 model jadwal_pendaftaran {
-  id_jadwal      String       @id @db.VarChar(100)
+  id_jadwal Int @id @default(autoincrement())
   id_pendaftaran Int
   jam_mulai      DateTime     @db.Time(0)
   jam_selesai    DateTime     @db.Time(0)
@@ -85,10 +103,11 @@ model nilai_semhas {
 }
 
 model panduan {
-  id_panduan     Int      @id
+  id_panduan     Int      @id @default(autoincrement())
   nama_file      String   @db.VarChar(255)
-  deskripsi      String   @db.Text
   tanggal_unggah DateTime @db.Date
+  file          Bytes    @db.Blob
+ 
 }
 
 model pendaftaran {

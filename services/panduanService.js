@@ -3,14 +3,14 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 // Fungsi untuk mengunggah PDF baru
-const uploadPanduan = async (nama_file, file_buffer, nikuAdmin) => {
+const uploadPanduan = async (nama_file, file_buffer) => {
     try {
         const newPanduan = await prisma.panduan.create({
             data: {
                 nama_file: nama_file,
-                file_data: file_buffer, // Data binary PDF
+                file: file_buffer, // Data binary PDF
                 tanggal_unggah: new Date(), // Tanggal saat ini
-                niku: nikuAdmin, // NIKU admin yang mengunggah (perlu dari sesi/auth)
+               
             }
         });
 
@@ -76,10 +76,10 @@ const getPanduanFile = async (id_panduan) => {
             where: { id_panduan: id_panduan },
             select: {
                 nama_file: true,
-                file_data: true // Ambil data binary file
+                file: true // Ambil data binary file
             }
         });
-        console.log(`DEBUG FILE: File ditemukan. Nama: ${panduan.nama_file}, ukuran data: ${panduan.file_data.length} bytes`);
+        console.log(`DEBUG FILE: File ditemukan. Nama: ${panduan.nama_file}, ukuran data: ${panduan.file.length} bytes`);
         return panduan;
     } catch (error) {
         console.error("Error fetching panduan file data:", error);
