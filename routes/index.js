@@ -2,22 +2,31 @@ var express = require('express');
 var router = express.Router();
 const { login, register, showLogin } = require('../controllers/authController');
 const { auth } = require('../middleware/authMiddleware');
+const { getFormDashboard } = require('../controllers/mahasiswa/dashboard');
 
 /* GET home page. */
 router.get('/', (req, res) => {
-  res.render('kadep/bidangkeahlian');
-  // res.redirect('/login');
+  res.redirect('/login');
 });
 
-router.get('/dashboard', auth, (req, res) =>{
+router.get('/login', (req, res) => {
+  res.render('index');
+});
+
+router.get('/register', (req, res) => {
+  res.render('register', { title: 'Register' });
+});
+
+
+router.get('/dashboard', auth, async (req, res) => {
   if (req.user.role === 'ADMIN') {
-    return res.render('dashboard admin');
+    return res.render('admin/dashboardAdmin');
   } else if (req.user.role === 'DOSEN') {
     return res.render('dashboard dosen');
   } else if (req.user.role === 'KADEP') {
     return res.render('kadep');
   } else if (req.user.role === 'MAHASISWA') {
-    return res.render('dashboard mahasiswa');
+    return await getFormDashboard(req, res); // ✅ INI SAJA!
   } else {
     return res.status(403).json({ message: 'Access denied. Invalid role.' });
   }

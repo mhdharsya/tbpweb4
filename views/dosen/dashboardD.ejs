@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/dosen/CSS/dashboardD.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <title>SISemhas - Universitas Andalas</title>
+</head>
+<body>
+    <header class="header">
+        <div class="header-left">
+            <img src="/dosen/IMG/logo-unand.png" alt="Logo Universitas Andalas" class="logo">
+            <h1 class="header-title">SISemhas - Universitas Andalas</h1>
+        </div>
+    </header>
+
+    <nav class="top-nav">
+        <ul>
+             <li><a href="/dosen/" class="active">Dashboard</a></li>
+             <li><a href="/dosen/mahasiswaseminar">List Mahasiswa Seminar</a></li>
+             <li><a href="/dosen/penilaian">Penilaian</a></li>
+             <li><a href="/dosen/riwayatseminar">Riwayat Seminar</a></li>
+             <li><a href="/dosen/upload">Upload Jadwal</a></li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        <aside class="profile-card">
+            <h2><%= dosen.nama %></h2>
+            <hr>
+            <div class="profile-info">
+                <div class="info-item">
+                    <span class="material-symbols-outlined icon">badge</span>
+                    <div class="info-text">
+                        <strong>NIP</strong>
+                        <p><%= dosen.nip %></p>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <span class="material-symbols-outlined icon">science</span>
+                    <div class="info-text">
+                        <strong>Bidang Keahlian</strong>
+                        <p><%= dosen.bidangKeahlian %></p>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <span class="material-symbols-outlined icon">mail</span>
+                    <div class="info-text">
+                        <strong>Email</strong>
+                        <p><%= dosen.email %></p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <section class="schedule-section">
+            <div class="welcome-section">
+                <h2>Halo, <%= dosen.nama %>!</h2>
+                <p>Berikut adalah jadwal Anda untuk hari ini.</p>
+            </div>
+            
+            <div class="calendar-container">
+                <div class="month-header" id="monthHeader"></div>
+                <div class="calendar-grid-container">
+                    <div class="calendar-grid" id="calendarGrid">
+                        <div class="calendar-day-header">S</div>
+                        <div class="calendar-day-header">M</div>
+                        <div class="calendar-day-header">T</div>
+                        <div class="calendar-day-header">W</div>
+                        <div class="calendar-day-header">T</div>
+                        <div class="calendar-day-header">F</div>
+                        <div class="calendar-day-header">S</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="agenda-container">
+                <h3>Agenda Hari Ini</h3>
+                <% if (jadwalHariIni && jadwalHariIni.length > 0) { %>
+                    <% jadwalHariIni.forEach(item => { %>
+                        <div class="event-card">
+                            <div class="event-time">
+                                <span class="material-symbols-outlined">schedule</span>
+                                <%= item.waktu %>
+                            </div>
+                            <div class="event-details">
+                                <h4><%= item.judul %></h4>
+                                <p><%= item.detail %></p>
+                            </div>
+                        </div>
+                    <% }) %>
+                <% } else { %>
+                    <div class="event-card">
+                       <p>Tidak ada jadwal untuk hari ini.</p>
+                    </div>
+                <% } %>
+            </div>
+        </section>
+    </main>
+
+    <script src="/dosen/JS/dashboardD.js"></script>
+</body>
+</html>

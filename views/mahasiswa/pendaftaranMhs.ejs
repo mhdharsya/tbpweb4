@@ -16,9 +16,9 @@
     <!-- Navigation -->
     <nav class="nav-tabs">
         <div class="nav-left">
-            <a href="/dashboardMhs/" class="nav-tab">Dashboard</a>
+            <a href="/dashboard/" class="nav-tab">Dashboard</a>
             <a href="/daftar/" class="nav-tab active">Pendaftaran</a>
-            <a href="#" class="nav-tab">Riwayat Semhas</a>
+            <a href="/riwayatseminar/" class="nav-tab">Riwayat Semhas</a>
         </div>
     </nav>
 
@@ -34,16 +34,6 @@
                 <div id="successMessage" class="success-message"></div>
 
                 <form id="dosenForm" action="/daftar" method="POST">
-                    <div class="form-group">
-                        <label for="nama_lengkap">Nama Mahasiswa</label>
-                        <input type="text" class="form-control" id="nama_lengkap" name="nama_lengkap" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="nim">NIM</label>
-                        <input type="text" id="nim" name="nim" required>
-                    </div>
-
                     <div class="form-group">
                         <label for="judul">Judul Penelitian</label>
                         <input type="text" class="form-control" id="judul" name="judul" required>
@@ -61,11 +51,12 @@
 
                     <div class="form-group">
                         <label for="nipDosen">Dosen Pembimbing</label>
-                        <select id="nipDosen" name="nipDosen" required>
+                          <select name="namaDosen" required>
                             <option value="">Pilih Dosen</option>
-                            <% dosenList.forEach(function(dosen) { %>
-                                <option value="<%= dosen.nip_dosen %>"><%= dosen.nama_dosen %></option>
+                            <% dosenList.forEach(dosen => { %>
+                            <option value="<%= dosen.nama_lengkap %>"><%= dosen.nama_lengkap %></option>
                             <% }) %>
+
                         </select>
                     </div>
 
@@ -75,6 +66,55 @@
         </div>
     </div>
 
-    <script src="/mahasiswa/JS/pendaftaran.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            console.log('Application initialized');
+            attachEventListeners();
+        });
+
+        function attachEventListeners() {
+            const form = document.getElementById('dosenForm');
+            if (!form) return;
+
+            form.addEventListener('submit', function (e) {
+                const nama = document.getElementById('nama_lengkap').value.trim();
+                const nim = document.getElementById('nim').value.trim();
+                const judul = document.getElementById('judul').value.trim();
+                const bidang = document.getElementById('bidangPenelitian').value;
+                const dosen = document.getElementById('nipDosen').value;
+
+                let valid = true;
+
+                if (!nama) {
+                    alert('Nama tidak boleh kosong');
+                    valid = false;
+                }
+
+                if (!/^\d{10,}$/.test(nim)) {
+                    alert('NIM harus berupa angka minimal 10 digit');
+                    valid = false;
+                }
+
+                if (!judul) {
+                    alert('Judul harus diisi');
+                    valid = false;
+                }
+
+                if (!bidang) {
+                    alert('Bidang penelitian harus dipilih');
+                    valid = false;
+                }
+
+                if (!dosen) {
+                    alert('Dosen pembimbing harus dipilih');
+                    valid = false;
+                }
+
+                if (!valid) {
+                    e.preventDefault();
+                }
+            });
+        }
+    </script>
 </body>
 </html>
