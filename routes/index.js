@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 const { login, register } = require('../controllers/authController');
 const { auth } = require('../middleware/authMiddleware');
+const { getDashboardD } = require('../controllers/dosen/dosen'); 
 
 /* GET home page. */
 router.get('/login', (req, res) => {
@@ -12,12 +13,12 @@ router.get('/register', (req, res) => {
   res.render('register', { title: 'Register' });
 });
 
-
-router.get('/dashboard', auth, (req, res) =>{
+router.get('/dashboard', auth, async (req, res) => { // <-- Tambahkan 'async' di sini
   if (req.user.role === 'ADMIN') {
     return res.render('dashboard admin');
-  } else if (req.user.role === 'DOSEN') {
-    return res.render('dashboard dosen');
+  } else if (req.user.role === 'DOSEN', getDashboardD) {
+    return res.render('dosen/dashboardD', { dosen: req.user }); // Sekarang 'await' valid di sini
+    
   } else if (req.user.role === 'KADEP') {
     return res.render('kadep');
   } else if (req.user.role === 'MAHASISWA') {

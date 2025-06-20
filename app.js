@@ -31,7 +31,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-app.use('/Dosen', dosenRouter);
+app.use('/dashboardD', dosenRouter);
 app.use('/Dosen/mahasiswaseminar', mahasiswaseminarRouter);
 app.use('/Dosen/penilaian', penilaianRouter);
 app.use('/Dosen/riwayatseminar', riwayatseminarRouter);
