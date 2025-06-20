@@ -1,6 +1,16 @@
 // services/panduanService.js
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
+const fs = require('fs').promises;
+const path = require('path');
+// const os = require('os'); // Tidak perlu lagi os.tmpdir() jika Anda menentukan path sendiri
+
+// Define your base storage directory for panduan files.
+// It's relative to the current file (panduanService.js).
+// '__dirname' refers to the directory of the current module (services/).
+// '..' goes up one level (to TBPWEB4/).
+// 'temp_files' enters the target folder.
+const BASE_FILE_STORAGE_DIR = path.join(__dirname, '..', 'temp_files');
 
 // Fungsi untuk mengunggah PDF baru
 const uploadPanduan = async (nama_file, file_buffer) => {

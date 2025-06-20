@@ -6,7 +6,7 @@ var logger = require('morgan');
 const cors = require('cors');
 
 var bodyParser = require('body-parser');
-var cors = require('cors');
+
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
@@ -17,6 +17,7 @@ var usersRouter = require('./routes/users');
 var dashboardMhsRouter = require('./routes/mahasiswa/dashboardMhs');
 //var panduanRouter = require('./routes/mahasiswa/panduan');
 var evaluasiRouter = require('./routes/mahasiswa/evaluasiSisemhas');
+var pandu = require('./routes/mahasiswa/panduan');
 var melihatRouter = require('./routes/mahasiswa/melihatdandownloadnilai');
 
 
@@ -85,12 +86,15 @@ app.get('/api/panduan/latest', panduanController.getLatestPanduanApi);
 app.get('/api/panduan/list', panduanController.getAllPanduanApi);
 app.get('/api/panduan/file/:id', panduanController.getPanduanFileApi);
 
+//router api untuk generate pendaftaran
+app.use('/api', dashboardRouter); 
 
 // Route-route umum lainnya (catch-all atau spesifik prefix) - DI BAWAH API
 // Ini harus di bawah route API agar permintaan /api/... tidak ditangkap olehnya
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/evaluasi', evaluasiRouter);
+app.use('/panduan', pandu);
 app.use(cors());
 app.use(express.json());
 app.use('/melihat', melihatRouter);
