@@ -34,6 +34,10 @@ const login = async (req, res) => {
   }
 };
 
+const showLogin = (req, res) => {
+  res.render('login', { title: 'Login' });
+};
+
 const register = async (req, res) => {
   const { username, password } = req.body;
 
@@ -58,4 +62,4 @@ const register = async (req, res) => {
   }
 };
 
-module.exports = { login, register };
+module.exports = { login, register, showLogin };

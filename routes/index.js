@@ -1,11 +1,12 @@
 var express = require('express');
 var router = express.Router();
-const { login, register } = require('../controllers/authController');
+const { login, register, showLogin } = require('../controllers/authController');
 const { auth } = require('../middleware/authMiddleware');
 
 /* GET home page. */
 router.get('/', (req, res) => {
-  res.render('index');
+  res.render('kadep/bidangkeahlian');
+  // res.redirect('/login');
 });
 
 router.get('/dashboard', auth, (req, res) =>{
@@ -22,6 +23,7 @@ router.get('/dashboard', auth, (req, res) =>{
   }
 });
 
+router.get('/login', showLogin);
 router.post('/login', login);
 router.post('/register', register);
 
