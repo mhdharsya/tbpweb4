@@ -9,10 +9,12 @@ const auth = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded;
+    req.user = decoded;  // Menyimpan decoded token ke dalam req.user
+    console.log('Decoded user:', req.user); // Log user untuk debugging
     next();
   } catch (error) {
-    return res.status(401).json({ message: 'Token is not valid' });
+    console.log('Error dalam token:', error);
+    return res.status(400).json({ message: 'Token tidak valid' });
   }
 };
 

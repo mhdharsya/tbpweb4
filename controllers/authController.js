@@ -4,7 +4,7 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 const login = async (req, res) => {
-  const { email, id_user, password, role } = req.body;
+  const { email, id_user, password, role, nama_lengkap } = req.body;
 
   try {
     const user = await prisma.user.findUnique({
@@ -22,7 +22,7 @@ const login = async (req, res) => {
     }
 
     const token = jwt.sign(
-      { userId: user.id_user, email: user.email, role: user.role },
+      { userId: user.id_user, email: user.email, role: user.role, nama_lengkap: user.nama_lengkap },
       process.env.JWT_SECRET,
       { expiresIn: '1h' }
     );
@@ -32,6 +32,7 @@ const login = async (req, res) => {
     console.log("id cookie : ", decodedToken.userId);
     console.log("email cookie : ", decodedToken.email);
     console.log("role cookie : ", decodedToken.role);
+    console.log("nama lengkap cookie : ", decodedToken.nama_lengkap);
 
     res.cookie('token', token, { httpOnly: true, maxAge: 3600000 }); // 1 hour expiration
     return res.redirect('/dashboard');

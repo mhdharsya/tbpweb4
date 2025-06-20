@@ -92,8 +92,8 @@ document.addEventListener('DOMContentLoaded', function() {
             setLoadingState(true);
             
             try {
-                // URL masih '/mahasiswa' sesuai log POST sebelumnya
-                const response = await fetch('/mahasiswa', {
+                // URL masih '/evaluasi' sesuai log POST sebelumnya
+                const response = await fetch('/evaluasi', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

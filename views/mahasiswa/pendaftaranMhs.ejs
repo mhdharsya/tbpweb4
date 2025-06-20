@@ -16,9 +16,9 @@
     <!-- Navigation -->
     <nav class="nav-tabs">
         <div class="nav-left">
-            <a href="/dashboardMhs/" class="nav-tab">Dashboard</a>
+            <a href="/dashboard/" class="nav-tab">Dashboard</a>
             <a href="/daftar/" class="nav-tab active">Pendaftaran</a>
-            <a href="#" class="nav-tab">Riwayat Semhas</a>
+            <a href="/riwayatseminar/" class="nav-tab">Riwayat Semhas</a>
         </div>
     </nav>
 
@@ -51,11 +51,12 @@
 
                     <div class="form-group">
                         <label for="nipDosen">Dosen Pembimbing</label>
-                        <select id="nipDosen" name="nipDosen" required>
+                          <select name="namaDosen" required>
                             <option value="">Pilih Dosen</option>
-                            <% dosenList.forEach(function(dosen) { %>
-                                <option value="<%= dosen.nip_dosen %>"><%= dosen.nama_dosen %></option>
+                            <% dosenList.forEach(dosen => { %>
+                            <option value="<%= dosen.nama_lengkap %>"><%= dosen.nama_lengkap %></option>
                             <% }) %>
+
                         </select>
                     </div>
 
