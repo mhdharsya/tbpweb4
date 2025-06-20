@@ -4,8 +4,9 @@ const panduanService = require('../../services/panduanService');
 const multer = require('multer'); // Pastikan sudah diinstal: npm install multer
 const upload = multer(); // Inisialisasi multer tanpa penyimpanan di disk, file masuk ke req.file/req.files
 
-const fs = require('fs');   // <--- TAMBAHKAN INI
-const path = require('path'); // <--- TAMBAHKAN INI
+// import fs and path are needed for disk operations
+// const fs = require('fs');    // <-- Ini tidak diperlukan lagi di controller untuk operasi file utama
+// const path = require('path'); // <-- Ini tidak diperlukan lagi di controller untuk operasi file utama
 
 // Endpoint untuk mengunggah panduan
 const uploadPanduanApi = async (req, res) => {
@@ -15,14 +16,18 @@ const uploadPanduanApi = async (req, res) => {
             return res.status(400).json({ message: 'Tidak ada file yang diunggah.' });
         }
         console.log(`DEBUG UPLOAD CONTROLLER: File diterima. Originalname: ${req.file.originalname}, Mimetype: ${req.file.mimetype}`);
+
         // Asumsi admin ID (niku) didapatkan dari sesi/token autentikasi
         // Untuk tujuan pengujian, kita bisa hardcode atau ambil dari body jika ada
         const nikuAdmin = req.user?.niku || 1; // Contoh: Ambil dari req.user setelah autentikasi, default 1
+        // Catatan: Fungsi uploadPanduan di service yang terakhir saya berikan hanya menerima nama_file dan file_buffer.
+        // Jika nikuAdmin perlu disimpan, Anda harus menambahkannya ke prisma.panduan.create() di service
+        // dan menambahkan kolom nikuAdmin di model Prisma Anda.
 
         const nama_file = req.file.originalname; // Nama file asli dari upload
-        const file_buffer = req.file.buffer; // Data binary file sebagai Buffer
+        const file_buffer = req.file.buffer;     // Data binary file sebagai Buffer
 
-        const newPanduan = await panduanService.uploadPanduan(nama_file, file_buffer, nikuAdmin);
+        const newPanduan = await panduanService.uploadPanduan(nama_file, file_buffer, nikuAdmin); // nikuAdmin jika memang ditambahkan di service
         res.status(201).json({ message: 'Panduan berhasil diunggah.', panduan: newPanduan });
 
     } catch (error) {
@@ -66,40 +71,43 @@ const getPanduanFileApi = async (req, res) => {
     }
 
     try {
-    const panduan = await panduanService.getPanduanFile(id_panduan);
+        // Panggil service untuk mendapatkan data file dan nama file
+        const fileData = await panduanService.getPanduanFile(id_panduan);
 
-    if (!panduan || !panduan.file) {
-        console.error(`DEBUG FILE CONTROLLER: Data file tidak ditemukan di service untuk ID: ${id_panduan}`);
-        return res.status(404).json({ message: 'File panduan tidak ditemukan.' });
+        // Periksa apakah fileData ditemukan dan memiliki file_buffer
+        // Nama properti di sini adalah 'file_buffer' bukan 'file' lagi
+        if (!fileData || !fileData.file_buffer) {
+            console.error(`DEBUG FILE CONTROLLER: Data file (buffer) tidak ditemukan di service untuk ID: ${id_panduan}`);
+            return res.status(404).json({ message: 'File panduan tidak ditemukan.' });
+        }
+
+        console.log(`DEBUG FILE CONTROLLER: Mengirim file: ${fileData.nama_file}, ukuran: ${fileData.file_buffer.length} bytes`);
+
+        // Hapus atau komen kode debug ini setelah dipastikan berfungsi
+        // const tempFileName = `temp_debug_panduan_${Date.now()}.pdf`;
+        // const tempFilePath = path.join(__dirname, '..', '..', 'temp_files', tempFileName);
+        // const tempDir = path.join(__dirname, '..', '..', 'temp_files');
+        // if (!fs.existsSync(tempDir)) {
+        //     fs.mkdirSync(tempDir);
+        // }
+        // try {
+        //     fs.writeFileSync(tempFilePath, fileData.file_buffer); // Menggunakan fileData.file_buffer
+        //     console.log(`DEBUG FILE CONTROLLER: Buffer PDF dari service berhasil ditulis ke: ${tempFilePath}`);
+        // } catch (writeErr) {
+        //     console.error('DEBUG FILE CONTROLLER: Gagal menulis file temp:', writeErr);
+        // }
+        // --- AKHIR KODE DEBUG ---
+
+        res.setHeader('Content-Type', 'application/pdf');
+        // 'inline' akan mencoba menampilkan di browser, 'attachment' akan memicu download
+        res.setHeader('Content-Disposition', `inline; filename="${fileData.nama_file}"`);
+        res.setHeader('Content-Length', fileData.file_buffer.length); // Penting untuk beberapa klien
+        res.send(fileData.file_buffer); // Kirim buffer ke browser
+
+    } catch (error) {
+        console.error("Error in panduanController.getPanduanFileApi:", error.message);
+        res.status(500).json({ message: 'Gagal mengambil file panduan.', details: error.message });
     }
-    console.log(`DEBUG FILE CONTROLLER: Mengirim file: ${panduan.nama_file}, ukuran: ${panduan.file.length} bytes`);
-
-    // --- TAMBAHKAN KODE DEBUG INI ---
-    const tempFileName = `temp_debug_panduan_${Date.now()}.pdf`; // Nama unik
-    const tempFilePath = path.join(__dirname, '..', '..', 'temp_files', tempFileName); // Path di root project Anda, buat folder 'temp_files'
-
-    // Pastikan folder temp_files ada
-    const tempDir = path.join(__dirname, '..', '..', 'temp_files');
-    if (!fs.existsSync(tempDir)) {
-        fs.mkdirSync(tempDir);
-    }
-
-    try {
-        fs.writeFileSync(tempFilePath, panduan.file);
-        console.log(`DEBUG FILE CONTROLLER: Buffer PDF dari DB berhasil ditulis ke: ${tempFilePath}`);
-    } catch (writeErr) {
-        console.error('DEBUG FILE CONTROLLER: Gagal menulis file temp:', writeErr);
-    }
-    // --- AKHIR KODE DEBUG ---
-
-    res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', `attachment; filename="${panduan.nama_file}"`); // Menggunakan attachment
-    res.send(panduan.file); // Kirim buffer ke browser
-
-} catch (error) {
-    console.error("Error in panduanController.getPanduanFileApi:", error.message);
-    res.status(500).json({ message: 'Gagal mengambil file panduan.', details: error.message });
-}
 };
 
 module.exports = {

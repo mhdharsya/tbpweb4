@@ -86,11 +86,11 @@ const register = async (req, res) => {
       });
 
       // Menambahkan data dosen di tabel dosen (hanya menyimpan id_user untuk dosen, bidang keahlian dan jadwal dosen diinput kemudian)
-      await prisma.dosen.create({
-        data: {
-          id_user: newUser.id_user, // Menggunakan id_user yang sama untuk dosen
-        },
-      });
+      // await prisma.dosen.create({
+      //   data: {
+      //     id_user: newUser.id_user, // Menggunakan id_user yang sama untuk dosen
+      //   },
+      // });
     }
 
     return res.status(201).json({ message: 'User created successfully' });

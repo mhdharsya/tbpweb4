@@ -5,12 +5,21 @@ const prisma = new PrismaClient();
 // Fungsi untuk mengunggah PDF baru
 const uploadPanduan = async (nama_file, file_buffer) => {
     try {
+        const fullFilePath = path.join(BASE_FILE_STORAGE_DIR, nama_file);
+
+        // Pastikan direktori penyimpanan ada
+        await fs.mkdir(BASE_FILE_STORAGE_DIR, { recursive: true });
+
+        // Simpan file_buffer ke disk
+        await fs.writeFile(fullFilePath, file_buffer);
+        console.log(`File saved to: ${fullFilePath}`);
+
+        // Simpan metadata ke database (kolom 'file' akan diisi dengan Buffer kosong)
         const newPanduan = await prisma.panduan.create({
             data: {
                 nama_file: nama_file,
-                file: file_buffer, // Data binary PDF
-                tanggal_unggah: new Date(), // Tanggal saat ini
-               
+                tanggal_unggah: new Date(),
+                file: Buffer.from(''), // Ganti dengan 'file: null' jika kolom 'file' nullable
             }
         });
 
@@ -20,8 +29,9 @@ const uploadPanduan = async (nama_file, file_buffer) => {
         console.error("Error uploading panduan:", error);
         throw new Error('Gagal mengunggah panduan.');
     }
-    
 };
+
+// ... (Fungsi getAllPanduan, getLatestPanduan, getPanduanFile tetap sama)
 
 // Fungsi untuk mendapatkan semua panduan (untuk tabel riwayat)
 const getAllPanduan = async () => {
@@ -31,16 +41,15 @@ const getAllPanduan = async () => {
                 id_panduan: true,
                 nama_file: true,
                 tanggal_unggah: true,
-                // file_data tidak perlu diselect jika hanya untuk tampilan tabel
             },
             orderBy: {
-                tanggal_unggah: 'desc' // Urutkan dari yang terbaru
+                tanggal_unggah: 'desc'
             }
         });
         return panduanList.map(p => ({
             id: p.id_panduan,
             namaFile: p.nama_file,
-            tanggalUnggah: p.tanggal_unggah.toISOString().slice(0, 10), // Format tanggal YYYY-MM-DD
+            tanggalUnggah: p.tanggal_unggah.toISOString().slice(0, 10),
         }));
     } catch (error) {
         console.error("Error fetching all panduan:", error);
@@ -58,13 +67,11 @@ const getLatestPanduan = async () => {
             select: {
                 id_panduan: true,
                 nama_file: true,
-                // file_data tidak perlu diselect di sini jika hanya untuk menampilkan link/thumbnail
             }
         });
         return latestPanduan;
     } catch (error) {
         console.error("Error fetching latest panduan:", error);
-        // Jika tidak ada panduan, kembalikan null atau objek kosong
         return null;
     }
 };
@@ -76,17 +83,28 @@ const getPanduanFile = async (id_panduan) => {
             where: { id_panduan: id_panduan },
             select: {
                 nama_file: true,
-                file: true // Ambil data binary file
             }
         });
-        console.log(`DEBUG FILE: File ditemukan. Nama: ${panduan.nama_file}, ukuran data: ${panduan.file.length} bytes`);
-        return panduan;
+
+        if (!panduan || !panduan.nama_file) {
+            console.warn(`Panduan with ID ${id_panduan} or its file name not found in DB.`);
+            return null;
+        }
+
+        const fullFilePath = path.join(BASE_FILE_STORAGE_DIR, panduan.nama_file);
+
+        const fileBuffer = await fs.readFile(fullFilePath);
+
+        console.log(`DEBUG FILE: File found. Name: ${panduan.nama_file}, data size: ${fileBuffer.length} bytes`);
+        return {
+            nama_file: panduan.nama_file,
+            file_buffer: fileBuffer
+        };
     } catch (error) {
-        console.error("Error fetching panduan file data:", error);
-        return null;
+        console.error(`Error fetching panduan file data for ID ${id_panduan}:`, error);
+        throw new Error('Gagal mengambil data file panduan.');
     }
 };
-
 
 module.exports = {
     uploadPanduan,

@@ -49,6 +49,7 @@ app.use((req, res, next) => {
 // Route API untuk user (Daftar Role User)
 app.get('/api/users', userController.getAllUsersWithDetailsOptimized);
 app.patch('/api/users/roles', userController.updateUsersRoles);
+app.delete('/api/users/:email', userController.deleteUser); 
 
 // Route API untuk permintaan akses
 app.get('/api/access-requests', accessRequestController.getAccessRequests);

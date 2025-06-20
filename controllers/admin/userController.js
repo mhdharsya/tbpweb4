@@ -38,9 +38,25 @@ const updateUsersRoles = async (req, res) => {
     }
 };
 
+const deleteUser = async (req, res) => {
+    const userEmail = req.params.email; // Ambil email dari parameter URL
+
+    try {
+        const deletedUser = await userService.deleteUserByEmail(userEmail);
+        res.status(200).json({ message: 'User deleted successfully', user: deletedUser });
+    } catch (error) {
+        console.error("Error in userController.deleteUser:", error.message);
+        // Berikan status 404 jika user tidak ditemukan
+        if (error.message.includes('not found')) {
+            return res.status(404).json({ message: error.message });
+        }
+        res.status(500).json({ message: 'Server error during user deletion.', details: error.message });
+    }
+};
 
 module.exports = {
     getAllUsersWithDetailsOptimized,
-    updateUsersRoles // Pastikan ini diekspor
+    updateUsersRoles,
+    deleteUser // Pastikan ini diekspor
     // ... (fungsi controller lainnya jika ada) ...
 };
