@@ -6,7 +6,6 @@ var logger = require('morgan');
 const cors = require('cors');
 
 var bodyParser = require('body-parser');
-var cors = require('cors');
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 

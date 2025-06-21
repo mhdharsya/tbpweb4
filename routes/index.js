@@ -6,7 +6,8 @@ const { getFormDashboard } = require('../controllers/mahasiswa/dashboard');
 
 /* GET home page. */
 router.get('/', (req, res) => {
-  res.redirect('/login');
+  res.render('kadep/bidangkeahlian');
+  // res.redirect('/login');
 });
 
 router.get('/login', (req, res) => {
