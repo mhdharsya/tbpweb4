@@ -1,65 +1,63 @@
 const express = require('express');
 const router = express.Router();
-const { PrismaClient } = require('@prisma/client');
-const multer = require('multer');
-const path = require('path');
-const prisma = new PrismaClient();
+const panduanService = require('../../services/panduanService'); // Pastikan path ini benar!
 
-// Konfigurasi multer untuk menyimpan file di temp_files
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, './temp_files'); // Simpan file di folder temp_files
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname)); // Nama file unik dengan timestamp
-  },
-});
-const upload = multer({ storage: storage });
 
-// Route untuk menampilkan daftar panduan
-router.get('/', async (req, res) => {
-  try {
-    // Mengambil panduan terbaru, diurutkan berdasarkan tanggal unggah
-    const panduanList = await prisma.panduan.findMany({
-      orderBy: { tanggal_unggah: 'desc' }, // Mengurutkan berdasarkan tanggal unggah terbaru
-      take: 1, // Mengambil hanya 1 data panduan terbaru
-    });
+router.get('/', async (req, res) => { // Make this an async function
+    try {
+        // Fetch the list of all panduan from your service
+        const panduanList = await panduanService.getAllPanduan(); // <--- THIS IS THE KEY FIX
 
-    if (panduanList.length > 0) {
-      const panduan = panduanList[0]; // Ambil panduan terbaru
-      res.render('mahasiswa/panduan', { panduan: panduan });
-    } else {
-      res.render('mahasiswa/panduan', { panduan: null });
+        // Render the EJS template and pass the fetched data
+        res.render('mahasiswa/panduan', {
+            panduanList: panduanList // Pass the panduanList array to the EJS template
+        });
+    } catch (error) {
+        console.error("Error rendering panduan page:", error);
+        // It's good practice to send a meaningful error response to the client
+        res.status(500).send("Gagal memuat halaman panduan. Silakan coba lagi nanti.");
     }
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Gagal mengambil data panduan');
-  }
+});
+// API: Ambil panduan terbaru
+router.get('/latest', async (req, res) => {
+    try {
+        const latest = await panduanService.getLatestPanduan(); // Panggil fungsi service
+
+        if (!latest) {
+            return res.status(404).json({ message: 'Tidak ada panduan ditemukan' });
+        }
+
+        res.json({
+            id_panduan: latest.id_panduan,
+            nama_file: latest.nama_file,
+            tanggal_unggah: latest.tanggal_unggah,
+        });
+    } catch (error) {
+        console.error("Error in /api/panduan/latest route:", error); // Log error spesifik rute
+        res.status(500).json({ message: 'Gagal mengambil panduan terbaru' });
+    }
 });
 
+// API: Tampilkan file PDF langsung dari BLOB
+router.get('/file/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const panduan = await panduanService.getPanduanFile(parseInt(id)); // Panggil fungsi service
 
+        if (!panduan || !panduan.file_pdf) {
+            return res.status(404).send('File tidak ditemukan');
+        }
 
-// Route untuk menangani upload file panduan
-router.post('/upload', upload.single('file'), async (req, res) => {
-  try {
-    if (!req.file) {
-      return res.status(400).send('No file uploaded');
+        res.set({
+            'Content-Type': 'application/pdf',
+            'Content-Disposition': `inline; filename="${panduan.nama_file}"`,
+        });
+
+        res.send(panduan.file_pdf);
+    } catch (error) {
+        console.error("Error in /api/panduan/file/:id route:", error); // Log error spesifik rute
+        res.status(500).send('Gagal menampilkan file PDF');
     }
-
-    // Simpan informasi file ke database (misalnya nama file dan tanggal unggah)
-    const newPanduan = await prisma.panduan.create({
-      data: {
-        nama_file: req.file.filename,  // Nama file PDF yang di-upload
-        file_path: `/temp_files/${req.file.filename}`,  // Path file yang di-upload
-        tanggal_unggah: new Date(),  // Tanggal unggah file
-      },
-    });
-
-    res.redirect('/panduan'); // Redirect ke halaman panduan setelah upload berhasil
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Gagal meng-upload file');
-  }
 });
 
 module.exports = router;

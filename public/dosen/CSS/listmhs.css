@@ -1,9 +1,7 @@
 /* Base Styles */
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    background-color: #F5F5F5;
-    color: #333;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(45deg, #ffd89b 0%, #19547b 100%);
 }
 
 /* Header Styling - Disesuaikan dengan warna screenshot terakhir */
@@ -83,6 +81,7 @@ body {
 /* KONTEN UTAMA                                               */
 /* ========================================================== */
 .content-container {
+    padding: 20px;
     margin: 20px 40px;
     background-color: #fff;
     border-radius: 8px;

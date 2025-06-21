@@ -3,8 +3,10 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const cors = require('cors');
+
 var bodyParser = require('body-parser');
-var cors = require('cors');
+
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
@@ -12,6 +14,14 @@ const prisma = new PrismaClient();
 // PASTIKAN PATH KE FILE ANDA SUDAH BENAR SESUAI STRUKTUR FOLDER ANDA
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var dashboardMhsRouter = require('./routes/mahasiswa/dashboardMhs');
+//var panduanRouter = require('./routes/mahasiswa/panduan');
+var evaluasiRouter = require('./routes/mahasiswa/evaluasiSisemhas');
+var pandu = require('./routes/mahasiswa/panduan');
+var melihatRouter = require('./routes/mahasiswa/melihatdandownloadnilai');
+
+
+var checkRouter = require('./routes/mahasiswa/checkberkas');
 var daftarRouter = require('./routes/mahasiswa/pendaftaran');
 var dashboardRouter = require('./routes/mahasiswa/dashboardMhs');
 var uploadRouter = require('./routes/mahasiswa/upload');
@@ -29,6 +39,11 @@ var nilaiRouter = require('./routes/mahasiswa/melihatdandownloadnilai');
 var statusRouter = require('./routes/admin/statusSemhas');
 var detailJadwalRouter = require('./routes/mahasiswa/detailJadwal');
 const pdfRiwayatRoutes = require('./routes/mahasiswa/detailRiwayat');
+const evaluasiSistemController = require('./controllers/admin/evaluasiSistemController'); // <--- PASTIKAN INI ADA
+const panduanController = require('./controllers/admin/panduanController'); // <--- PASTIKAN INI ADA
+// ⬇️ Tambahkan baris ini untuk menghubungkan route panduan
+//const panduanRouter = require('./routes/mahasiswa/panduan');
+
 
 var app = express(); // Hanya satu deklarasi 'app' di sini
 
@@ -65,6 +80,7 @@ app.use((req, res, next) => {
 // Route API untuk user (Daftar Role User)
 app.get('/api/users', userController.getAllUsersWithDetailsOptimized);
 app.patch('/api/users/roles', userController.updateUsersRoles);
+app.delete('/api/users/:email', userController.deleteUser); 
 
 // Route API untuk permintaan akses
 app.get('/api/access-requests', accessRequestController.getAccessRequests);
@@ -81,11 +97,24 @@ app.get('/api/panduan/latest', panduanController.getLatestPanduanApi);
 app.get('/api/panduan/list', panduanController.getAllPanduanApi);
 app.get('/api/panduan/file/:id', panduanController.getPanduanFileApi);
 
+//router api untuk generate pendaftaran
+app.use('/api', dashboardRouter); 
 
 // Route-route umum lainnya (catch-all atau spesifik prefix) - DI BAWAH API
 // Ini harus di bawah route API agar permintaan /api/... tidak ditangkap olehnya
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/dashboardD', dosenRouter);
+app.use('/Dosen/mahasiswaseminar', mahasiswaseminarRouter);
+app.use('/Dosen/penilaian', penilaianRouter);
+app.use('/Dosen/riwayatseminar', riwayatseminarRouter);
+app.use('/evaluasi', evaluasiRouter);
+app.use('/panduan', pandu);
+app.use(cors());
+app.use(express.json());
+app.use('/melihat', melihatRouter);
+app.use('/check', checkRouter);
+app.use('/dashboardMhs', dashboardMhsRouter);
 app.use('/daftar', daftarRouter);
 app.use('/dashboard', dashboardRouter);
 app.use('/mahasiswa', uploadRouter);
@@ -120,7 +149,6 @@ app.use((req, res, next) => {
 
 // checkPrismaConnection();
 app.use('/admin', adminRouter);
-
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -1,99 +1,56 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Penilaian Seminar - SISemhas</title>
-    <link rel="stylesheet" href="/dosen/CSS/listmhs.css">
-    <link rel="stylesheet" href="/dosen/CSS/penilaian.css">
-</head>
-<body>
-    <header class="header">
-        <div class="header-left">
-            <img src="/dosen/IMG/logo-unand.png" alt="Logo Universitas Andalas" class="logo">
-            <h1 class="header-title">SISemhas - Universitas Andalas</h1>
-        </div>
-    </header>
+<main class="content-container">
+    <div class="content-header">
+        Penilaian Seminar Hasil
+    </div>
 
-    <nav class="top-nav">
-        <ul>
-            <li><a href="/dosen/mahasiswaseminar">List Mahasiswa Seminar</a></li>
-            <li><a href="/dosen/penilaian" class="active">Penilaian</a></li>
-            <li><a href="/dosen/riwayatseminar">Riwayat Seminar</a></li>
-            <li><a href="/dosen/upload">Upload Jadwal</a></li>
-        </ul>
-    </nav>
-
-    <main class="content-container">
-        <div class="content-header">
-            Penilaian Seminar Hasil
+    <div class="form-container">
+        <div class="form-group">
+            <label for="studentSelect">Pilih Nama Mahasiswa</label>
+            <select id="studentSelect" class="student-dropdown">
+                <option value="">-- Pilih Mahasiswa --</option>
+                <% if (typeof mahasiswas !== 'undefined' && mahasiswas.length > 0) { %>
+                    <% mahasiswas.forEach(function(mhs) { %>
+                        <option value="<%= mhs.id %>"><%= mhs.nama %> (<%= mhs.nim %>)</option>
+                    <% }); %>
+                <% } else { %>
+                    <option value="" disabled>Tidak ada mahasiswa yang perlu dinilai</option>
+                <% } %>
+            </select>
         </div>
-        <div class="form-container">
+
+        <form id="assessmentForm">
+            <% if (typeof penilaian !== 'undefined' && penilaian.length > 0) { %>
+                <% penilaian.forEach(function(item) { %>
+                    <div class="form-group">
+                        <label><%= item.nama_kriteria || 'Kriteria ' + item.id_nilai %> (<%= item.bobot * 100 %>%)</label>
+                        <input
+                            type="number"
+                            class="score-input"
+                            data-kategori-id="<%= item.id_nilai %>"
+                            data-weight="<%= item.bobot %>"
+                            min="0"
+                            max="100"
+                            step="0.01"
+                            required
+                        >
+                    </div>
+                <% }); %>
+            <% } else { %>
+                <p>Tidak ada kriteria penilaian yang tersedia.</p>
+            <% } %>
+
             <div class="form-group">
-                <label for="studentSelect">Pilih Nama Mahasiswa</label>
-                <select id="studentSelect" class="student-dropdown">
-                    <option value="">-- Pilih Mahasiswa --</option>
-                    </select>
+                <label>Nilai Akhir:</label>
+                <span id="finalScore">0.00</span>
             </div>
-            
-            <form id="assessmentForm">
-                <table class="assessment-table">
-                    <thead>
-                        <tr>
-                            <th style="width: 5%;">No</th>
-                            <th>Kategori</th>
-                            <th style="width: 15%;">Nilai (0-100)</th>
-                            <th style="width: 15%;">Bobot</th>
-                            <th style="width: 15%;">Skor Akhir</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <%# Pastikan Anda mengirim variabel 'kriteriaPenilaian' dari controller %>
-                        <% if (typeof kriteriaPenilaian !== 'undefined' && kriteriaPenilaian.length > 0) { %>
-                            <% kriteriaPenilaian.forEach((item, index) => { %>
-                                <tr>
-                                    <td><%= index + 1 %></td>
-                                    <td><%= item.kategori %></td>
-                                    <td>
-                                        <input 
-                                            type="number" 
-                                            class="score-input" 
-                                            min="0" 
-                                            max="100" 
-                                            data-kategori-id="<%= item.id %>" 
-                                            data-weight="<%= item.bobot %>"
-                                            disabled>  <%# Dinonaktifkan secara default %>
-                                    </td>
-                                    <td><%= item.bobot %>%</td>
-                                    <td class="weighted-score">0.00</td>
-                                </tr>
-                            <% }) %>
-                        <% } else { %>
-                            <tr>
-                                <td colspan="5" style="text-align: center;">Kriteria penilaian tidak tersedia. Hubungi administrator.</td>
-                            </tr>
-                        <% } %>
-                    </tbody>
-                    <tfoot>
-                        <tr class="total-score-row">
-                            <td colspan="4">Total Nilai Akhir</td>
-                            <td id="finalScore">0.00</td>
-                        </tr>
-                    </tfoot>
-                </table>
-                <div class="button-group">
-                    <button type="button" class="btn btn-revise" disabled>Revisi</button>
-                    <button type="button" class="btn btn-print" disabled>Cetak</button>
-                    <button type="submit" class="btn btn-submit" disabled>Submit</button>
-                </div>
-            </form>
-        </div>
-    </main>
 
-    <footer class="footer">
-        <p>&copy; 2025 Universitas Andalas - Sistem Informasi Seminar Hasil</p>
-    </footer>
+            <div class="form-actions">
+                <button type="submit" class="btn-submit">Kirim Penilaian</button>
+                <button type="button" class="btn-revise" disabled>Revisi</button>
+                <button type="button" class="btn-print" disabled>Cetak</button>
+            </div>
+        </form>
+    </div>
+</main>
 
-    <script src="/dosen/JS/penilaian.js"></script>
-</body>
-</html>
+<script src="/dosen/JS/penilaian.js"></script>

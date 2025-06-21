@@ -167,7 +167,24 @@ const getUsersWithDetails = async () => {
   }
 };
 
-// Fungsi updateUsersRoles, createUserFromAccessRequest tetap sama
+const deleteUserByEmail = async (email) => {
+    try {
+        // Hapus user berdasarkan email
+        const deletedUser = await prisma.user.delete({
+            where: {
+                email: email
+            }
+        });
+        return deletedUser;
+    } catch (error) {
+        console.error("Error in userService.deleteUserByEmail:", error);
+        // Tangani error jika user tidak ditemukan atau ada masalah lain
+        if (error.code === 'P2025') { // Prisma error code for record not found
+            throw new Error(`User with email ${email} not found.`);
+        }
+        throw new Error('Failed to delete user.');
+    }
+};
 // ...
 const updateUsersRoles = async (updates) => {
     return await prisma.$transaction(async (tx) => {
@@ -207,6 +224,7 @@ const updateUsersRoles = async (updates) => {
 // --- HANYA ADA SATU module.exports DI SINI ---
 module.exports = {
   getUsersWithDetails,
+  deleteUserByEmail,
   updateUsersRoles, // Pastikan ini juga diekspor
   
 };
