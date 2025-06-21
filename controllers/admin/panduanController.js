@@ -17,12 +17,11 @@ const uploadPanduanApi = async (req, res) => {
         console.log(`DEBUG UPLOAD CONTROLLER: File diterima. Originalname: ${req.file.originalname}, Mimetype: ${req.file.mimetype}`);
         // Asumsi admin ID (niku) didapatkan dari sesi/token autentikasi
         // Untuk tujuan pengujian, kita bisa hardcode atau ambil dari body jika ada
-        const nikuAdmin = req.user?.niku || 1; // Contoh: Ambil dari req.user setelah autentikasi, default 1
-
+        
         const nama_file = req.file.originalname; // Nama file asli dari upload
         const file_buffer = req.file.buffer; // Data binary file sebagai Buffer
 
-        const newPanduan = await panduanService.uploadPanduan(nama_file, file_buffer, nikuAdmin);
+        const newPanduan = await panduanService.uploadPanduan(nama_file, file_buffer);
         res.status(201).json({ message: 'Panduan berhasil diunggah.', panduan: newPanduan });
 
     } catch (error) {

@@ -16,12 +16,19 @@ var daftarRouter = require('./routes/mahasiswa/pendaftaran');
 var dashboardRouter = require('./routes/mahasiswa/dashboardMhs');
 var uploadRouter = require('./routes/mahasiswa/upload');
 var riwayatSeminarRouter = require('./routes/mahasiswa/riwayatseminar');
-var adminRouter = require('./routes/admin/dashboardAdmin')
+var adminRouter = require('./routes/admin/dashboardAdmin');
+var detailJadwalRouter = require('./routes/mahasiswa/detailJadwal');
+var panduanRouter = require('./routes/mahasiswa/panduan');
+var evaluasiRouter = require('./routes/mahasiswa/evaluasiSisemhas');
+var detailRiwayatRouter = require('./routes/mahasiswa/detailRiwayat')
 const userController = require('./controllers/admin/userController');
 const accessRequestController = require('./controllers/admin/accessRequestController');
-const evaluasiSistemController = require('./controllers/admin/evaluasiSistemController'); // <--- PASTIKAN INI ADA
-const panduanController = require('./controllers/admin/panduanController'); // <--- PASTIKAN INI ADA
-
+const evaluasiSistemController = require('./controllers/admin/evaluasiSistemController'); 
+const panduanController = require('./controllers/admin/panduanController'); 
+var nilaiRouter = require('./routes/mahasiswa/melihatdandownloadnilai');
+var statusRouter = require('./routes/admin/statusSemhas');
+var detailJadwalRouter = require('./routes/mahasiswa/detailJadwal');
+const pdfRiwayatRoutes = require('./routes/mahasiswa/detailRiwayat');
 
 var app = express(); // Hanya satu deklarasi 'app' di sini
 
@@ -37,6 +44,7 @@ app.use(express.json()); // Untuk parsing JSON body dari POST/PUT/PATCH requests
 app.use(express.urlencoded({ extended: false })); // Untuk parsing URL-encoded body dari form-data
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public'))); // Untuk menyajikan file statis (CSS, JS, gambar)
+app.use('/temp_files', express.static(path.join(__dirname, 'temp_files')));
 
 // =========================================================
 // GLOBAL DEBUG MIDDLEWARE (Opsional, untuk debugging)
@@ -81,7 +89,19 @@ app.use('/users', usersRouter);
 app.use('/daftar', daftarRouter);
 app.use('/dashboard', dashboardRouter);
 app.use('/mahasiswa', uploadRouter);
-app.use('/riwayatseminar', riwayatSeminarRouter);
+app.use('/', riwayatSeminarRouter);
+app.use('/', detailRiwayatRouter);
+app.use('/melihat', nilaiRouter);
+
+//Router API untuk Generate Pendaftaran
+app.use('/api', dashboardRouter);
+app.use('/api', pdfRiwayatRoutes);
+
+app.use('/panduan', panduanRouter); // Route untuk halaman panduan seminar hasil'
+app.use('/evaluasi', evaluasiRouter); // Route untuk halaman evaluasi sistem
+// app.use('/detail', detailJadwalRouter);
+app.use('/', statusRouter);
+app.use('/tampil', detailJadwalRouter);
 
 app.use((req, res, next) => {
   console.log('Request URL:', req.url);  // Log URL

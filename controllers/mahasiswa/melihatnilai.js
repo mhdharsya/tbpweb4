@@ -3,21 +3,23 @@ const prisma = new PrismaClient();
 
 exports.showNilai = async (req, res) => {
   try {
-    const nim = req.user.nim; // jika login sebagai mahasiswa
-    const data = await prisma.nilai_semhas.findMany({
-      where: {
-        pendaftaran: {
-          nim: nim
-        }
-      },
-      include: {
-        pendaftaran: true
-      }
-    });
+  const nim = req.userId; // jika login sebagai mahasiswa
+  const data = await prisma.pendaftaran.findFirst({
+    where: {
+      id_user: nim, // mencocokkan id_user dengan userId yang login
+    },
+    orderBy: {
+      id_pendaftaran: 'desc', // urutkan berdasarkan id_pendaftaran terbaru
+    },
+  });
 
-    res.render('mahasiswa/nilai', { data });
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Gagal memuat nilai');
+  // Jika ada data, tampilkan judul
+  if (data) {
+    console.log(data.judul); // menampilkan judul dari pendaftaran
+  } else {
+    console.log("Data tidak ditemukan.");
   }
+} catch (error) {
+  console.error("Terjadi error: ", error);
+}
 };

@@ -5,7 +5,6 @@ const { auth } = require('../middleware/authMiddleware');
 const { getFormDashboard } = require('../controllers/mahasiswa/dashboard');
 
 /* GET home page. */
-
 router.get('/login', (req, res) => {
   res.render('index');
 });

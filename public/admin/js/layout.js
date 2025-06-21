@@ -4,6 +4,52 @@
 // Variabel global
 const pendingRoleUpdates = new Map();
 
+function renderstatussemhas() {
+    const cardHeader = createElement('div', ['card-header']);
+    cardHeader.appendChild(createElement('h2', [], 'Status Semhas'));
+
+    const cardBody = createElement('div', ['card-body']);
+    let tableData = [];
+
+
+exports.getPendaftaran = async (req, res) => {
+
+  try {
+    // Ambil semua data pendaftaran dimana nama_laporan tidak null
+    const pendaftaran = await prisma.pendaftaran.findMany({
+      where: {
+        nama_laporan: {
+          not: null, // Pastikan nama_laporan tidak null
+        }
+      },
+      select: {
+        id_pendaftaran: true,
+        judul: true,
+        bidang_penelitian: true,
+        status: true,
+      },
+      orderBy: {
+        id_pendaftaran: 'desc', // Urutkan berdasarkan id_pendaftaran jika perlu
+      }
+    });
+
+    // Render data pendaftaran ke halaman admin
+    res.render('admin/statusSemhas', {
+      pendaftaran,
+    });
+
+  } catch (error) {
+    console.error('Error fetching pendaftaran data:', error);
+    res.status(500).send('Terjadi kesalahan dalam mengambil data');
+  }
+};
+
+const card = createElement('div', ['card']);
+    card.append(cardHeader, cardBody);
+    return card;
+
+}
+
 function createHeader() {
     const header = createElement('header', ['header']);
     const headerLeft = createElement('div', ['header-left']);
@@ -36,6 +82,7 @@ function createSidebar(activePage) {
         { text: 'Daftar Role User', id: 'daftarRoleUser', url: '/admin/daftar-role-user' }, // Tambah URL
         { text: 'Panduan Seminar Hasil', id: 'panduanSeminar', url: '/admin/panduan-seminar' }, // Tambah URL
         { text: 'Evaluasi Sistem', id: 'evaluasiSistem', url: '/admin/evaluasi-sistem' }, // Tambah URL
+        { text: 'Status Semhas', id: 'statussemhas', url: '/status' },
     ];
 
     menuItems.forEach(item => {
@@ -84,6 +131,9 @@ async function renderPage(pageId) {
             break;
         case 'evaluasiSistem':
             pageContent = await renderEvaluasiSistem(); // Panggil fungsi dari file terpisah
+            break;
+        case 'statussemhas':
+            pageContent = await renderstatussemhas(); // Panggil fungsi dari file terpisah
             break;
         // case 'daftarJadwal':
         //     pageContent = renderDaftarJadwal(); // Panggil fungsi dari file terpisah

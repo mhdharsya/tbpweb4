@@ -13,32 +13,42 @@
         <div class="header-title">SISemhas - Universitas Andalas</div>
     </header>
 
-        <!-- Navigation Tabs -->
-        <nav class="nav-tabs">
-          <div class="nav-left">
-            <a href="/dashboardMhs" class="nav-tab">Dashboard</a>
-            <a href="/daftar/" class="nav-tab">Pendaftaran</a>
-            <a href="/riwayat/" class="nav-tab">Riwayat Semhas</a>
-          </div>
-        </nav>
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs">
+      <div class="nav-left">
+        <a href="/dashboard/" class="nav-tab">Dashboard</a>
+        <a href="/daftar/" class="nav-tab">Pendaftaran</a>
+        <a href="/riwayat/" class="nav-tab">Riwayat Semhas</a>
+      </div>
+    </nav>
 
-        <div class="breadcrumb">
-            <span>Buku Panduan</span>
-        </div>
+    <div class="breadcrumb">
+        <span>Buku Panduan</span>
+    </div>
 
     <!-- Main Content -->
     <div class="main-content">
       <!-- Panduan Content -->
       <div class="page-content active" data-content="panduan">
-        <div class="pdf-container" id="pdfContainer">
-          <div class="pdf-icon">📄</div>
-          <span class="pdf-text">Klik untuk membuka PDF Panduan SISemhas</span>
-        </div>
+        <% if (panduan) { %>
+          <div class="pdf-container" id="pdfContainer">
+            <div class="pdf-icon">📄</div>
+            <!-- Gunakan path file yang disimpan di database untuk menampilkan PDF -->
+            <span class="pdf-text">
+              <a href="<%= panduan.file_path %>" target="_blank">
+                Klik untuk membuka PDF Panduan SISemhas
+              </a>
+            </span>
+          </div>
 
-        <iframe class="pdf-viewer" id="pdfViewer" src="panduan.pdf" style="display: none;"></iframe>
+          <!-- Menampilkan PDF di iframe jika diinginkan -->
+          <iframe class="pdf-viewer" id="pdfViewer" src="<%= panduan.file_path %>" style="width: 100%; height: 600px;"></iframe>
+        <% } else { %>
+          <p>Belum ada panduan yang di-upload.</p>
+        <% } %>
 
         <div class="pdf-controls" id="pdfControls" style="display: none;">
-          <a href="panduan.pdf" class="btn btn-primary" id="downloadBtn" download>
+          <a href="<%= panduan.file_path %>" class="btn btn-primary" id="downloadBtn" download>
             💾 Download PDF
           </a>
           <button class="btn btn-secondary" id="closeBtn">
@@ -47,7 +57,6 @@
         </div>
       </div>
     </div>
-  </div>
 
   <script src="/mahasiswa/js/panduan.js"></script>
 </body>
