@@ -7,60 +7,34 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model berkas_pdf {
-  id            Int      @id @default(autoincrement())
-  nama_file     String   @db.VarChar(255)
-  tipe          String   @db.VarChar(50)  // contoh: "KRS", "Laporan", "PPT"
-  file          Bytes    @db.Blob
-  uploaded_by   String   @db.VarChar(100) // email user pengunggah
-  createdAt     DateTime @default(now())
-
-  @@index([uploaded_by])
-}
-
-
 model admin {
-  niku       String @id @db.VarChar(50)
-  nama_admin String @db.VarChar(255)
-  email      String @unique @db.VarChar(100)
-  id_user    String @db.VarChar(50)
-  user       user   @relation(fields: [id_user], references: [id_user], onDelete: Cascade)
-
-  @@index([id_user], map: "admin_id_user_fkey")
-}
-
-model dosen {
-  id_user         String  @id @db.VarChar(50)
-  bidang_keahlian String? @db.VarChar(99)
-  user            user    @relation(fields: [id_user], references: [id_user], onDelete: Cascade)
-
-  @@index([id_user], map: "fk_user_dosen")
+  niku       String    @id @db.VarChar(50)    // Mengubah dari Int ke String
+  nama_admin String    @db.VarChar(255)
+  email      String    @unique @db.VarChar(100)
+  panduan    panduan[]
 }
 
 model evaluasi_sistem {
-  id               String       @id @default(cuid()) @db.VarChar(50)
-  fitur            Int
-  konten           Int
-  responsif        Int
-  kemudahan        Int
-  dokumentasi      Int
-  saran            String?
-  kritik           String?
-  createdAt        DateTime     @default(now())
+  id_evaluasi    Int       @id
+  kualitas_ui    String    @db.VarChar(100)
+  kinerja_sistem String    @db.VarChar(100)
+  kritik_saran   String    @db.Text
+  tanggal_isi    DateTime  @db.Date
 }
 
 model jadwal_dosen {
-  id_jadwal_dosen String   @id @db.VarChar(50)
-  tanggal_mulai   DateTime @db.Date
-  tanggal_selesai DateTime @db.Date
+  id_jadwal_dosen String      @id @db.VarChar(50)  // Mengubah dari Int ke String
+  bidang_keahlian String      @db.VarChar(99)
+  tanggal_mulai   DateTime    @db.Date
+  tanggal_selesai DateTime   @db.Date
 }
 
 model jadwal_pendaftaran {
-  id_jadwal Int @id @default(autoincrement())
+  id_jadwal      Int          @id @default(autoincrement())
   id_pendaftaran Int
   jam_mulai      DateTime     @db.Time(0)
   jam_selesai    DateTime     @db.Time(0)
-  status         String       @db.VarChar(50)
+  tanggal        DateTime      @db.Date
   dosen_penguji  String       @db.VarChar(99)
   id_kuota       String       @db.VarChar(50)
   kuota_semhas   kuota_semhas @relation(fields: [id_kuota], references: [id_kuota], onDelete: NoAction, onUpdate: NoAction, map: "fk_kuota_semhas_jadwal_pendaftaran")
@@ -82,30 +56,31 @@ model kadep {
 model kuota_semhas {
   id_kuota           String               @id @db.VarChar(50)
   kuota_max          Int
-  minggu             DateTime             @db.Time(0)
+  batas_input        DateTime             @db.Time(0)
   jadwal_pendaftaran jadwal_pendaftaran[]
 }
 
 model nilai_semhas {
-  id_nilai        String      @id @db.VarChar(50)
   status_semhas   String      @db.VarChar(50)
-  bobot_penilaian Int
   komentar        String      @db.Text
-  id_rubik        String      @db.VarChar(50)
+  id_rubik        String      @id @db.VarChar(50)
   id_pendaftaran  Int
   pendaftaran     pendaftaran @relation(fields: [id_pendaftaran], references: [id_pendaftaran], onUpdate: Restrict, map: "fk_pendaftaran_nilai_semhas")
   rubik           rubik       @relation(fields: [id_rubik], references: [id_rubik], onDelete: NoAction, onUpdate: NoAction, map: "fk_rubik_nilai_semhas")
+  id_user       String      @db.VarChar(50)
+  user    user               @relation(fields: [id_user], references: [id_user], onUpdate: Restrict, map: "fk_dosen_nilai_semhas")
 
   @@index([id_pendaftaran], map: "fk_pendaftaran_nilai_semhas")
   @@index([id_rubik], map: "fk_rubik_nilai_semhas")
+  @@index([id_user], map: "fk_dosen_nilai_semhas")
 }
+
 
 model panduan {
   id_panduan     Int      @id @default(autoincrement())
   nama_file      String   @db.VarChar(255)
   tanggal_unggah DateTime @db.Date
-  file          Bytes    @db.Blob
- 
+  file           Bytes    @db.Blob
 }
 
 model pendaftaran {
@@ -119,6 +94,7 @@ model pendaftaran {
   nama_ppt           String?              @db.VarChar(255)
   id_periode         String?              @db.VarChar(50)
   id_user            String               @db.VarChar(50)
+  status             String?              @db.VarChar(50)
   jadwal_pendaftaran jadwal_pendaftaran[]
   nilai_semhas       nilai_semhas[]
   periode_semhas     periode_semhas?      @relation(fields: [id_periode], references: [id_periode], onDelete: NoAction, onUpdate: NoAction)
@@ -138,20 +114,25 @@ model periode_semhas {
 }
 
 model rubik {
-  id_rubik     String         @id @db.VarChar(50)
-  kriteria     String         @db.VarChar(255)
-  bobot        Int
+  id_rubik        String         @id @db.VarChar(50)
+  pemahaman       String         @db.VarChar(255)
+  dokumenasi      String         @db.VarChar(255)
+  presentasi      String         @db.VarChar(255)
+  ketepatan_waktu String         @db.VarChar(255)
+  sikap           String         @db.VarChar(255)
+  id_pendaftaran  Int
   nilai_semhas nilai_semhas[]
+
+  @@index([id_pendaftaran], map: "fk_pendaftaran_rubik")
 }
 
 model user {
-  password     String        @db.VarChar(99)
-  email        String        @id @db.VarChar(100)
-  role         String        @db.VarChar(50)
-  id_user      String?       @unique(map: "id_user") @db.VarChar(50)
-  nama_lengkap String        @db.VarChar(99)
-  admin        admin[]
-  dosen        dosen?
-  kadep        kadep?
-  pendaftaran  pendaftaran[]
+  password      String      @db.VarChar(99)
+  email         String      @id @db.VarChar(100)
+  role          String      @db.VarChar(50)
+  id_user       String?     @unique(map: "id_user") @db.VarChar(50) // id_user digunakan untuk mahasiswa dan dosen
+  nama_lengkap  String      @db.VarChar(99) // Nama Lengkap untuk semua role (mahasiswa, dosen, admin, dll)
+  kadep         kadep[]
+  pendaftaran   pendaftaran[]
+  nilai_semhas  nilai_semhas[]
 }

@@ -3,12 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Sistem Informasi Seminar Hasil - Universitas Andalas">
     <title>SISemhas - Universitas Andalas</title>
     <link rel="stylesheet" href="/mahasiswa/CSS/dashboard.css">
 </head>
 <body>
-    <!-- Header -->
     <header class="header">
         <img class="logo" src="/mahasiswa/asset/image/logo.png" alt="Logo Universitas Andalas" />
         <div class="header-title">SISemhas - Universitas Andalas</div>
@@ -17,7 +15,7 @@
     <!-- Navigation -->
     <nav class="nav-tabs">
         <div class="nav-left">
-            <a href="/dashboardMhs/" class="nav-tab active" aria-current="page">Dashboard</a>
+            <a href="/dashboard/" class="nav-tab active" aria-current="page">Dashboard</a>
             <a href="/daftar/" class="nav-tab">Pendaftaran</a>
             <a href="/riwayatseminar/" class="nav-tab">Riwayat Semhas</a>
         </div>
@@ -31,7 +29,7 @@
                 <h1>Halo, <%= nama_lengkap %></h1>
                 <p>Segera Daftar Seminar Online</p>
             </div>
-            <a href="/daftar/" class="register-btn">
+            <a href="/daftar/" class="daftar-seminar-hasil">
                 <span class="icon">📋</span>
                 Daftar Seminar Hasil
             </a>
@@ -43,18 +41,26 @@
             <section class="section">
                 <header class="section-header">
                     <span class="icon">🖨️</span>
-                    Riwayat - Seminar Hasil
+                    Dashboard - Seminar Hasil
                 </header>
-                
-                <div class="seminar-item">
-                    <div class="seminar-title">Seminar Hasil - dd/mm/yy</div>
-                    <div class="seminar-status">Status : Lulus / Revisi</div>
-                </div>
-                
-                <div class="seminar-item">
-                    <div class="seminar-title">Seminar Hasil - dd/mm/yy</div>
-                    <div class="seminar-status">Status : Lulus / Revisi</div>
-                </div>
+                <% if (!emptyState) { %>
+                    <% riwayat.forEach(function(item) { %>
+                        <div class="seminar-item">
+                            <div class="seminar-title">
+                                <%= item.judul %> - <%= item.tanggal ? item.tanggal : 'dd/mm/yy' %> <!-- Menampilkan tanggal jika ada -->
+                            </div>
+                            <div class="seminar-status">
+                                Status : <%= item.status %> <!-- Menampilkan status seminar: Lulus/Revisi -->
+                            </div>
+                        </div>
+                    <% }); %>
+                <% } else { %>
+                    <!-- Empty state message if there is no data -->
+                    <div id="emptyState" class="empty-state show">
+                        <h3>Belum Ada Riwayat Semhas</h3>
+                        <p>Anda belum memiliki riwayat seminar hasil. Silakan lakukan pendaftaran seminar hasil terlebih dahulu.</p>
+                    </div>
+                <% } %>
             </section>
 
             <!-- Right Section - Menu -->
@@ -64,21 +70,29 @@
                 </header>
                 
                 <div class="menu-buttons">
-                     <a href="/melihat/">
-                         <button class ="menu-btn">Penilaian SemHas</button>
-                    </a> 
-                    <button class="menu-btn">Detail Jadwal</button>
+                    <a href="/melihat/">
+                        <button class="menu-btn">Penilaian SemHas</button>
+                    </a>
+
+                    <!-- Menggunakan EJS untuk menyertakan id_pendaftaran dalam href -->
+                    <a href="/tampil/">
+                        <button class="menu-btn">Detail Jadwal</button>
+                    </a>
+                    
+                    <!--Download kartu pendaftaran-->
+                    <button id="downloadPendaftaranPdfBtn" class="menu-btn download-pdf">Generate Laporan Pendaftaran PDF</button>
+                    <p id="pendaftaran-error-message" class="error-message" style="display:none;"></p>
                 </div>
             </section>
         </div>
 
         <!-- Evaluation Section dan Panduan Section -->
         <div class="eval-panduan">
-            <a href="/evaluasi/">
+            <a href="/mahasiswa/">
                 <button class ="menu-btn">Evaluasi SISemhas</button>
             </a> 
             <a href="/panduan/">
-                <button class ="menu-btn">Buku Panduan</button>
+                <button class="menu-btn">Buku Panduan</button>
             </a>
         </div>
     </div>
@@ -90,59 +104,16 @@
         <p id="pendaftaran-error-message" class="error-message" style="display:none;"></p>
     </div>
 
+    <!-- Footer Section -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p>Universitas Andalas</p>
+            <p>Fakultas Teknologi Informasi</p>
+            <p>Sistem Informasi</p>
+            <p>Contact Person: 082184146930</p>
+        </div>
+    </footer>
     <script src="/mahasiswa/JS/dashboard.js"></script>
-
-    <script>
-        // Tambahkan script ini ke file dashboard.js Anda, atau di sini di dalam tag <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const downloadPdfBtn = document.getElementById('downloadPendaftaranPdfBtn');
-            const errorMessageP = document.getElementById('pendaftaran-error-message');
-
-            const API_BASE_URL = 'http://localhost:3000/api'; // Sesuaikan dengan URL API backend Anda
-
-            const setLoading = (isLoading) => {
-                downloadPdfBtn.disabled = isLoading;
-                downloadPdfBtn.textContent = isLoading ? 'Mengenerate PDF...' : 'Generate Laporan Pendaftaran PDF';
-            };
-
-            const displayError = (message) => {
-                errorMessageP.textContent = message;
-                errorMessageP.style.display = 'block';
-            };
-
-            const clearMessages = () => {
-                errorMessageP.style.display = 'none';
-            };
-
-            // Fungsi untuk mengunduh PDF pendaftaran
-            downloadPdfBtn.addEventListener('click', async () => {
-                clearMessages();
-                setLoading(true);
-                try {
-                    const response = await fetch(`${API_BASE_URL}/pendaftaran/pdf`);
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-
-                    const blob = await response.blob();
-                    const url = window.URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = 'laporan_pendaftaran.pdf';
-                    document.body.appendChild(a);
-                    a.click();
-                    a.remove();
-                    window.URL.revokeObjectURL(url);
-                    alert('Laporan PDF Pendaftaran berhasil diunduh!');
-                } catch (err) {
-                    console.error("Error generating pendaftaran PDF:", err);
-                    displayError('Gagal mengenerate laporan PDF. Pastikan server berjalan dan URL benar.');
-                } finally {
-                    setLoading(false);
-                }
-            });
-        });
-    </script>
 </body>
 </html>
 

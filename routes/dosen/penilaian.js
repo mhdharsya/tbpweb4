@@ -17,14 +17,6 @@ router.get(
     penilaianController.renderPenilaianPage
 );
 
-// Rute API untuk data mahasiswa
-router.get(
-    '/api/mahasiswa-bimbingan',
-    authMiddleware,
-    dosenMiddleware,
-    penilaianController.getMahasiswaBimbingan
-);
-
 // Rute API untuk mengambil nilai yang sudah ada
 router.get(
     '/api/nilai/:mahasiswaId',

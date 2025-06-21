@@ -80,19 +80,52 @@ border-radius: 3px;
         <div class="header-title">SISemhas - Universitas Andalas</div>
     </header>
 
-        <!-- Navigation Tabs -->
-        <nav class="nav-tabs">
-          <div class="nav-left">
-            <a href="/dashboardMhs" class="nav-tab">Dashboard</a>
-            <a href="/daftar/" class="nav-tab">Pendaftaran</a>
-            <a href="/riwayat/" class="nav-tab">Riwayat Semhas</a>
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs">
+      <div class="nav-left">
+        <a href="/dashboard/" class="nav-tab">Dashboard</a>
+        <a href="/daftar/" class="nav-tab">Pendaftaran</a>
+        <a href="/riwayat/" class="nav-tab">Riwayat Semhas</a>
+      </div>
+    </nav>
+
+    <div class="breadcrumb">
+        <span>Buku Panduan</span>
+    </div>
+
+<<<<<<< HEAD
+    <!-- Main Content -->
+    <div class="main-content">
+      <!-- Panduan Content -->
+      <div class="page-content active" data-content="panduan">
+        <% if (panduan) { %>
+          <div class="pdf-container" id="pdfContainer">
+            <div class="pdf-icon">📄</div>
+            <!-- Gunakan path file yang disimpan di database untuk menampilkan PDF -->
+            <span class="pdf-text">
+              <a href="<%= panduan.file_path %>" target="_blank">
+                Klik untuk membuka PDF Panduan SISemhas
+              </a>
+            </span>
           </div>
-        </nav>
 
-        <div class="breadcrumb">
-            <span>Buku Panduan</span>
+          <!-- Menampilkan PDF di iframe jika diinginkan -->
+          <iframe class="pdf-viewer" id="pdfViewer" src="<%= panduan.file_path %>" style="width: 100%; height: 600px;"></iframe>
+        <% } else { %>
+          <p>Belum ada panduan yang di-upload.</p>
+        <% } %>
+
+        <div class="pdf-controls" id="pdfControls" style="display: none;">
+          <a href="<%= panduan.file_path %>" class="btn btn-primary" id="downloadBtn" download>
+            💾 Download PDF
+          </a>
+          <button class="btn btn-secondary" id="closeBtn">
+            ❌ Tutup PDF
+          </button>
         </div>
-
+      </div>
+    </div>
+=======
  <!-- Main Content -->
     <div class="container">
         
@@ -102,72 +135,21 @@ border-radius: 3px;
 
     </div>
 
-    <script>
-        // Fungsi createElement kustom Anda (contoh sederhana)
-        // Pastikan fungsi ini sama persis dengan yang Anda gunakan di skrip Anda
-        function createElement(tag, classNames = [], textContent = '', attributes = {}) {
-            const element = document.createElement(tag);
-            if (classNames.length > 0) {
-                element.classList.add(...classNames);
-            }
-            if (textContent) {
-                element.textContent = textContent;
-            }
-            for (const key in attributes) {
-                element.setAttribute(key, attributes[key]);
-            }
-            return element;
-        }
+    <!-- Iframe PDF Viewer -->
+    <iframe class="pdf-viewer" id="pdfViewer" src="panduan.pdf" style="display: none;"></iframe>
 
-        // Ambil elemen yang akan menjadi target penambahan kartu panduan
-        const panduanSection = document.getElementById('panduanSection');
+    <!-- Tombol Kontrol PDF -->
+    <div class="pdf-controls" id="pdfControls" style="display: none;">
+      <a href="panduan.pdf" class="btn btn-primary" id="downloadBtn" download>
+        💾 Download PDF
+      </a>
+      <button class="btn btn-secondary" id="closeBtn">
+        ❌ Tutup PDF
+      </button>
+    </div>
+  </div>
+</div>
 
-        // Pastikan Anda membersihkan placeholder awal
-        panduanSection.innerHTML = ''; 
-
-        // Kode JavaScript Anda yang akan membuat dan mengisi elemen
-        // Salin dan tempel kode JavaScript yang Anda berikan di sini:
-        const bookCard = createElement('div', ['panduan-card', 'book-panduan']);
-        bookCard.appendChild(createElement('h3', [], 'Buku Panduan Terbaru'));
-        const imgContainer = createElement('div', ['panduan-image-container']);
-        const pdfLink = createElement('a', [], '', { target: '_blank' }); // Link untuk PDF
-        const defaultPdfIcon = createElement('img', ['panduan-thumbnail'], '', {
-            src: '/admin/img/pdf-icon.png', // <--- GANTI DENGAN PATH ICON PDF ANDA JIKA BERBEDA
-            alt: 'PDF Icon'
-        });
-        pdfLink.appendChild(defaultPdfIcon);
-        const pdfTitle = createElement('p', [], 'Memuat...'); // Nama file PDF
-        pdfLink.appendChild(pdfTitle);
-        imgContainer.appendChild(pdfLink);
-        bookCard.appendChild(imgContainer);
-        panduanSection.appendChild(bookCard);
-
-        // Fetch latest panduan
-        try {
-            const fetchPanduan = async () => {
-                const response = await fetch('/api/panduan/latest');
-                if (response.ok) {
-                    const latest = await response.json();
-                    if (latest && latest.id_panduan && latest.nama_file) {
-                        pdfLink.href = `/api/panduan/file/${latest.id_panduan}`; // URL untuk menampilkan PDF
-                        pdfTitle.textContent = latest.nama_file;
-                    } else {
-                        pdfTitle.textContent = 'Tidak ada panduan tersedia';
-                        pdfLink.removeAttribute('href'); // Hapus link jika tidak ada file
-                    }
-                } else if (response.status === 404) {
-                    pdfTitle.textContent = 'Tidak ada panduan tersedia';
-                    pdfLink.removeAttribute('href');
-                } else {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-            };
-            fetchPanduan(); // Panggil fungsi fetch
-        } catch (error) {
-            console.error("Error fetching latest panduan:", error);
-            pdfTitle.textContent = 'Gagal memuat panduan terbaru';
-            pdfLink.removeAttribute('href');
-        }
-    </script>
+  <script src="/mahasiswa/js/panduan.js"></script>
 </body>
 </html>

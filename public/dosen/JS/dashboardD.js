@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const currentMonth = now.getMonth();
         const currentYear = now.getFullYear();
         const today = now.getDate();
+        
 
         // SOLUSI 2: Menggunakan Bahasa Indonesia
         const monthNames = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
