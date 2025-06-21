@@ -1,13 +1,13 @@
 var express = require('express');
 var router = express.Router();
-const { login, register } = require('../controllers/authController');
+const { login, register, showLogin } = require('../controllers/authController');
 const { auth } = require('../middleware/authMiddleware');
 const { getDashboardD } = require('../controllers/dosen/dosen'); 
 const { getFormDashboard } = require('../controllers/mahasiswa/dashboard');
 
 /* GET home page. */
 router.get('/', (req, res) => {
-  res.render('kadep/');
+  res.render('kadep/bidangkeahlian');
 });
 
 router.get('/login', (req, res) => {
@@ -33,6 +33,7 @@ router.get('/dashboard', auth, async (req, res) => {
   }
 });
 
+router.get('/login', showLogin);
 router.post('/login', login);
 router.post('/register', register);
 
