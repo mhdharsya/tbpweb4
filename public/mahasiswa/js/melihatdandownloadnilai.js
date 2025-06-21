@@ -1,45 +1,59 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const tbody = document.getElementById("nilai-body");
+  window.downloadPDF = function () {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
 
-    dataNilai.forEach((item) => {
-        const row = document.createElement("tr");
-
-        const colNo = document.createElement("td");
-        colNo.textContent = item.no;
-        row.appendChild(colNo);
-
-        const colKategori = document.createElement("td");
-        colKategori.textContent = item.kategori;
-        row.appendChild(colKategori);
-
-        const colNilai = document.createElement("td");
-        colNilai.textContent = item.nilai;
-        row.appendChild(colNilai);
-
-        tbody.appendChild(row);
-    });
-});
+    const nama = document.querySelector(".form-info h3:nth-child(1)").textContent;
+    const nim = document.querySelector(".form-info h3:nth-child(2)").textContent;
+    const judul = document.querySelector(".form-info h3:nth-child(3)").textContent;
+    const status = document.querySelector(".status-section .form-group:nth-child(1)").textContent;
+    const komentar = document.querySelector(".status-section .form-group:nth-child(2)").textContent;
+    const namaDosen = document.getElementById("printDosenSignatureName").textContent.trim();
+    const nipDosen = document.getElementById("printDosenSignatureId").textContent.trim();
 
 
-function downloadPDF() {
-    const nama = getCookieValue("nama") || "Mahasiswa";
-
-    const doc = new window.jspdf.jsPDF();
     doc.setFontSize(16);
-    doc.text(`Nilai ${nama} - Seminar Akhir`, 14, 15);
+    doc.text("Penilaian Seminar Akhir", 70, 15);
 
-    const headers = [["No", "Kategori", "Nilai"]];
-    const rows = dataNilai.map(item => [item.no, item.kategori, item.nilai]);
+    doc.setFontSize(12);
+    doc.text(nama, 10, 30);
+    doc.text(nim, 10, 40);
+    doc.text(judul, 10, 50);
+    doc.text("Nama Dosen: " + namaDosen, 10, 60);
+    doc.text("NIP: " + nipDosen, 10, 70);
+
+
+
+    // Tabel Penilaian
+    const rows = [];
+    const tableRows = document.querySelectorAll("#nilai-body tr");
+    tableRows.forEach(row => {
+      const cols = row.querySelectorAll("td");
+      const rowData = Array.from(cols).map(col => col.textContent.trim());
+      rows.push(rowData);
+    });
 
     doc.autoTable({
-        head: headers,
-        body: rows,
-        startY: 25,
-        styles: { fontSize: 12 },
-        headStyles: { fillColor: [41, 128, 185] },
-        alternateRowStyles: { fillColor: [245, 245, 245] }
+      head: [['No', 'Kriteria', 'Bobot']],
+      body: rows,
+      startY: 90,
     });
 
-    const filename = `nilai_${nama.replace(/\s+/g, "_")}.pdf`;
-    doc.save(filename);
-}
+    const finalY = doc.lastAutoTable.finalY + 10;
+    doc.text(status, 10, finalY);
+    doc.text(komentar, 10, finalY + 10);
+
+    
+    
+    // Tambahkan tanda tangan di sisi kanan
+    const date = new Date();
+    const formattedDate = date.toLocaleDateString('id-ID');
+    doc.text(`Padang, ${formattedDate}`, 140, finalY + 30);
+    doc.text("Dosen Penguji,", 140, finalY + 40);
+    doc.text(`(${namaDosen})`, 140, finalY + 70);
+    doc.text(`NIP. ${nipDosen}`, 140, finalY + 80);
+
+    doc.save('nilai-seminar.pdf');
+  }
+
+});
