@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const panduanService = require('../services/panduanMService'); // Pastikan path ini benar!
 
 // API: Ambil panduan terbaru
 router.get('/latest', async (req, res) => {

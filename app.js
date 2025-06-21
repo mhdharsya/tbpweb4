@@ -47,6 +47,7 @@ app.use(express.json()); // Untuk parsing JSON body dari POST/PUT/PATCH requests
 app.use(express.urlencoded({ extended: false })); // Untuk parsing URL-encoded body dari form-data
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public'))); // Untuk menyajikan file statis (CSS, JS, gambar)
+app.use('/uploads', express.static(path.join(__dirname, 'public', 'uploads')));
 
 // =========================================================
 // GLOBAL DEBUG MIDDLEWARE (Opsional, untuk debugging)
@@ -92,8 +93,7 @@ app.use('/evaluasi', evaluasiRouter);
 app.use(cors());
 app.use(express.json());
 app.use('/melihat', melihatRouter);
-app.use('/check', checkRouter);
-app.use('/dashboardMhs', dashboardMhsRouter);
+
 app.use('/daftar', daftarRouter);
 app.use('/dashboard', dashboardRouter);
 app.use('/mahasiswa', uploadRouter);

@@ -7,19 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model berkas_pdf {
-  id            Int      @id @default(autoincrement())
-  nama_file     String   @db.VarChar(255)
-  tipe          String   @db.VarChar(50)  // contoh: "KRS", "Laporan", "PPT"
-  file          Bytes    @db.Blob
-  uploaded_by   String   @db.VarChar(100) // email user pengunggah
-  createdAt     DateTime @default(now())
-
-  user          user     @relation(fields: [uploaded_by], references: [email], onDelete: Cascade)
-
-  @@index([uploaded_by])
-}
-
 
 model admin {
   niku       String @id @db.VarChar(50)
@@ -89,11 +76,9 @@ model kuota_semhas {
 }
 
 model nilai_semhas {
-  id_nilai        String      @id @db.VarChar(50)
   status_semhas   String      @db.VarChar(50)
-  bobot_penilaian Int
   komentar        String      @db.Text
-  id_rubik        String      @db.VarChar(50)
+  id_rubik        String      @id @db.VarChar(50)
   id_pendaftaran  Int
   pendaftaran     pendaftaran @relation(fields: [id_pendaftaran], references: [id_pendaftaran], onUpdate: Restrict, map: "fk_pendaftaran_nilai_semhas")
   rubik           rubik       @relation(fields: [id_rubik], references: [id_rubik], onDelete: NoAction, onUpdate: NoAction, map: "fk_rubik_nilai_semhas")
@@ -140,10 +125,16 @@ model periode_semhas {
 }
 
 model rubik {
-  id_rubik     String         @id @db.VarChar(50)
-  kriteria     String         @db.VarChar(255)
-  bobot        Int
+  id_rubik        String         @id @db.VarChar(50)
+  pemahaman       String         @db.VarChar(255)
+  dokumenasi      String         @db.VarChar(255)
+  presentasi      String         @db.VarChar(255)
+  ketepatan_waktu String         @db.VarChar(255)
+  sikap           String         @db.VarChar(255)
+  id_pendaftaran  Int
   nilai_semhas nilai_semhas[]
+
+  @@index([id_pendaftaran], map: "fk_pendaftaran_rubik")
 }
 
 model user {
