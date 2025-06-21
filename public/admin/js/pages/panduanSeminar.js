@@ -1,18 +1,32 @@
 // public/js/pages/panduanSeminar.js
 
-// Asumsi createElement, createTable, renderPage sudah tersedia secara global
+// ... (Asumsi createElement, createTable, renderPage sudah tersedia secara global) ...
+
 async function renderPanduanSeminar() {
     console.log('--- ENTERING renderPanduanSeminar ---');
     const cardContent = document.createDocumentFragment();
 
     const cardHeader = createElement('div', ['card-header']);
-    cardHeader.appendChild(createElement('h2', [], 'Panduan Seminar Hasil'));
+    const headerTitle = createElement('h2', [], 'Panduan Seminar Hasil');
+    cardHeader.appendChild(headerTitle);
+
+    // --- TOMBOL LIHAT RIWAYAT PANDUAN ---
+    const historyButton = createElement('a', ['btn-update', 'btn-history-header'], 'Lihat Riwayat Panduan', {
+        href: '/admin/panduan-riwayat' // <--- LINK KE HALAMAN RIWAYAT
+    });
+    cardHeader.appendChild(historyButton); // Pindahkan tombol ke cardHeader
+
+    // Tambahkan styling untuk cardHeader agar kontennya sejajar
+    cardHeader.style.display = 'flex';
+    cardHeader.style.justifyContent = 'space-between'; // Memisahkan judul dan tombol
+    cardHeader.style.alignItems = 'center'; // Pusatkan secara vertikal
+
 
     const cardBody = createElement('div', ['card-body']);
 
     const panduanSection = createElement('div', ['panduan-upload-section']);
 
-    // --- BAGIAN BUKU PANDUAN TERBARU ---
+    // --- BAGIAN BUKU PANDUAN TERBARU --- (Tetap sama)
     const bookCard = createElement('div', ['panduan-card', 'book-panduan']);
     bookCard.appendChild(createElement('h3', [], 'Buku Panduan Terbaru'));
     const imgContainer = createElement('div', ['panduan-image-container']);
@@ -28,17 +42,16 @@ async function renderPanduanSeminar() {
     bookCard.appendChild(imgContainer);
     panduanSection.appendChild(bookCard);
 
-    // Fetch latest panduan
     try {
         const response = await fetch('/api/panduan/latest');
         if (response.ok) {
             const latest = await response.json();
             if (latest && latest.id_panduan && latest.nama_file) {
-                pdfLink.href = `/api/panduan/file/${latest.id_panduan}`; // URL untuk menampilkan PDF
+                pdfLink.href = `/api/panduan/file/${latest.id_panduan}`;
                 pdfTitle.textContent = latest.nama_file;
             } else {
                 pdfTitle.textContent = 'Tidak ada panduan tersedia';
-                pdfLink.removeAttribute('href'); // Hapus link jika tidak ada file
+                pdfLink.removeAttribute('href');
             }
         } else if (response.status === 404) {
             pdfTitle.textContent = 'Tidak ada panduan tersedia';
@@ -52,26 +65,23 @@ async function renderPanduanSeminar() {
         pdfLink.removeAttribute('href');
     }
 
-
-    // --- BAGIAN UPLOAD PANDUAN ---
+    // --- BAGIAN UPLOAD PANDUAN --- (Tetap sama)
     const uploadCard = createElement('div', ['panduan-card', 'upload-panduan']);
     uploadCard.appendChild(createElement('h3', [], 'Unggah Panduan Baru'));
     const uploadArea = createElement('div', ['upload-area']);
     const uploadIcon = createElement('i', ['fas', 'fa-cloud-upload-alt', 'upload-icon']);
-    const fileInput = createElement('input', [], '', { type: 'file', id: 'uploadFile', accept: '.pdf' }); // Hanya terima PDF
+    const fileInput = createElement('input', [], '', { type: 'file', id: 'uploadFile', accept: '.pdf' });
     fileInput.style.display = 'none';
     const uploadLabel = createElement('label', ['btn-upload-file'], 'Pilih File PDF', { 'for': 'uploadFile' });
-    const fileNameSpan = createElement('span', [], 'Belum ada file dipilih'); // Untuk menampilkan nama file yang dipilih
-    
+    const fileNameSpan = createElement('span', ['file-name-display'], 'Belum ada file dipilih');
 
     uploadArea.append(uploadIcon, fileInput, uploadLabel, fileNameSpan);
     uploadCard.appendChild(uploadArea);
     panduanSection.appendChild(uploadCard);
 
-    const uploadButton = createElement('button', ['btn-update'], 'Unggah Panduan'); // Tombol untuk memulai upload
+    const uploadButton = createElement('button', ['btn-update'], 'Unggah Panduan');
     uploadCard.appendChild(uploadButton);
 
-    // Event listener untuk menampilkan nama file yang dipilih
     fileInput.addEventListener('change', (event) => {
         if (event.target.files.length > 0) {
             fileNameSpan.textContent = event.target.files[0].name;
@@ -80,7 +90,6 @@ async function renderPanduanSeminar() {
         }
     });
 
-    // Event listener untuk tombol Unggah
     uploadButton.addEventListener('click', async () => {
         if (fileInput.files.length === 0) {
             alert('Mohon pilih file PDF terlebih dahulu.');
@@ -88,12 +97,12 @@ async function renderPanduanSeminar() {
         }
         const file = fileInput.files[0];
         const formData = new FormData();
-        formData.append('pdfFile', file); // 'pdfFile' harus cocok dengan nama field multer di backend (upload.single('pdfFile'))
+        formData.append('pdfFile', file);
 
         try {
             const response = await fetch('/api/panduan/upload', {
                 method: 'POST',
-                body: formData, // FormData akan mengatur Content-Type secara otomatis
+                body: formData,
             });
 
             if (!response.ok) {
@@ -105,56 +114,16 @@ async function renderPanduanSeminar() {
             alert(result.message);
             console.log('Upload berhasil:', result);
 
-            // Bersihkan input file dan refresh tabel setelah berhasil
-            fileInput.value = ''; // Reset input file
+            fileInput.value = '';
             fileNameSpan.textContent = 'Belum ada file dipilih';
-            renderPage('panduanSeminar'); // Refresh halaman untuk menampilkan daftar terbaru
+            renderPage('panduanSeminar'); // Refresh halaman
         } catch (error) {
             console.error('Error saat mengunggah panduan:', error);
             alert(`Gagal mengunggah panduan: ${error.message}`);
         }
     });
 
-
-    cardBody.appendChild(panduanSection);
-
-    // --- BAGIAN RIWAYAT PANDUAN ---
-    const tableHeaders = ['Riwayat', 'Judul', 'Tanggal Unggah', 'Aksi']; // Tambahkan kolom Aksi jika ingin download
-    let panduanListData = [];
-
-    try {
-        const response = await fetch('/api/panduan/list');
-        if (response.ok) {
-            const list = await response.json();
-            panduanListData = list.map((item, index) => {
-                return [
-                    index + 1,
-                    item.namaFile,
-                    item.tanggalUnggah,
-                    item.id // Simpan ID untuk tombol aksi
-                ];
-            });
-        } else {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-    } catch (error) {
-        console.error("Error fetching panduan list:", error);
-        cardBody.appendChild(createElement('p', ['error-message'], 'Gagal memuat riwayat panduan. ' + error.message));
-    }
-
-
-    const panduanTable = createTable(tableHeaders, panduanListData, (cellData, rowIndex, colIndex, rowData) => {
-        if (colIndex === 3) { // Kolom 'Aksi'
-            const downloadLink = createElement('a', ['btn-action', 'btn-accept'], 'Lihat/Unduh', {
-                href: `/api/panduan/file/${rowData[3]}`, // rowData[3] adalah ID panduan
-                // target: '_blank' // Buka di tab baru
-            });
-            return downloadLink;
-        }
-        return document.createTextNode(String(cellData));
-    });
-    panduanTable.classList.add('panduan-table');
-    cardBody.appendChild(panduanTable);
+    cardBody.appendChild(panduanSection); // panduanSection berisi bookCard dan uploadCard
 
     const card = createElement('div', ['card']);
     card.append(cardHeader, cardBody);

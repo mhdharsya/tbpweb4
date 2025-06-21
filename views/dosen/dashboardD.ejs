@@ -27,14 +27,21 @@
 
     <main class="main-content">
         <aside class="profile-card">
-            <h2><%= dosen.nama %></h2>
+            <h2>BIODATA DIRI</h2>
             <hr>
             <div class="profile-info">
                 <div class="info-item">
                     <span class="material-symbols-outlined icon">badge</span>
                     <div class="info-text">
                         <strong>NIP</strong>
-                        <p><%= dosen.nip %></p>
+                        <p><%= dosen.userId %></p>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <span class="material-symbols-outlined icon">person</span>
+                    <div class="info-text">
+                        <strong>Nama Lengkap</strong>
+                        <p><%= dosen.nama_lengkap %></p>
                     </div>
                 </div>
                 <div class="info-item">
@@ -44,6 +51,7 @@
                         <p><%= dosen.bidangKeahlian %></p>
                     </div>
                 </div>
+
                 <div class="info-item">
                     <span class="material-symbols-outlined icon">mail</span>
                     <div class="info-text">
@@ -56,7 +64,7 @@
 
         <section class="schedule-section">
             <div class="welcome-section">
-                <h2>Halo, <%= dosen.nama %>!</h2>
+                <h2>Halo, <%= dosen.nama_lengkap %>!</h2>
                 <p>Berikut adalah jadwal Anda untuk hari ini.</p>
             </div>
             
@@ -75,27 +83,7 @@
                 </div>
             </div>
 
-            <div class="agenda-container">
-                <h3>Agenda Hari Ini</h3>
-                <% if (jadwalHariIni && jadwalHariIni.length > 0) { %>
-                    <% jadwalHariIni.forEach(item => { %>
-                        <div class="event-card">
-                            <div class="event-time">
-                                <span class="material-symbols-outlined">schedule</span>
-                                <%= item.waktu %>
-                            </div>
-                            <div class="event-details">
-                                <h4><%= item.judul %></h4>
-                                <p><%= item.detail %></p>
-                            </div>
-                        </div>
-                    <% }) %>
-                <% } else { %>
-                    <div class="event-card">
-                       <p>Tidak ada jadwal untuk hari ini.</p>
-                    </div>
-                <% } %>
-            </div>
+            
         </section>
     </main>
 

@@ -1,6 +1,23 @@
 const express = require('express');
 const router = express.Router();
+const panduanService = require('../../services/panduanService'); // Pastikan path ini benar!
 
+
+router.get('/', async (req, res) => { // Make this an async function
+    try {
+        // Fetch the list of all panduan from your service
+        const panduanList = await panduanService.getAllPanduan(); // <--- THIS IS THE KEY FIX
+
+        // Render the EJS template and pass the fetched data
+        res.render('mahasiswa/panduan', {
+            panduanList: panduanList // Pass the panduanList array to the EJS template
+        });
+    } catch (error) {
+        console.error("Error rendering panduan page:", error);
+        // It's good practice to send a meaningful error response to the client
+        res.status(500).send("Gagal memuat halaman panduan. Silakan coba lagi nanti.");
+    }
+});
 // API: Ambil panduan terbaru
 router.get('/latest', async (req, res) => {
     try {
