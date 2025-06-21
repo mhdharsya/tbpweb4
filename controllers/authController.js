@@ -42,6 +42,10 @@ const login = async (req, res) => {
   }
 };
 
+const showLogin = (req, res) => {
+  res.render('login', { title: 'Login' });
+};
+
 const register = async (req, res) => {
   const { email, id_user, password, role, nama_lengkap } = req.body;
 
