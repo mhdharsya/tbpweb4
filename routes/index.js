@@ -6,6 +6,10 @@ const { getDashboardD } = require('../controllers/dosen/dosen');
 const { getFormDashboard } = require('../controllers/mahasiswa/dashboard');
 
 /* GET home page. */
+router.get('/', (req, res) => {
+  res.render('kadep/');
+});
+
 router.get('/login', (req, res) => {
   res.render('index');
 });

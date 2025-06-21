@@ -4,6 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const cors = require('cors');
+const multer = require('multer');
 
 var bodyParser = require('body-parser');
 const { PrismaClient } = require('@prisma/client');
@@ -32,14 +33,18 @@ var evaluasiRouter = require('./routes/mahasiswa/evaluasiSisemhas');
 var detailRiwayatRouter = require('./routes/mahasiswa/detailRiwayat')
 const userController = require('./controllers/admin/userController');
 const accessRequestController = require('./controllers/admin/accessRequestController');
-const evaluasiSistemController = require('./controllers/admin/evaluasiSistemController'); 
-const panduanController = require('./controllers/admin/panduanController'); 
 var nilaiRouter = require('./routes/mahasiswa/melihatdandownloadnilai');
 var statusRouter = require('./routes/admin/statusSemhas');
 var detailJadwalRouter = require('./routes/mahasiswa/detailJadwal');
 const pdfRiwayatRoutes = require('./routes/mahasiswa/detailRiwayat');
 const evaluasiSistemController = require('./controllers/admin/evaluasiSistemController'); // <--- PASTIKAN INI ADA
 const panduanController = require('./controllers/admin/panduanController'); // <--- PASTIKAN INI ADA
+const dosenRouter = require('./routes/dosen/dashboardD');
+const mahasiswaseminarRouter = require('./routes/dosen/mahasiswaseminar');
+const penilaianRouter = require('./routes/dosen/penilaian');
+const riwayatseminarRouter = require('./routes/dosen/riwayatseminar');
+const revisipRouter = require('./routes/mahasiswa/revisi');
+const checkRoutes = require('./routes/mahasiswa/checkberkas');
 // ⬇️ Tambahkan baris ini untuk menghubungkan route panduan
 //const panduanRouter = require('./routes/mahasiswa/panduan');
 
@@ -120,7 +125,7 @@ app.use('/mahasiswa', uploadRouter);
 app.use('/revisip', revisipRouter);
 app.use('/panduan', panduanRouter);
 app.use('/check', checkRoutes);
-app.use('/list', listRoutes);
+// app.use('/list', listRoutes);
 
 app.use('/', riwayatSeminarRouter);
 app.use('/', detailRiwayatRouter);
