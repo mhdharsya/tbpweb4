@@ -34,7 +34,6 @@ function createSidebar(activePage) {
 
     const menuItems = [
         { text: 'Daftar Role User', id: 'daftarRoleUser', url: '/admin/daftar-role-user' }, // Tambah URL
-        { text: 'Permintaan Akses', id: 'permintaanAkses', url: '/admin/permintaan-akses' }, // Tambah URL
         { text: 'Panduan Seminar Hasil', id: 'panduanSeminar', url: '/admin/panduan-seminar' }, // Tambah URL
         { text: 'Evaluasi Sistem', id: 'evaluasiSistem', url: '/admin/evaluasi-sistem' }, // Tambah URL
     ];

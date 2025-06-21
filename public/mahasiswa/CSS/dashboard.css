@@ -239,3 +239,43 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        .report-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px; /* Jarak dari bagian atas */
+            justify-content: center;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .report-buttons .menu-btn {
+            padding: 12px 25px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            color: white; /* Default text color for menu-btn is often white */
+        }
+
+        .report-buttons .menu-btn.download-pdf {
+            background-color: #28a745; /* Warna hijau */
+        }
+
+        .report-buttons .menu-btn.download-pdf:hover {
+            background-color: #218838;
+        }
+
+        .report-buttons .menu-btn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
+        .error-message {
+            color: red;
+            margin-top: 10px;
+            text-align: center;
+        }

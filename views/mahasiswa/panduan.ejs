@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SISemhas - Buku Panduan</title>
+  <link rel="stylesheet" href="/mahasiswa/css/panduan.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <img class="logo" src="/mahasiswa/asset/image/logo.png" alt="Logo Universitas Andalas">
+        <div class="header-title">SISemhas - Universitas Andalas</div>
+    </header>
+
+        <!-- Navigation Tabs -->
+        <nav class="nav-tabs">
+          <div class="nav-left">
+            <a href="/dashboardMhs" class="nav-tab">Dashboard</a>
+            <a href="/daftar/" class="nav-tab">Pendaftaran</a>
+            <a href="/riwayat/" class="nav-tab">Riwayat Semhas</a>
+          </div>
+        </nav>
+
+        <div class="breadcrumb">
+            <span>Buku Panduan</span>
+        </div>
+
+ <!-- Main Content -->
+<div class="main-content">
+  <!-- Panduan Content -->
+  <div class="page-content active" data-content="panduan">
+    <div class="pdf-container" id="panduan-container">
+      <div class="pdf-icon">📄</div>
+      <span class="pdf-text">Klik untuk membuka PDF Panduan SISemhas</span>
+    </div>
+
+    <!-- DAFTAR PANDUAN PDF DARI DATABASE -->
+    <div class="panduan-list">
+      <ul>
+        <% panduanList.forEach(p => { %>
+          <li>
+            <%= p.judul %> -
+            <a href="/mahasiswa/panduan/lihat/<%= p.id %>" target="_blank">Lihat File</a>
+          </li>
+        <% }); %>
+      </ul>
+    </div>
+
+    <!-- Iframe PDF Viewer -->
+    <iframe class="pdf-viewer" id="pdfViewer" src="panduan.pdf" style="display: none;"></iframe>
+
+    <!-- Tombol Kontrol PDF -->
+    <div class="pdf-controls" id="pdfControls" style="display: none;">
+      <a href="panduan.pdf" class="btn btn-primary" id="downloadBtn" download>
+        💾 Download PDF
+      </a>
+      <button class="btn btn-secondary" id="closeBtn">
+        ❌ Tutup PDF
+      </button>
+    </div>
+  </div>
+</div>
+
+  <script src="/mahasiswa/js/panduan.js"></script>
+</body>
+</html>

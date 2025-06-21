@@ -22,7 +22,7 @@
         </div>
     </nav>
     
-    <form action="/mahasiswa/upload/" method="POST" enctype="multipart/form-data">
+    <form id="uploadForm" action="/mahasiswa/upload/<%= id_pendaftaran %>" method="POST" enctype="multipart/form-data">
         <div class="main-content">
             <div class="upload-section">
             <h1 class="upload-title">Upload Berkas</h1>
@@ -63,9 +63,8 @@
             <button class="submit-btn" type="submit">Submit Berkas</button>
             </div>
         </div>
-        </form>
-
-
+    </form>
+    
     <script>
         function updateFileName(input, infoId) {
             const fileName = input.files[0]?.name || "Belum ada file dipilih";

@@ -9,39 +9,12 @@ async function renderDaftarRoleUser() {
     const cardHeader = createElement('div', ['card-header']);
     cardHeader.appendChild(createElement('h2', [], 'Daftar Role User'));
 
-    // --- HAPUS BAGIAN FILTER INI ---
-    // const roleFilterDiv = createElement('div', ['role-filter']);
-    // roleFilterDiv.appendChild(createElement('label', [], 'Role :', { 'for': 'role-select' }));
-    // const selectFilter = createElement('select', [], '', { id: 'role-select' });
-    // ['Semua', 'Mahasiswa', 'Dosen', 'Admin', 'Kadep'].forEach(optionText => {
-    //     const option = createElement('option', [], optionText, { value: optionText.toLowerCase() });
-    //     if (optionText.toLowerCase() === currentRoleFilter) {
-    //         option.selected = true;
-    //     }
-    //     selectFilter.appendChild(option);
-    // });
-    // roleFilterDiv.appendChild(selectFilter);
-    // cardHeader.appendChild(roleFilterDiv);
-
-    // selectFilter.addEventListener('change', async (event) => {
-    //     currentRoleFilter = event.target.value;
-    //     const mainContent = document.getElementById('main-content');
-    //     if (mainContent) {
-    //         mainContent.innerHTML = '';
-    //         const userRoleCard = await renderDaftarRoleUser();
-    //         mainContent.appendChild(userRoleCard);
-    //     }
-    // });
-    // --- AKHIR BAGIAN FILTER YANG DIHAPUS ---
-
-
     const cardBody = createElement('div', ['card-body']);
 
-    let tableData = [];
+    let tableData = []; 
 
     try {
-        // URL API sekarang selalu sama, tanpa parameter filter
-        const apiUrl = '/api/users'; // <--- URL API disederhanakan
+        const apiUrl = '/api/users'; 
         console.log('renderDaftarRoleUser: Attempting to fetch data from:', apiUrl);
         const response = await fetch(apiUrl);
 
@@ -55,10 +28,11 @@ async function renderDaftarRoleUser() {
         tableData = users.map((user, index) => {
             return [
                 index + 1,
-                user.name,
+                user.name, 
                 user.email,
-                user.role,
-                ''
+                user.role, 
+                '', // Kolom update
+                user.email // Menyimpan email untuk keperluan hapus, bisa disembunyikan
             ];
         });
         console.log('renderDaftarRoleUser: Formatted tableData:', tableData);
@@ -68,28 +42,55 @@ async function renderDaftarRoleUser() {
         cardBody.appendChild(createElement('p', ['error-message'], 'Gagal memuat data pengguna. ' + error.message));
     }
 
-    const tableHeaders = ['No', 'Nama', 'Email', 'Role', 'Update'];
+    // Tambahkan 'Hapus' di header tabel
+    const tableHeaders = ['No', 'Nama', 'Email', 'Role', 'Update', 'Hapus']; 
     const userTable = createTable(tableHeaders, tableData, (cellData, rowIndex, colIndex, row) => {
         if (colIndex === 4) { // Kolom 'Update'
             const selectUpdate = createElement('select');
             ['Mahasiswa', 'Dosen', 'Admin', 'Kadep'].forEach(optionText => {
                 const option = createElement('option', [], optionText);
-                if (optionText.toUpperCase() === row[3]) { // <--- row[3] adalah user.role (Enum String)
-                option.selected = true;
+                if (optionText.toUpperCase() === String(row[3])) { 
+                    option.selected = true;
                 }
                 selectUpdate.appendChild(option);
             });
 
             selectUpdate.addEventListener('change', (event) => {
-                const newRole = event.target.value; // Ini akan tetap lowercase dari dropdown
-                const userEmail = row[2];
-                // pendingRoleUpdates akan menyimpan newRole (lowercase)
+                const newRole = event.target.value; 
+                const userEmail = row[2]; 
                 pendingRoleUpdates.set(userEmail, newRole);
                 console.log(`Perubahan role disimpan sementara untuk ${userEmail}: ${row[3]} -> ${newRole}`);
             });
             return selectUpdate;
-            }
-            return document.createTextNode(cellData);
+        } else if (colIndex === 5) { // Kolom 'Hapus'
+            const deleteButton = createElement('button', ['btn-danger'], 'Hapus');
+            deleteButton.addEventListener('click', async () => {
+                const userEmailToDelete = row[2]; // Email user ada di kolom ke-2 (index 2)
+                if (confirm(`Anda yakin ingin menghapus user dengan email ${userEmailToDelete}?`)) {
+                    try {
+                        const response = await fetch(`/api/users/${userEmailToDelete}`, {
+                            method: 'DELETE',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                        });
+
+                        if (!response.ok) {
+                            const errorData = await response.json();
+                            throw new Error(errorData.message || 'Gagal menghapus user.');
+                        }
+
+                        alert('User berhasil dihapus!');
+                        renderPage('daftarRoleUser'); // Refresh halaman
+                    } catch (error) {
+                        console.error('Error saat menghapus user:', error);
+                        alert(`Gagal menghapus user: ${error.message}`);
+                    }
+                }
+            });
+            return deleteButton;
+        }
+        return document.createTextNode(String(cellData)); 
     });
     cardBody.appendChild(userTable);
 
@@ -124,7 +125,7 @@ async function renderDaftarRoleUser() {
             console.log('Update role berhasil:', result);
 
             pendingRoleUpdates.clear();
-            renderPage('daftarRoleUser');
+            renderPage('daftarRoleUser'); 
         } catch (error) {
             console.error('Error saat mengupdate role:', error);
             alert(`Gagal mengupdate role: ${error.message}`);
