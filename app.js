@@ -6,7 +6,6 @@ var logger = require('morgan');
 const cors = require('cors');
 
 var bodyParser = require('body-parser');
-var cors = require('cors');
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
@@ -99,6 +98,11 @@ app.use('/daftar', daftarRouter);
 app.use('/dashboard', dashboardRouter);
 app.use('/mahasiswa', uploadRouter);
 app.use('/riwayatseminar', riwayatSeminarRouter);
+app.use('/revisip', revisipRouter);
+app.use('/panduan', panduanRouter);
+app.use('/check', checkRoutes);
+app.use('/list', listRoutes);
+
 
 app.use((req, res, next) => {
   console.log('Request URL:', req.url);  // Log URL
