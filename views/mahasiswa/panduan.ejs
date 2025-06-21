@@ -5,6 +5,73 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>SISemhas - Buku Panduan</title>
   <link rel="stylesheet" href="/mahasiswa/css/panduan.css">
+  <style>
+        /* Gaya dasar untuk memastikan tampilan yang layak jika belum ada di CSS Anda */
+        /* Ini diasumsikan adalah wadah terluar yang membungkus .panduan-card */
+.panduan-upload-section {
+    display: flex; /* Sudah ada */
+    /* justify-content: space-around; // Bisa diganti atau dihapus jika hanya ada 1 kartu */
+    justify-content: center; /* <<< GUNAKAN INI UNTUK MEMUSATKAN ITEM FLEX */
+    gap: 30px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+
+    /* Tambahkan ini untuk memusatkan blok .panduan-upload-section itu sendiri */
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 800px; /* <<< PENTING: Atur lebar maksimum yang sesuai */
+    /* Atau width: fit-content; jika Anda ingin lebarnya sesuai dengan kontennya */
+}
+
+/* Jika .panduan-card adalah satu-satunya item di .panduan-upload-section, 
+   pastikan panduan-upload-section juga terpusat di dalam .container yang lebih besar */
+/* Dari HTML Anda sebelumnya, sepertinya .panduan-section adalah parent dari bookCard */
+/* Mari kita sesuaikan dengan struktur HTML yang saya buatkan sebelumnya */
+
+#panduanSection { /* Asumsi ini adalah ID dari section yang menampung kartu panduan */
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #f8f8f8;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    
+    /* Tambahkan ini untuk memusatkan konten di dalam #panduanSection */
+    display: flex; /* Jadikan flex container */
+    justify-content: center; /* Pusatkan item-itemnya secara horizontal */
+    align-items: center; /* Opsional: Pusatkan secara vertikal jika ada tinggi */
+    flex-wrap: wrap; /* Jika suatu saat ada lebih dari 1 kartu */
+
+    /* Ini untuk memusatkan #panduanSection itu sendiri di dalam .container */
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 800px; /* Atur lebar maksimum yang sesuai dengan konten */
+    /* Anda bisa bereksperimen dengan width: fit-content; juga */
+}
+
+/* Untuk panduan-card itu sendiri, text-align: center; sudah memusatkan konten di dalamnya */
+.panduan-card {
+    background-color: #f8f8f8;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center; /* Memusatkan h3, img, p di dalam kartu */
+    width: 45%; /* Ini mungkin terlalu besar jika hanya ada 1 kartu dan ingin di tengah */
+    min-width: 280px;
+    max-width: 400px; /* Tambahkan max-width agar kartu tidak terlalu lebar */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    /* margin: 0 auto; // Ini tidak akan bekerja langsung di sini karena parent adalah flex container */
+}
+
+/* Pastikan gambar di dalam kartu terpusat */
+.panduan-thumbnail {
+max-width: 100%; /* Ubah dari nilai tetap menjadi persentase */
+height: auto;
+display: block;
+margin: 0 auto;
+border-radius: 3px;
+}
+
+    </style>
 </head>
 <body>
     <!-- Header -->
@@ -27,41 +94,80 @@
         </div>
 
  <!-- Main Content -->
-<div class="main-content">
-  <!-- Panduan Content -->
-  <div class="page-content active" data-content="panduan">
-    <div class="pdf-container" id="panduan-container">
-      <div class="pdf-icon">📄</div>
-      <span class="pdf-text">Klik untuk membuka PDF Panduan SISemhas</span>
+    <div class="container">
+        
+        <section id="panduanSection" class="panduan-section">
+            <p>Memuat buku panduan...</p> 
+            </section>
+
     </div>
 
-    <!-- DAFTAR PANDUAN PDF DARI DATABASE -->
-    <div class="panduan-list">
-      <ul>
-        <% panduanList.forEach(p => { %>
-          <li>
-            <%= p.judul %> -
-            <a href="/mahasiswa/panduan/lihat/<%= p.id %>" target="_blank">Lihat File</a>
-          </li>
-        <% }); %>
-      </ul>
-    </div>
+    <script>
+        // Fungsi createElement kustom Anda (contoh sederhana)
+        // Pastikan fungsi ini sama persis dengan yang Anda gunakan di skrip Anda
+        function createElement(tag, classNames = [], textContent = '', attributes = {}) {
+            const element = document.createElement(tag);
+            if (classNames.length > 0) {
+                element.classList.add(...classNames);
+            }
+            if (textContent) {
+                element.textContent = textContent;
+            }
+            for (const key in attributes) {
+                element.setAttribute(key, attributes[key]);
+            }
+            return element;
+        }
 
-    <!-- Iframe PDF Viewer -->
-    <iframe class="pdf-viewer" id="pdfViewer" src="panduan.pdf" style="display: none;"></iframe>
+        // Ambil elemen yang akan menjadi target penambahan kartu panduan
+        const panduanSection = document.getElementById('panduanSection');
 
-    <!-- Tombol Kontrol PDF -->
-    <div class="pdf-controls" id="pdfControls" style="display: none;">
-      <a href="panduan.pdf" class="btn btn-primary" id="downloadBtn" download>
-        💾 Download PDF
-      </a>
-      <button class="btn btn-secondary" id="closeBtn">
-        ❌ Tutup PDF
-      </button>
-    </div>
-  </div>
-</div>
+        // Pastikan Anda membersihkan placeholder awal
+        panduanSection.innerHTML = ''; 
 
-  <script src="/mahasiswa/js/panduan.js"></script>
+        // Kode JavaScript Anda yang akan membuat dan mengisi elemen
+        // Salin dan tempel kode JavaScript yang Anda berikan di sini:
+        const bookCard = createElement('div', ['panduan-card', 'book-panduan']);
+        bookCard.appendChild(createElement('h3', [], 'Buku Panduan Terbaru'));
+        const imgContainer = createElement('div', ['panduan-image-container']);
+        const pdfLink = createElement('a', [], '', { target: '_blank' }); // Link untuk PDF
+        const defaultPdfIcon = createElement('img', ['panduan-thumbnail'], '', {
+            src: '/admin/img/pdf-icon.png', // <--- GANTI DENGAN PATH ICON PDF ANDA JIKA BERBEDA
+            alt: 'PDF Icon'
+        });
+        pdfLink.appendChild(defaultPdfIcon);
+        const pdfTitle = createElement('p', [], 'Memuat...'); // Nama file PDF
+        pdfLink.appendChild(pdfTitle);
+        imgContainer.appendChild(pdfLink);
+        bookCard.appendChild(imgContainer);
+        panduanSection.appendChild(bookCard);
+
+        // Fetch latest panduan
+        try {
+            const fetchPanduan = async () => {
+                const response = await fetch('/api/panduan/latest');
+                if (response.ok) {
+                    const latest = await response.json();
+                    if (latest && latest.id_panduan && latest.nama_file) {
+                        pdfLink.href = `/api/panduan/file/${latest.id_panduan}`; // URL untuk menampilkan PDF
+                        pdfTitle.textContent = latest.nama_file;
+                    } else {
+                        pdfTitle.textContent = 'Tidak ada panduan tersedia';
+                        pdfLink.removeAttribute('href'); // Hapus link jika tidak ada file
+                    }
+                } else if (response.status === 404) {
+                    pdfTitle.textContent = 'Tidak ada panduan tersedia';
+                    pdfLink.removeAttribute('href');
+                } else {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+            };
+            fetchPanduan(); // Panggil fungsi fetch
+        } catch (error) {
+            console.error("Error fetching latest panduan:", error);
+            pdfTitle.textContent = 'Gagal memuat panduan terbaru';
+            pdfLink.removeAttribute('href');
+        }
+    </script>
 </body>
 </html>

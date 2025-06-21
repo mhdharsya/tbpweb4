@@ -15,8 +15,6 @@ model berkas_pdf {
   uploaded_by   String   @db.VarChar(100) // email user pengunggah
   createdAt     DateTime @default(now())
 
-  user          user     @relation(fields: [uploaded_by], references: [email], onDelete: Cascade)
-
   @@index([uploaded_by])
 }
 

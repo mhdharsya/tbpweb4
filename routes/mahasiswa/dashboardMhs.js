@@ -3,9 +3,9 @@ const router = express.Router();
 const { getFormDashboard } = require('../../controllers/mahasiswa/dashboard');
 const userGuard = require('../../middleware/decodeJWT');
 
-const pendaftaranController = require('../controllers/pendaftaranController');
-router.get('/pendaftaran', pendaftaranController.getPendaftaranData);
-router.get('/pendaftaran/pdf', pendaftaranController.downloadPendaftaranPdf);
+// // const pendaftaranController = require('../controllers/pendaftaranController');
+// // router.get('/pendaftaran', pendaftaranController.getPendaftaranData);
+// router.get('/pendaftaran/pdf', pendaftaranController.downloadPendaftaranPdf);
 
 router.get('/dashboard', userGuard, async (req, res) => {
   await getFormDashboard(req, res);

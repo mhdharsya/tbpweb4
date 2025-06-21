@@ -20,11 +20,11 @@ function createHeader() {
     const titleSpan = createElement('span', [], 'SISemhas - Universitas Andalas');
     headerLeft.append(logoImage, titleSpan);
 
-    const headerRight = createElement('div', ['header-right']);
-    const userIcon = createElement('i', ['far', 'fa-user-circle', 'user-icon']);
-    headerRight.appendChild(userIcon);
+    // const headerRight = createElement('div', ['header-right']);
+    // const userIcon = createElement('i', ['far', 'fa-user-circle', 'user-icon']);
+    // headerRight.appendChild(userIcon);
 
-    header.append(headerLeft, headerRight);
+    header.append(headerLeft);
     return header;
 }
 
@@ -84,6 +84,12 @@ async function renderPage(pageId) {
             break;
         case 'evaluasiSistem':
             pageContent = await renderEvaluasiSistem(); // Panggil fungsi dari file terpisah
+            break;
+        case 'panduanRiwayat': // <--- TAMBAHKAN CASE BARU INI
+            pageContent = await renderPanduanRiwayat();
+            break;
+        case 'hapusUser': // <--- TAMBAHKAN CASE BARU INI
+            pageContent = await renderHapusUser();
             break;
         // case 'daftarJadwal':
         //     pageContent = renderDaftarJadwal(); // Panggil fungsi dari file terpisah
