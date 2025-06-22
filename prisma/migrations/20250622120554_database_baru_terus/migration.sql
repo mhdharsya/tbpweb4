@@ -1,72 +1,39 @@
 -- CreateTable
-CREATE TABLE `berkas_pdf` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `nama_file` VARCHAR(255) NOT NULL,
-    `tipe` VARCHAR(50) NOT NULL,
-    `file` BLOB NOT NULL,
-    `uploaded_by` VARCHAR(100) NOT NULL,
-    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-
-    INDEX `berkas_pdf_uploaded_by_idx`(`uploaded_by`),
-    PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
 CREATE TABLE `admin` (
     `niku` VARCHAR(50) NOT NULL,
     `nama_admin` VARCHAR(255) NOT NULL,
     `email` VARCHAR(100) NOT NULL,
 
     UNIQUE INDEX `admin_email_key`(`email`),
-    INDEX `admin_email_idx`(`email`),
     PRIMARY KEY (`niku`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `dosen` (
-    `id_user` VARCHAR(50) NOT NULL,
-    `bidang_keahlian` VARCHAR(99) NULL,
-    `id_jadwal_dosen` VARCHAR(50) NOT NULL,
-
-    INDEX `fk_jadwal_dosen_dosen`(`id_jadwal_dosen`),
-    INDEX `fk_user_dosen`(`id_user`),
-    PRIMARY KEY (`id_user`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
 CREATE TABLE `evaluasi_sistem` (
-    `id_evaluasi` VARCHAR(50) NOT NULL,
+    `id_evaluasi` INTEGER NOT NULL,
     `kualitas_ui` VARCHAR(100) NOT NULL,
     `kinerja_sistem` VARCHAR(100) NOT NULL,
     `kritik_saran` TEXT NOT NULL,
     `tanggal_isi` DATE NOT NULL,
-    `nim` VARCHAR(50) NOT NULL,
 
-    INDEX `fk_mahasiswa_evaluasi_sistem`(`nim`),
     PRIMARY KEY (`id_evaluasi`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
-CREATE TABLE `jadwal_dosen` (
-    `id_jadwal_dosen` VARCHAR(50) NOT NULL,
-    `tanggal_mulai` DATE NOT NULL,
-    `tanggal_selesai` DATE NOT NULL,
-
-    PRIMARY KEY (`id_jadwal_dosen`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
 CREATE TABLE `jadwal_pendaftaran` (
     `id_jadwal` INTEGER NOT NULL AUTO_INCREMENT,
     `id_pendaftaran` INTEGER NOT NULL,
-    `jam_mulai` TIME(0) NOT NULL,
-    `jam_selesai` TIME(0) NOT NULL,
-    `status` VARCHAR(50) NOT NULL,
-    `dosen_penguji` VARCHAR(99) NOT NULL,
-    `id_kuota` VARCHAR(50) NOT NULL,
+    `status` VARCHAR(50) NULL,
+    `dosen_penguji` VARCHAR(99) NULL,
+    `id_kuota` VARCHAR(50) NULL,
+    `id_jadwal_dosen` INTEGER NULL,
+    `id_user` VARCHAR(50) NULL,
+    `jadwal_semhas` VARCHAR(50) NULL,
+    `tanggal_semhas` DATE NULL,
 
-    INDEX `fk_kuota_semhas_jadwal_pendaftaran`(`id_kuota`),
     INDEX `fk_pendaftaran_jadwal_pendaftaran`(`id_pendaftaran`),
+    INDEX `jadwal_pendaftaran_id_user_fkey`(`id_user`),
+    INDEX `jadwal_dosen_id_jadwal_fkey`(`id_jadwal_dosen`),
     PRIMARY KEY (`id_jadwal`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -92,27 +59,27 @@ CREATE TABLE `kuota_semhas` (
 
 -- CreateTable
 CREATE TABLE `nilai_semhas` (
-    `id_nilai` VARCHAR(50) NOT NULL,
     `status_semhas` VARCHAR(50) NOT NULL,
-    `bobot_penilaian` INTEGER NOT NULL,
     `komentar` TEXT NOT NULL,
     `id_rubik` VARCHAR(50) NOT NULL,
     `id_pendaftaran` INTEGER NOT NULL,
+    `id_user` VARCHAR(50) NOT NULL,
 
     INDEX `fk_pendaftaran_nilai_semhas`(`id_pendaftaran`),
     INDEX `fk_rubik_nilai_semhas`(`id_rubik`),
-    PRIMARY KEY (`id_nilai`)
+    INDEX `fk_dosen_nilai_semhas`(`id_user`),
+    PRIMARY KEY (`id_rubik`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
 CREATE TABLE `panduan` (
-    `id_panduan` INTEGER NOT NULL,
+    `id_panduan` INTEGER NOT NULL AUTO_INCREMENT,
     `nama_file` VARCHAR(255) NOT NULL,
-    `deskripsi` TEXT NOT NULL,
     `tanggal_unggah` DATE NOT NULL,
-    `niku` VARCHAR(191) NOT NULL,
+    `file` BLOB NOT NULL,
+    `adminNiku` VARCHAR(50) NULL,
 
-    INDEX `fk_admin_panduan`(`niku`),
+    INDEX `panduan_adminNiku_fkey`(`adminNiku`),
     PRIMARY KEY (`id_panduan`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -121,20 +88,17 @@ CREATE TABLE `pendaftaran` (
     `id_pendaftaran` INTEGER NOT NULL AUTO_INCREMENT,
     `judul` VARCHAR(799) NULL,
     `bidang_penelitian` VARCHAR(99) NULL,
-    `nip_dosen` VARCHAR(50) NULL,
+    `nama_dosen` VARCHAR(50) NULL,
     `nama_laporan` VARCHAR(255) NULL,
-    `file_laporan` BLOB NULL,
     `nama_krs` VARCHAR(255) NULL,
-    `file_krs` BLOB NULL,
     `nama_pengesahan` VARCHAR(255) NULL,
-    `file_pengesahan` BLOB NULL,
     `nama_ppt` VARCHAR(255) NULL,
-    `file_ppt` BLOB NULL,
     `id_periode` VARCHAR(50) NULL,
     `id_user` VARCHAR(50) NOT NULL,
+    `status` VARCHAR(50) NULL,
 
-    INDEX `fk_dosen_pendaftaran`(`nip_dosen`),
     INDEX `fk_periode_semhas_pendaftaran`(`id_periode`),
+    INDEX `pendaftaran_id_user_fkey`(`id_user`),
     PRIMARY KEY (`id_pendaftaran`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -152,9 +116,14 @@ CREATE TABLE `periode_semhas` (
 -- CreateTable
 CREATE TABLE `rubik` (
     `id_rubik` VARCHAR(50) NOT NULL,
-    `kriteria` VARCHAR(255) NOT NULL,
-    `bobot` INTEGER NOT NULL,
+    `pemahaman` VARCHAR(255) NOT NULL,
+    `dokumenasi` VARCHAR(255) NOT NULL,
+    `presentasi` VARCHAR(255) NOT NULL,
+    `ketepatan_waktu` VARCHAR(255) NOT NULL,
+    `sikap` VARCHAR(255) NOT NULL,
+    `id_pendaftaran` INTEGER NOT NULL,
 
+    INDEX `fk_pendaftaran_rubik`(`id_pendaftaran`),
     PRIMARY KEY (`id_rubik`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -170,26 +139,36 @@ CREATE TABLE `user` (
     PRIMARY KEY (`email`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
--- AddForeignKey
-ALTER TABLE `berkas_pdf` ADD CONSTRAINT `berkas_pdf_uploaded_by_fkey` FOREIGN KEY (`uploaded_by`) REFERENCES `user`(`email`) ON DELETE CASCADE ON UPDATE CASCADE;
+-- CreateTable
+CREATE TABLE `jadwal_dosendosen` (
+    `id_jadwal_dosen` INTEGER NOT NULL AUTO_INCREMENT,
+    `tanggal_data` DATE NOT NULL,
+    `bidang_keahlian` VARCHAR(191) NULL,
+    `shift1` VARCHAR(191) NULL,
+    `shift2` VARCHAR(191) NULL,
+    `shift3` VARCHAR(191) NULL,
+    `shift4` VARCHAR(191) NULL,
+    `id_user` VARCHAR(50) NOT NULL,
 
--- AddForeignKey
-ALTER TABLE `admin` ADD CONSTRAINT `fk_user_admin` FOREIGN KEY (`email`) REFERENCES `user`(`email`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `dosen` ADD CONSTRAINT `dosen_id_jadwal_dosen_fkey` FOREIGN KEY (`id_jadwal_dosen`) REFERENCES `jadwal_dosen`(`id_jadwal_dosen`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- AddForeignKey
-ALTER TABLE `dosen` ADD CONSTRAINT `dosen_id_user_fkey` FOREIGN KEY (`id_user`) REFERENCES `user`(`id_user`) ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `jadwal_pendaftaran` ADD CONSTRAINT `fk_kuota_semhas_jadwal_pendaftaran` FOREIGN KEY (`id_kuota`) REFERENCES `kuota_semhas`(`id_kuota`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+    UNIQUE INDEX `jadwal_dosenDosen_tanggal_data_key`(`tanggal_data`),
+    INDEX `jadwal_dosendosen_id_user_fkey`(`id_user`),
+    PRIMARY KEY (`id_jadwal_dosen`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- AddForeignKey
 ALTER TABLE `jadwal_pendaftaran` ADD CONSTRAINT `fk_pendaftaran_jadwal_pendaftaran` FOREIGN KEY (`id_pendaftaran`) REFERENCES `pendaftaran`(`id_pendaftaran`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 -- AddForeignKey
+ALTER TABLE `jadwal_pendaftaran` ADD CONSTRAINT `jadwal_dosen_id_jadwal_fkey` FOREIGN KEY (`id_jadwal_dosen`) REFERENCES `jadwal_dosendosen`(`id_jadwal_dosen`) ON DELETE SET NULL ON UPDATE RESTRICT;
+
+-- AddForeignKey
+ALTER TABLE `jadwal_pendaftaran` ADD CONSTRAINT `jadwal_pendaftaran_id_user_fkey` FOREIGN KEY (`id_user`) REFERENCES `user`(`id_user`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE `kadep` ADD CONSTRAINT `fk_user_kadep` FOREIGN KEY (`email`) REFERENCES `user`(`email`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `nilai_semhas` ADD CONSTRAINT `fk_dosen_nilai_semhas` FOREIGN KEY (`id_user`) REFERENCES `user`(`id_user`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 -- AddForeignKey
 ALTER TABLE `nilai_semhas` ADD CONSTRAINT `fk_pendaftaran_nilai_semhas` FOREIGN KEY (`id_pendaftaran`) REFERENCES `pendaftaran`(`id_pendaftaran`) ON DELETE RESTRICT ON UPDATE RESTRICT;
@@ -198,10 +177,13 @@ ALTER TABLE `nilai_semhas` ADD CONSTRAINT `fk_pendaftaran_nilai_semhas` FOREIGN 
 ALTER TABLE `nilai_semhas` ADD CONSTRAINT `fk_rubik_nilai_semhas` FOREIGN KEY (`id_rubik`) REFERENCES `rubik`(`id_rubik`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
-ALTER TABLE `panduan` ADD CONSTRAINT `fk_admin_panduan` FOREIGN KEY (`niku`) REFERENCES `admin`(`niku`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE `panduan` ADD CONSTRAINT `panduan_adminNiku_fkey` FOREIGN KEY (`adminNiku`) REFERENCES `admin`(`niku`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `pendaftaran` ADD CONSTRAINT `pendaftaran_id_periode_fkey` FOREIGN KEY (`id_periode`) REFERENCES `periode_semhas`(`id_periode`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
 ALTER TABLE `pendaftaran` ADD CONSTRAINT `pendaftaran_id_user_fkey` FOREIGN KEY (`id_user`) REFERENCES `user`(`id_user`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `jadwal_dosendosen` ADD CONSTRAINT `jadwal_dosendosen_id_user_fkey` FOREIGN KEY (`id_user`) REFERENCES `user`(`id_user`) ON DELETE RESTRICT ON UPDATE CASCADE;

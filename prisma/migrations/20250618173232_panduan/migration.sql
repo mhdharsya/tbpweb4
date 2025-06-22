@@ -1,2 +1,0 @@
--- AlterTable
-ALTER TABLE `panduan` MODIFY `id_panduan` INTEGER NOT NULL AUTO_INCREMENT;

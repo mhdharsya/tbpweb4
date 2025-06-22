@@ -5,7 +5,7 @@ const { login, register, showLogin } = require('../controllers/authController');
 const { auth } = require('../middleware/authMiddleware');
 const { getDashboardD } = require('../controllers/dosen/dosen'); 
 const { getFormDashboard } = require('../controllers/mahasiswa/dashboard');
-const { listBidangKeahlian, tambahBidangKeahlian, ubahBidangKeahlian, hapusBidangKeahlian } = require('../controllers/kadepController');
+const { listBidangKeahlian, createJadwal, updateJadwal, deleteJadwal } = require('../controllers/kadepController');
 
 /* GET home page. */
 router.get('/', (req, res) => {
@@ -44,9 +44,9 @@ router.post('/register', register);
 // Controller Kadep
 router.use(methodOverride('_method'));
 router.get('/bidang-keahlian', listBidangKeahlian);
-router.post('/:nip/bidang-keahlian', tambahBidangKeahlian);
-router.put('/:nip/bidang-keahlian', ubahBidangKeahlian);
-router.delete('/:nip/bidang-keahlian', hapusBidangKeahlian);
+router.post('/bidang-keahlian', createJadwal);
+router.put('/:nip/bidang-keahlian', updateJadwal);
+router.delete('/:nip/bidang-keahlian', deleteJadwal);
 router.get('/dosenpenguji', (req, res) => {
   res.render('kadep/dosenpenguji');
 });
