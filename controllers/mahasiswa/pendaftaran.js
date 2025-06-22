@@ -45,12 +45,24 @@ exports.submitFormPendaftaran = async (req, res) => {
   try {
     const { judul, bidangPenelitian, namaDosen } = req.body;
 
+    const id_user = req.user.userId;
+
+    const dosenList = await prisma.user.findMany({
+      where: {
+        nama_lengkap: namaDosen  // Filter hanya user dengan role 'DOSEN'
+      },
+      select: {
+        id_user: true,      // Ambil id_user dari user (yang akan menjadi nip_dosen)
+         // Ambil nama lengkap dosen dari user
+      }
+    });
+
     // Memastikan semua field wajib diisi
     if (!judul || !bidangPenelitian || !namaDosen) {
       return res.status(400).send('Semua field wajib diisi.');
     }
 
-    const id_user = req.user.userId;
+    
 
     // Menyaring data mahasiswa berdasarkan id_user
     const mahasiswa = await prisma.user.findUnique({
@@ -60,6 +72,12 @@ exports.submitFormPendaftaran = async (req, res) => {
         role: true
       }
     });
+    // const dosen = await prisma.dosen.findUnique({
+    //   where: { namaDosen: namaDosen },
+    //   select: {
+    //     id_user: true,
+    //   }
+    // });
 
     if (!mahasiswa || mahasiswa.role !== 'MAHASISWA') {
       return res.status(400).send('Data mahasiswa tidak ditemukan.');

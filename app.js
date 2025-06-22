@@ -6,7 +6,6 @@ var logger = require('morgan');
 const cors = require('cors');
 
 var bodyParser = require('body-parser');
-
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
@@ -27,6 +26,12 @@ var dashboardRouter = require('./routes/mahasiswa/dashboardMhs');
 var uploadRouter = require('./routes/mahasiswa/upload');
 var riwayatSeminarRouter = require('./routes/mahasiswa/riwayatseminar');
 var adminRouter = require('./routes/admin/dashboardAdmin')
+var dosenRouter = require('./routes/dosen/dashboardD');
+var mahasiswaseminarRouter = require('./routes/dosen/mahasiswaseminar');
+var penilaianRouter = require('./routes/dosen/penilaian');  
+var riwayatseminarRouter = require('./routes/dosen/riwayatseminar');
+var scheduleRouter = require('./routes/dosen/schedule');
+      
 const userController = require('./controllers/admin/userController');
 const accessRequestController = require('./controllers/admin/accessRequestController');
 const evaluasiSistemController = require('./controllers/admin/evaluasiSistemController'); // <--- PASTIKAN INI ADA
@@ -94,13 +99,15 @@ app.use('/api', dashboardRouter);
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/dashboardD', dosenRouter);
-app.use('/Dosen/mahasiswaseminar', mahasiswaseminarRouter);
-app.use('/Dosen/penilaian', penilaianRouter);
-app.use('/Dosen/riwayatseminar', riwayatseminarRouter);
+app.use('/dosen/mahasiswaseminar', mahasiswaseminarRouter);
+app.use('/dosen/penilaian', penilaianRouter);
+app.use('/dosen/riwayatseminar', riwayatseminarRouter);
+app.use('/dosen', scheduleRouter); // Pastikan ini sesuai dengan rute yang Anda buat di scheduler.js
 app.use('/evaluasi', evaluasiRouter);
 app.use('/panduan', pandu);
 app.use(cors());
-app.use(express.json());
+// app.use(express.json()
+// );
 app.use('/melihat', melihatRouter);
 app.use('/check', checkRouter);
 app.use('/dashboardMhs', dashboardMhsRouter);
@@ -108,6 +115,7 @@ app.use('/daftar', daftarRouter);
 app.use('/dashboard', dashboardRouter);
 app.use('/mahasiswa', uploadRouter);
 app.use('/riwayatseminar', riwayatSeminarRouter);
+
 
 app.use((req, res, next) => {
   console.log('Request URL:', req.url);  // Log URL

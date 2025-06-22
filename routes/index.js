@@ -17,18 +17,21 @@ router.get('/register', (req, res) => {
 
 
 router.get('/dashboard', auth, async (req, res) => {
+  console.log('role:', req.user.role);
+
   if (req.user.role === 'ADMIN') {
     return res.render('admin/dashboardAdmin');
-  } else if (req.user.role === 'DOSEN', getDashboardD) {
+  } else if (req.user.role === 'DOSEN') {
     return res.render('dosen/dashboardD', { dosen: req.user });
   } else if (req.user.role === 'KADEP') {
-    return res.render('kadep');
+    return res.render('kadep/dashboardKadep', { kadep: req.user });
   } else if (req.user.role === 'MAHASISWA') {
-    return await getFormDashboard(req, res); // ✅ INI SAJA!
+    return await getFormDashboard(req, res);
   } else {
     return res.status(403).json({ message: 'Access denied. Invalid role.' });
   }
 });
+
 
 router.post('/login', login);
 router.post('/register', register);
