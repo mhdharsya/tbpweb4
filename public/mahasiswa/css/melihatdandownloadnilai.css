@@ -145,6 +145,10 @@
     color: black;
 }
 
+.signature-area{
+    text-align: right;
+}
+
 .nilai-table td {
     background-color: #fff9ed;
 }

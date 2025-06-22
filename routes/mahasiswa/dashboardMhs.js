@@ -2,14 +2,14 @@ const express = require('express');
 const router = express.Router();
 const { getFormDashboard } = require('../../controllers/mahasiswa/dashboard');
 const userGuard = require('../../middleware/decodeJWT');
+// const pendaftaranController = require('../../controllers/mahasiswa/pendaftaranController');
 
-// const pendaftaranController = require('../controllers/mahasiswa/pendaftaran');
-// router.get('/pendaftaran', pendaftaran.getPendaftaranData);
-// router.get('/pendaftaran/pdf', pendaftaran.downloadPendaftaranPdf);
+// // const pendaftaranController = require('../controllers/pendaftaranController');
+// // router.get('/pendaftaran', pendaftaranController.getPendaftaranData);
+// router.get('/pendaftaran/pdf', pendaftaranController.downloadPendaftaranPdf);
 
-router.get('/dashboard', userGuard, async (req, res) => {
-  await getFormDashboard(req, res);
-});
+router.get('/dashboard', userGuard, getFormDashboard); // Menangani tampilan dashboard
+// router.get('/pendaftaran/pdf', userGuard, pendaftaranController.downloadPendaftaranPdf); // Menangani download PDF laporan
 
 module.exports = router;
 

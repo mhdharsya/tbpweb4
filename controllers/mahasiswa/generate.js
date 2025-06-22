@@ -1,5 +1,5 @@
 // controllers/pendaftaranController.js
-const pendaftaranService = require('../services/pendaftaranService');
+const pendaftaranService = require('../../services/pendaftaranService');
 
 const getPendaftaranData = async (req, res) => {
     try {

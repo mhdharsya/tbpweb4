@@ -8,10 +8,27 @@ datasource db {
 }
 
 model admin {
-  niku       String    @id @db.VarChar(50)
+  niku       Int       @id
   nama_admin String    @db.VarChar(255)
   email      String    @unique @db.VarChar(100)
+  user       user      @relation(fields: [email], references: [email], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_admin")
   panduan    panduan[]
+
+  @@index([email], map: "fk_user_admin")
+}
+
+model dosen {
+  nip_dosen       Int           @id
+  nama_dosen      String        @db.VarChar(255)
+  email           String        @unique @db.VarChar(100)
+  bidang_keahlian String        @db.VarChar(99)
+  id_jadwal_dosen Int
+  jadwal_dosen    jadwal_dosen  @relation(fields: [id_jadwal_dosen], references: [id_jadwal_dosen], onDelete: NoAction, onUpdate: NoAction, map: "fk_jadwal_dosen_dosen")
+  user            user          @relation(fields: [email], references: [email], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_dosen")
+  pendaftaran     pendaftaran[]
+
+  @@index([id_jadwal_dosen], map: "fk_jadwal_dosen_dosen")
+  @@index([email], map: "fk_user_dosen")
 }
 
 model evaluasi_sistem {
@@ -42,19 +59,31 @@ model jadwal_pendaftaran {
 }
 
 model kadep {
-  nip_kadep  String @id @db.VarChar(50)
+  nip_kadep  Int    @id
   nama_kadep String @db.VarChar(99)
   email      String @unique @db.VarChar(100)
-  user       user   @relation(fields: [email], references: [email], map: "fk_user_kadep")
+  user       user   @relation(fields: [email], references: [email], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_kadep")
 
-  @@index([email])
+  @@index([email], map: "fk_user_kadep")
 }
 
 model kuota_semhas {
-  id_kuota           String               @id @db.VarChar(50)
+  id_kuota           Int                  @id
   kuota_max          Int
   minggu             DateTime             @db.Time(0)
   jadwal_pendaftaran jadwal_pendaftaran[]
+}
+
+model mahasiswa {
+  nim             Int               @id
+  nama_lengkap    String            @db.VarChar(99)
+  email           String            @unique @db.VarChar(100)
+  status          String            @db.VarChar(99)
+  evaluasi_sistem evaluasi_sistem[]
+  user            user              @relation(fields: [email], references: [email], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_mahasiswa")
+  pendaftaran     pendaftaran[]
+
+  @@index([email], map: "fk_user_mahasiswa")
 }
 
 model nilai_semhas {
@@ -69,12 +98,12 @@ model nilai_semhas {
 
   @@index([id_pendaftaran], map: "fk_pendaftaran_nilai_semhas")
   @@index([id_rubik], map: "fk_rubik_nilai_semhas")
-  @@index([id_user], map: "fk_dosen_nilai_semhas")
 }
 
 model panduan {
-  id_panduan     Int      @id @default(autoincrement())
+  id_panduan     Int      @id
   nama_file      String   @db.VarChar(255)
+  deskripsi      String   @db.Text
   tanggal_unggah DateTime @db.Date
   file           Bytes    @db.Blob
   adminNiku      String?  @db.VarChar(50)
@@ -97,15 +126,17 @@ model pendaftaran {
   status             String?              @db.VarChar(50)
   jadwal_pendaftaran jadwal_pendaftaran[]
   nilai_semhas       nilai_semhas[]
-  periode_semhas     periode_semhas?      @relation(fields: [id_periode], references: [id_periode], onDelete: NoAction, onUpdate: NoAction)
-  user               user                 @relation(fields: [id_user], references: [id_user], onDelete: Cascade)
+  dosen              dosen                @relation(fields: [nip_dosen], references: [nip_dosen], onDelete: NoAction, onUpdate: NoAction, map: "fk_dosen_pendaftaran")
+  mahasiswa          mahasiswa            @relation(fields: [nim], references: [nim], onDelete: NoAction, onUpdate: NoAction, map: "fk_mahasiswa_pendaftaran")
+  periode_semhas     periode_semhas       @relation(fields: [id_periode], references: [id_periode], onDelete: NoAction, onUpdate: NoAction, map: "fk_periode_semhas_pendaftaran")
 
+  @@index([nip_dosen], map: "fk_dosen_pendaftaran")
+  @@index([nim], map: "fk_mahasiswa_pendaftaran")
   @@index([id_periode], map: "fk_periode_semhas_pendaftaran")
-  @@index([id_user], map: "pendaftaran_id_user_fkey")
 }
 
 model periode_semhas {
-  id_periode    String        @id @db.VarChar(50)
+  id_periode    Int           @id
   semester      Int
   tanggal_buka  DateTime      @db.Date
   tanggal_tutup DateTime      @db.Date

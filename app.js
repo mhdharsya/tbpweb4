@@ -4,6 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const cors = require('cors');
+const multer = require('multer');
 
 var bodyParser = require('body-parser');
 const { PrismaClient } = require('@prisma/client');
@@ -20,7 +21,6 @@ var pandu = require('./routes/mahasiswa/panduan');
 var melihatRouter = require('./routes/mahasiswa/melihatdandownloadnilai');
 
 
-var checkRouter = require('./routes/mahasiswa/checkberkas');
 var daftarRouter = require('./routes/mahasiswa/pendaftaran');
 var dashboardRouter = require('./routes/mahasiswa/dashboardMhs');
 var uploadRouter = require('./routes/mahasiswa/upload');
@@ -34,8 +34,18 @@ var scheduleRouter = require('./routes/dosen/schedule');
       
 const userController = require('./controllers/admin/userController');
 const accessRequestController = require('./controllers/admin/accessRequestController');
+var nilaiRouter = require('./routes/mahasiswa/melihatdandownloadnilai');
+var statusRouter = require('./routes/admin/statusSemhas');
+var detailJadwalRouter = require('./routes/mahasiswa/detailJadwal');
+const pdfRiwayatRoutes = require('./routes/mahasiswa/detailRiwayat');
 const evaluasiSistemController = require('./controllers/admin/evaluasiSistemController'); // <--- PASTIKAN INI ADA
 const panduanController = require('./controllers/admin/panduanController'); // <--- PASTIKAN INI ADA
+const dosenRouter = require('./routes/dosen/dashboardD');
+const mahasiswaseminarRouter = require('./routes/dosen/mahasiswaseminar');
+const penilaianRouter = require('./routes/dosen/penilaian');
+const riwayatseminarRouter = require('./routes/dosen/riwayatseminar');
+const revisipRouter = require('./routes/mahasiswa/revisi');
+const checkRoutes = require('./routes/mahasiswa/checkberkas');
 // ⬇️ Tambahkan baris ini untuk menghubungkan route panduan
 //const panduanRouter = require('./routes/mahasiswa/panduan');
 
@@ -54,6 +64,8 @@ app.use(express.json()); // Untuk parsing JSON body dari POST/PUT/PATCH requests
 app.use(express.urlencoded({ extended: false })); // Untuk parsing URL-encoded body dari form-data
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public'))); // Untuk menyajikan file statis (CSS, JS, gambar)
+app.use('/uploads', express.static(path.join(__dirname, 'public', 'uploads')));
+app.use('/temp_files', express.static(path.join(__dirname, 'temp_files')));
 
 // =========================================================
 // GLOBAL DEBUG MIDDLEWARE (Opsional, untuk debugging)
@@ -104,17 +116,32 @@ app.use('/dosen/penilaian', penilaianRouter);
 app.use('/dosen/riwayatseminar', riwayatseminarRouter);
 app.use('/dosen', scheduleRouter); // Pastikan ini sesuai dengan rute yang Anda buat di scheduler.js
 app.use('/evaluasi', evaluasiRouter);
-app.use('/panduan', pandu);
 app.use(cors());
 // app.use(express.json()
 // );
 app.use('/melihat', melihatRouter);
-app.use('/check', checkRouter);
-app.use('/dashboardMhs', dashboardMhsRouter);
+
 app.use('/daftar', daftarRouter);
 app.use('/dashboard', dashboardRouter);
 app.use('/mahasiswa', uploadRouter);
-app.use('/riwayatseminar', riwayatSeminarRouter);
+app.use('/revisip', revisipRouter);
+app.use('/panduan', panduanRouter);
+app.use('/check', checkRoutes);
+// app.use('/list', listRoutes);
+
+app.use('/', riwayatSeminarRouter);
+app.use('/', detailRiwayatRouter);
+app.use('/melihat', nilaiRouter);
+
+//Router API untuk Generate Pendaftaran
+app.use('/api', dashboardRouter);
+app.use('/api', pdfRiwayatRoutes);
+
+app.use('/panduan', panduanRouter); // Route untuk halaman panduan seminar hasil'
+app.use('/evaluasi', evaluasiRouter); // Route untuk halaman evaluasi sistem
+// app.use('/detail', detailJadwalRouter);
+app.use('/', statusRouter);
+app.use('/tampil', detailJadwalRouter);
 
 
 app.use((req, res, next) => {

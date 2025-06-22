@@ -5,6 +5,73 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>SISemhas - Buku Panduan</title>
   <link rel="stylesheet" href="/mahasiswa/css/panduan.css">
+  <style>
+        /* Gaya dasar untuk memastikan tampilan yang layak jika belum ada di CSS Anda */
+        /* Ini diasumsikan adalah wadah terluar yang membungkus .panduan-card */
+.panduan-upload-section {
+    display: flex; /* Sudah ada */
+    /* justify-content: space-around; // Bisa diganti atau dihapus jika hanya ada 1 kartu */
+    justify-content: center; /* <<< GUNAKAN INI UNTUK MEMUSATKAN ITEM FLEX */
+    gap: 30px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+
+    /* Tambahkan ini untuk memusatkan blok .panduan-upload-section itu sendiri */
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 800px; /* <<< PENTING: Atur lebar maksimum yang sesuai */
+    /* Atau width: fit-content; jika Anda ingin lebarnya sesuai dengan kontennya */
+}
+
+/* Jika .panduan-card adalah satu-satunya item di .panduan-upload-section, 
+   pastikan panduan-upload-section juga terpusat di dalam .container yang lebih besar */
+/* Dari HTML Anda sebelumnya, sepertinya .panduan-section adalah parent dari bookCard */
+/* Mari kita sesuaikan dengan struktur HTML yang saya buatkan sebelumnya */
+
+#panduanSection { /* Asumsi ini adalah ID dari section yang menampung kartu panduan */
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #f8f8f8;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    
+    /* Tambahkan ini untuk memusatkan konten di dalam #panduanSection */
+    display: flex; /* Jadikan flex container */
+    justify-content: center; /* Pusatkan item-itemnya secara horizontal */
+    align-items: center; /* Opsional: Pusatkan secara vertikal jika ada tinggi */
+    flex-wrap: wrap; /* Jika suatu saat ada lebih dari 1 kartu */
+
+    /* Ini untuk memusatkan #panduanSection itu sendiri di dalam .container */
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 800px; /* Atur lebar maksimum yang sesuai dengan konten */
+    /* Anda bisa bereksperimen dengan width: fit-content; juga */
+}
+
+/* Untuk panduan-card itu sendiri, text-align: center; sudah memusatkan konten di dalamnya */
+.panduan-card {
+    background-color: #f8f8f8;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center; /* Memusatkan h3, img, p di dalam kartu */
+    width: 45%; /* Ini mungkin terlalu besar jika hanya ada 1 kartu dan ingin di tengah */
+    min-width: 280px;
+    max-width: 400px; /* Tambahkan max-width agar kartu tidak terlalu lebar */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    /* margin: 0 auto; // Ini tidak akan bekerja langsung di sini karena parent adalah flex container */
+}
+
+/* Pastikan gambar di dalam kartu terpusat */
+.panduan-thumbnail {
+max-width: 100%; /* Ubah dari nilai tetap menjadi persentase */
+height: auto;
+display: block;
+margin: 0 auto;
+border-radius: 3px;
+}
+
+    </style>
 </head>
 <body>
     <!-- Header -->
@@ -13,38 +80,59 @@
         <div class="header-title">SISemhas - Universitas Andalas</div>
     </header>
 
-        <!-- Navigation Tabs -->
-        <nav class="nav-tabs">
-          <div class="nav-left">
-            <a href="/dashboardMhs" class="nav-tab">Dashboard</a>
-            <a href="/daftar/" class="nav-tab">Pendaftaran</a>
-            <a href="/riwayat/" class="nav-tab">Riwayat Semhas</a>
-          </div>
-        </nav>
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs">
+      <div class="nav-left">
+        <a href="/dashboard/" class="nav-tab">Dashboard</a>
+        <a href="/daftar/" class="nav-tab">Pendaftaran</a>
+        <a href="/riwayat/" class="nav-tab">Riwayat Semhas</a>
+      </div>
+    </nav>
 
-        <div class="breadcrumb">
-            <span>Buku Panduan</span>
-        </div>
-
- <!-- Main Content -->
-<div class="main-content">
-  <!-- Panduan Content -->
-  <div class="page-content active" data-content="panduan">
-    <div class="pdf-container" id="panduan-container">
-      <div class="pdf-icon">📄</div>
-      <span class="pdf-text">Klik untuk membuka PDF Panduan SISemhas</span>
+    <div class="breadcrumb">
+        <span>Buku Panduan</span>
     </div>
 
-    <!-- DAFTAR PANDUAN PDF DARI DATABASE -->
-    <div class="panduan-list">
-      <ul>
-        <% panduanList.forEach(p => { %>
-          <li>
-            <%= p.judul %> -
-            <a href="/mahasiswa/panduan/lihat/<%= p.id %>" target="_blank">Lihat File</a>
-          </li>
-        <% }); %>
-      </ul>
+<<<<<<< HEAD
+    <!-- Main Content -->
+    <div class="main-content">
+      <!-- Panduan Content -->
+      <div class="page-content active" data-content="panduan">
+        <% if (panduan) { %>
+          <div class="pdf-container" id="pdfContainer">
+            <div class="pdf-icon">📄</div>
+            <!-- Gunakan path file yang disimpan di database untuk menampilkan PDF -->
+            <span class="pdf-text">
+              <a href="<%= panduan.file_path %>" target="_blank">
+                Klik untuk membuka PDF Panduan SISemhas
+              </a>
+            </span>
+          </div>
+
+          <!-- Menampilkan PDF di iframe jika diinginkan -->
+          <iframe class="pdf-viewer" id="pdfViewer" src="<%= panduan.file_path %>" style="width: 100%; height: 600px;"></iframe>
+        <% } else { %>
+          <p>Belum ada panduan yang di-upload.</p>
+        <% } %>
+
+        <div class="pdf-controls" id="pdfControls" style="display: none;">
+          <a href="<%= panduan.file_path %>" class="btn btn-primary" id="downloadBtn" download>
+            💾 Download PDF
+          </a>
+          <button class="btn btn-secondary" id="closeBtn">
+            ❌ Tutup PDF
+          </button>
+        </div>
+      </div>
+    </div>
+=======
+ <!-- Main Content -->
+    <div class="container">
+        
+        <section id="panduanSection" class="panduan-section">
+            <p>Memuat buku panduan...</p> 
+            </section>
+
     </div>
 
     <!-- Iframe PDF Viewer -->
