@@ -21,7 +21,6 @@ var pandu = require('./routes/mahasiswa/panduan');
 var melihatRouter = require('./routes/mahasiswa/melihatdandownloadnilai');
 
 
-var checkRouter = require('./routes/mahasiswa/checkberkas');
 var daftarRouter = require('./routes/mahasiswa/pendaftaran');
 var dashboardRouter = require('./routes/mahasiswa/dashboardMhs');
 var uploadRouter = require('./routes/mahasiswa/upload');
@@ -114,7 +113,6 @@ app.use('/Dosen/mahasiswaseminar', mahasiswaseminarRouter);
 app.use('/Dosen/penilaian', penilaianRouter);
 app.use('/Dosen/riwayatseminar', riwayatseminarRouter);
 app.use('/evaluasi', evaluasiRouter);
-app.use('/panduan', pandu);
 app.use(cors());
 app.use(express.json());
 app.use('/melihat', melihatRouter);
