@@ -17,7 +17,6 @@ var usersRouter = require('./routes/users');
 var dashboardMhsRouter = require('./routes/mahasiswa/dashboardMhs');
 //var panduanRouter = require('./routes/mahasiswa/panduan');
 var evaluasiRouter = require('./routes/mahasiswa/evaluasiSisemhas');
-var pandu = require('./routes/mahasiswa/panduan');
 var melihatRouter = require('./routes/mahasiswa/melihatdandownloadnilai');
 
 
@@ -25,11 +24,7 @@ var daftarRouter = require('./routes/mahasiswa/pendaftaran');
 var dashboardRouter = require('./routes/mahasiswa/dashboardMhs');
 var uploadRouter = require('./routes/mahasiswa/upload');
 var riwayatSeminarRouter = require('./routes/mahasiswa/riwayatseminar');
-var adminRouter = require('./routes/admin/dashboardAdmin')
-var dosenRouter = require('./routes/dosen/dashboardD');
-var mahasiswaseminarRouter = require('./routes/dosen/mahasiswaseminar');
-var penilaianRouter = require('./routes/dosen/penilaian');  
-var riwayatseminarRouter = require('./routes/dosen/riwayatseminar');
+var adminRouter = require('./routes/admin/dashboardAdmin');
 var scheduleRouter = require('./routes/dosen/schedule');
       
 const userController = require('./controllers/admin/userController');
@@ -43,11 +38,10 @@ const panduanController = require('./controllers/admin/panduanController'); // <
 const dosenRouter = require('./routes/dosen/dashboardD');
 const mahasiswaseminarRouter = require('./routes/dosen/mahasiswaseminar');
 const penilaianRouter = require('./routes/dosen/penilaian');
-const riwayatseminarRouter = require('./routes/dosen/riwayatseminar');
 const revisipRouter = require('./routes/mahasiswa/revisi');
 const checkRoutes = require('./routes/mahasiswa/checkberkas');
 // ⬇️ Tambahkan baris ini untuk menghubungkan route panduan
-//const panduanRouter = require('./routes/mahasiswa/panduan');
+const panduanRouter = require('./routes/mahasiswa/panduan');
 
 
 var app = express(); // Hanya satu deklarasi 'app' di sini
@@ -113,7 +107,7 @@ app.use('/users', usersRouter);
 app.use('/dashboardD', dosenRouter);
 app.use('/dosen/mahasiswaseminar', mahasiswaseminarRouter);
 app.use('/dosen/penilaian', penilaianRouter);
-app.use('/dosen/riwayatseminar', riwayatseminarRouter);
+app.use('/dosen/riwayatseminar', riwayatSeminarRouter);
 app.use('/dosen', scheduleRouter); // Pastikan ini sesuai dengan rute yang Anda buat di scheduler.js
 app.use('/evaluasi', evaluasiRouter);
 app.use(cors());
@@ -130,7 +124,7 @@ app.use('/check', checkRoutes);
 // app.use('/list', listRoutes);
 
 app.use('/', riwayatSeminarRouter);
-app.use('/', detailRiwayatRouter);
+// app.use('/', detailRiwayatRouter);
 app.use('/melihat', nilaiRouter);
 
 //Router API untuk Generate Pendaftaran
