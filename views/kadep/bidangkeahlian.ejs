@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kelola Bidang Keahlian Dosen</title>
+  <link href="/stylesheets/output.css" rel="stylesheet">
+</head>
+<body>
+  <div class="container mx-auto p-6">
+    <h1 class="text-3xl font-bold mb-4">Kelola Bidang Keahlian Dosen</h1>
+
+    <!-- FILTER & SEARCH -->
+    <form action="/bidang-keahlian" method="GET" class="mb-6 flex gap-4">
+      <input
+        type="text"
+        name="search"
+        value="<%= search %>"
+        placeholder="Cari nama dosen..."
+        class="flex-1 px-4 py-2 border rounded"
+      />
+      <select name="filter" class="px-4 py-2 border rounded">
+        <option value="all" <%= filter === 'all' ? 'selected' : '' %>>Semua Bidang</option>
+        <% bidangOptions.forEach(opt => { %>
+          <option value="<%= opt %>" <%= filter === opt ? 'selected' : '' %>><%= opt %></option>
+        <% }) %>
+      </select>
+      <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded">Terapkan</button>
+    </form>
+
+    <!-- BUTTON TAMBAH JADWAL -->
+    <button id="openModalBtn" class="mb-6 px-6 py-2 bg-green-600 text-white rounded">
+      Tambah Jadwal
+    </button>
+
+    <!-- MODAL TAMBAH JADWAL -->
+    <div id="addJadwalModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center">
+      <div class="bg-white p-6 rounded-lg w-full max-w-md">
+        <button id="closeModalBtn" class="float-right">×</button>
+        <h2 class="text-xl font-semibold mb-4">Tambah Jadwal Dosen</h2>
+        <form action="/bidang-keahlian" method="POST" class="space-y-4">
+          <div>
+            <label class="block mb-1">ID User</label>
+            <input
+              type="number"
+              name="id_user"
+              required
+              class="w-full px-3 py-2 border rounded"
+            />
+          </div>
+          <div>
+            <label class="block mb-1">Tanggal</label>
+            <input
+              type="date"
+              name="tanggal_data"
+              required
+              class="w-full px-3 py-2 border rounded"
+            />
+          </div>
+          <div>
+            <label class="block mb-1">Bidang Keahlian</label>
+            <select
+              name="bidang_keahlian"
+              required
+              class="w-full px-3 py-2 border rounded"
+            >
+              <option value="">-- Pilih Bidang --</option>
+              <% bidangOptions.forEach(opt => { %>
+                <option value="<%= opt %>"><%= opt %></option>
+              <% }) %>
+            </select>
+          </div>
+          <div class="text-right">
+            <button type="button" id="cancelBtn" class="px-4 py-2 border rounded mr-2">Batal</button>
+            <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded">Simpan</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- TABEL JADWAL -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <% dosens.forEach(dosen => { %>
+        <div class="border p-4 rounded-lg">
+          <h3 class="font-semibold"><%= dosen.nama_dosen %></h3>
+          <p class="text-sm text-gray-600">ID Jadwal: <%= dosen.id_jadwal %></p>
+          <p class="text-sm text-gray-600">Tanggal: <%= dosen.tanggal %></p>
+          <div class="mt-2">
+            <strong>Bidang:</strong>
+            <% if (dosen.bidang_keahlian) { %>
+              <%= dosen.bidang_keahlian %>
+            <% } else { %>
+              <span class="italic text-gray-400">Belum diisi</span>
+            <% } %>
+          </div>
+          <div class="mt-4 flex gap-2">
+            <form action="/bidang-keahlian/<%= dosen.id_jadwal %>?_method=PUT" method="POST">
+              <select name="bidang_keahlian" class="px-2 py-1 border rounded">
+                <% bidangOptions.forEach(opt => { %>
+                  <option value="<%= opt %>" <%= dosen.bidang_keahlian===opt?'selected':'' %>><%= opt %></option>
+                <% }) %>
+              </select>
+              <button class="px-3 py-1 bg-yellow-400 rounded">Update</button>
+            </form>
+            <form action="/bidang-keahlian/<%= dosen.id_jadwal %>?_method=DELETE" method="POST">
+              <button class="px-3 py-1 bg-red-500 text-white rounded">Hapus</button>
+            </form>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+
+    <!-- PAGINATION -->
+    <div class="mt-6 flex justify-center gap-2">
+      <% if (currentPage > 1) { %>
+        <a href="?page=<%= currentPage-1 %>&search=<%= search %>&filter=<%= filter %>" class="px-3 py-1 border rounded">‹</a>
+      <% } %>
+      <% for(let i=1; i<= totalPages; i++) { %>
+        <a
+          href="?page=<%= i %>&search=<%= search %>&filter=<%= filter %>"
+          class="px-3 py-1 border rounded <%= i===currentPage?'bg-blue-600 text-white':'' %>"
+        ><%= i %></a>
+      <% } %>
+      <% if (currentPage < totalPages) { %>
+        <a href="?page=<%= currentPage+1 %>&search=<%= search %>&filter=<%= filter %>" class="px-3 py-1 border rounded">›</a>
+      <% } %>
+    </div>
+  </div>
+
+  <script>
+    const openBtn   = document.getElementById('openModalBtn');
+    const closeBtn  = document.getElementById('closeModalBtn');
+    const cancelBtn = document.getElementById('cancelBtn');
+    const modal     = document.getElementById('addJadwalModal');
+
+    [openBtn, closeBtn, cancelBtn].forEach(el => {
+      if (el) el.addEventListener('click', () => modal.classList.toggle('hidden'));
+    });
+  </script>
+</body>
+</html>

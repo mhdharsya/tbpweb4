@@ -1,14 +1,19 @@
 var express = require('express');
 var router = express.Router();
-const { login, register } = require('../controllers/authController');
+const methodOverride = require('method-override');
+const { login, register, showLogin } = require('../controllers/authController');
 const { auth } = require('../middleware/authMiddleware');
 const { getDashboardD } = require('../controllers/dosen/dosen'); 
 const { getFormDashboard } = require('../controllers/mahasiswa/dashboard');
+const { listBidangKeahlian, createJadwal, updateJadwal, deleteJadwal } = require('../controllers/kadepController');
 
 /* GET home page. */
+router.get('/', (req, res) => {
+  res.render('kadep');
+});
 
 router.get('/login', (req, res) => {
-  res.render('index');
+  res.render('login');
 });
 
 router.get('/register', (req, res) => {
@@ -35,5 +40,31 @@ router.get('/dashboard', auth, async (req, res) => {
 
 router.post('/login', login);
 router.post('/register', register);
+
+
+// Controller Kadep
+router.use(methodOverride('_method'));
+router.get('/bidang-keahlian', listBidangKeahlian);
+router.post('/bidang-keahlian', createJadwal);
+router.put('/:nip/bidang-keahlian', updateJadwal);
+router.delete('/:nip/bidang-keahlian', deleteJadwal);
+router.get('/dosenpenguji', (req, res) => {
+  res.render('kadep/dosenpenguji');
+});
+router.get('/kuota', (req, res) => {
+  res.render('kadep/kuota');
+});
+router.get('/periodependaftaran', (req, res) => {
+  res.render('kadep/periodependaftaran');
+});
+router.get('/rekapitulasi', (req, res) => {
+  res.render('kadep/rekapitulasi');
+});
+router.get('/rubrikpenilaian', (req, res) => {
+  res.render('kadep/rubrikpenilaian');
+});
+router.get('/statistik', (req, res) => {
+  res.render('kadep/statistikseminar');
+});
 
 module.exports = router;

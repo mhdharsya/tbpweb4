@@ -35,7 +35,6 @@ model jadwal_pendaftaran {
   jadwal_dosenDosen jadwal_dosendosen @relation(fields: [id_jadwal_dosen], references: [id_jadwal_dosen], onUpdate: Restrict, map: "jadwal_dosen_id_jadwal_fkey")
   user              user              @relation(fields: [id_user], references: [id_user], onDelete: Cascade)
 
-  @@index([id_kuota], map: "fk_kuota_semhas_jadwal_pendaftaran")
   @@index([id_pendaftaran], map: "fk_pendaftaran_jadwal_pendaftaran")
   @@index([id_user], map: "jadwal_pendaftaran_id_user_fkey")
   @@index([id_jadwal_dosen], map: "jadwal_dosen_id_jadwal_fkey")
@@ -51,10 +50,9 @@ model kadep {
 }
 
 model kuota_semhas {
-  id_kuota           String               @id @db.VarChar(50)
-  kuota_max          Int
-  minggu             DateTime             @db.Time(0)
-  jadwal_pendaftaran jadwal_pendaftaran[]
+  id_kuota  String   @id @db.VarChar(50)
+  kuota_max Int
+  minggu    DateTime @db.Time(0)
 }
 
 model nilai_semhas {
@@ -132,6 +130,10 @@ model user {
   role               String               @db.VarChar(50)
   id_user            String?              @unique(map: "id_user") @db.VarChar(50)
   nama_lengkap       String               @db.VarChar(99)
+<<<<<<< HEAD
+=======
+  jadwal_dosendosen  jadwal_dosendosen[]
+>>>>>>> 58f18611fc873b2acc297e72c8b47363e8d23b61
   jadwal_pendaftaran jadwal_pendaftaran[]
   kadep              kadep?
   nilai_semhas       nilai_semhas[]
@@ -147,6 +149,14 @@ model jadwal_dosendosen {
   shift2             String?
   shift3             String?
   shift4             String?
+<<<<<<< HEAD
+=======
+  id_user            String               @db.VarChar(50)
+  user               user                 @relation(fields: [id_user], references: [id_user])
+  jadwal_pendaftaran jadwal_pendaftaran[]
+
+  @@index([id_user], map: "jadwal_dosendosen_id_user_fkey")
+>>>>>>> 58f18611fc873b2acc297e72c8b47363e8d23b61
   jadwal_pendaftaran jadwal_pendaftaran[]
 
   id_user            String            @db.VarChar(50)

@@ -1,10 +1,15 @@
 // Lokasi: public/dosen/JS/penilaian.js
 document.addEventListener('DOMContentLoaded', function() {
     
+<<<<<<< HEAD
     // Seleksi Elemen DOM
+=======
+    // Seleksi Elemen DOM (tetap sama)
+>>>>>>> 58f18611fc873b2acc297e72c8b47363e8d23b61
     const studentSelect = document.getElementById('studentSelect');
-    const assessmentForm = document.getElementById('assessmentForm');
+    const assessmentForm = document.getElementById('assessmentForm'); // Ini adalah form interaktif
     const scoreInputs = document.querySelectorAll('.score-input');
+<<<<<<< HEAD
     const finalScoreEl = document.getElementById('finalScore');
     const submitButton = document.querySelector('.btn-submit'); // Ini akan selalu jadi "Kirim Penilaian"
     const printButton = document.querySelector('.btn-print');
@@ -13,6 +18,16 @@ document.addEventListener('DOMContentLoaded', function() {
     const komentarInput = document.getElementById('komentar');
 
     // Seleksi elemen placeholder untuk laporan cetak (tetap sama)
+=======
+    const finalScoreEl = document.getElementById('finalScore'); // Nilai akhir di form interaktif
+    const submitButton = document.querySelector('.btn-submit');
+    const printButton = document.querySelector('.btn-print');
+    const reviseButton = document.querySelector('.btn-revise');
+    const statusSemhasSelect = document.getElementById('statusSemhas'); // Select status di form interaktif
+    const komentarInput = document.getElementById('komentar'); // Textarea komentar di form interaktif
+
+    // Seleksi elemen placeholder untuk laporan cetak (ada di div#printReportContent)
+>>>>>>> 58f18611fc873b2acc297e72c8b47363e8d23b61
     const printStudentNamePlaceholder = document.getElementById('printStudentNamePlaceholder');
     const printStudentIdPlaceholder = document.getElementById('printStudentIdPlaceholder');
     const printDosenNamePlaceholder = document.getElementById('printDosenNamePlaceholder');
@@ -21,7 +36,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const printDatePlaceholder = document.getElementById('printDatePlaceholder');
 
     // Seleksi elemen nilai akhir untuk print
+<<<<<<< HEAD
     const printFinalScorePlaceholder = document.getElementById('print-final-score-cell');
+=======
+    const printFinalScorePlaceholder = document.getElementById('print-final-score-cell'); // Ini adalah TD-nya
+>>>>>>> 58f18611fc873b2acc297e72c8b47363e8d23b61
     // Seleksi elemen tanda tangan dosen untuk print
     const printDosenSignatureName = document.getElementById('printDosenSignatureName');
     const printDosenSignatureId = document.getElementById('printDosenSignatureId');
@@ -31,6 +50,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const printStatusPlaceholder = document.getElementById('printStatusPlaceholder');
     const printKomentarPlaceholder = document.getElementById('printKomentarPlaceholder');
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 58f18611fc873b2acc297e72c8b47363e8d23b61
     // Ambil data dosen dari hidden input (Pastikan ID ini ada di EJS Anda)
     const loggedInDosenNama = document.getElementById('loggedInDosenNama') ? document.getElementById('loggedInDosenNama').value : '';
     const loggedInDosenId = document.getElementById('loggedInDosenId') ? document.getElementById('loggedInDosenId').value : '';
@@ -40,16 +63,26 @@ document.addEventListener('DOMContentLoaded', function() {
 
     async function fetchExistingScores(mahasiswaId) {
         resetForm(); // Reset form interaktif
+<<<<<<< HEAD
         setFormDisabled(false); // Aktifkan form interaktif (akan diubah jika tidak ada mahasiswaId)
 
         if (!mahasiswaId) {
             setFormDisabled(true); // Nonaktifkan form jika tidak ada mahasiswaId
             clearPrintPlaceholders();
             clearPrintScoreAndCommentDataAttributes();
+=======
+        setFormDisabled(false); // Aktifkan form interaktif
+
+        if (!mahasiswaId) {
+            setFormDisabled(true);
+            clearPrintPlaceholders(); // Bersihkan placeholder cetak
+            clearPrintScoreAndCommentDataAttributes(); // Bersihkan data-attributes cetak
+>>>>>>> 58f18611fc873b2acc297e72c8b47363e8d23b61
             return;
         }
 
         const selectedOption = studentSelect.options[studentSelect.selectedIndex];
+<<<<<<< HEAD
         // const isDinilai = selectedOption.dataset.isDinilai === 'true'; // HAPUS: tidak digunakan lagi untuk mengubah teks tombol submit
         const judulPenelitian = selectedOption.dataset.judulPenelitian || 'Tidak Ada Judul';
 
@@ -61,6 +94,23 @@ document.addEventListener('DOMContentLoaded', function() {
         // Tombol Revisi sudah dihapus, jadi tidak perlu logikanya di sini
 
         // --- Mengisi Placeholder Info Laporan (di luar tabel) --- (Tetap sama)
+=======
+        const isDinilai = selectedOption.dataset.isDinilai === 'true'; 
+        const judulPenelitian = selectedOption.dataset.judulPenelitian || 'Tidak Ada Judul';
+
+        // Logika untuk mengubah teks tombol Submit dan status tombol Revisi/Cetak
+        if (isDinilai) {
+            submitButton.textContent = 'Update Penilaian';
+            reviseButton.disabled = false;
+            printButton.disabled = false;
+        } else {
+            submitButton.textContent = 'Kirim Penilaian';
+            reviseButton.disabled = true;
+            printButton.disabled = true;
+        }
+
+        // --- Mengisi Placeholder Info Laporan (di luar tabel) ---
+>>>>>>> 58f18611fc873b2acc297e72c8b47363e8d23b61
         if (printStudentNamePlaceholder) {
             printStudentNamePlaceholder.textContent = selectedOption.textContent.replace('(Sudah Dinilai)', '').trim();
         }
@@ -103,9 +153,17 @@ document.addEventListener('DOMContentLoaded', function() {
             
             if (response.status === 404) {
                 console.log('Belum ada penilaian untuk mahasiswa ini. Form siap diisi.');
+<<<<<<< HEAD
                 submitButton.textContent = 'Kirim Penilaian'; // Pastikan selalu ini
                 printButton.disabled = false; // Tetap aktifkan cetak
                 clearPrintScoreAndCommentDataAttributes();
+=======
+                submitButton.textContent = 'Kirim Penilaian';
+                reviseButton.disabled = true;
+                printButton.disabled = true;
+                
+                clearPrintScoreAndCommentDataAttributes(); // Bersihkan data-attributes jika 404
+>>>>>>> 58f18611fc873b2acc297e72c8b47363e8d23b61
                 return;
             }
             if (!response.ok) {
@@ -117,7 +175,12 @@ document.addEventListener('DOMContentLoaded', function() {
             
             if (existingData) {
                 if (existingData.scores) {
+<<<<<<< HEAD
                     populateFormScores(existingData.scores);
+=======
+                    populateFormScores(existingData.scores); // Mengisi form interaktif
+                    // Mengisi data-attributes skor untuk sel tabel cetak
+>>>>>>> 58f18611fc873b2acc297e72c8b47363e8d23b61
                     scoreInputs.forEach(input => {
                         const scorePrintCell = document.getElementById(`print-score-${input.dataset.kategoriId}`);
                         if (scorePrintCell) {
@@ -125,6 +188,10 @@ document.addEventListener('DOMContentLoaded', function() {
                         }
                     });
                 } else {
+<<<<<<< HEAD
+=======
+                    // Kosongkan data-attributes skor jika scores null
+>>>>>>> 58f18611fc873b2acc297e72c8b47363e8d23b61
                     scoreInputs.forEach(input => {
                         const scorePrintCell = document.getElementById(`print-score-${input.dataset.kategoriId}`);
                         if (scorePrintCell) scorePrintCell.dataset.scoreValue = '';
@@ -135,26 +202,49 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (statusSemhasSelect) statusSemhasSelect.value = existingData.commentData.status_semhas;
                     if (komentarInput) komentarInput.value = existingData.commentData.komentar;
                     
+<<<<<<< HEAD
                     if (printStatusPlaceholder) printStatusPlaceholder.textContent = existingData.commentData.status_semhas;
                     if (printKomentarPlaceholder) printKomentarPlaceholder.textContent = existingData.commentData.komentar;
                 } else {
+=======
+                    // Mengisi data-attributes untuk placeholder status & komentar baru
+                    if (printStatusPlaceholder) printStatusPlaceholder.textContent = existingData.commentData.status_semhas;
+                    if (printKomentarPlaceholder) printKomentarPlaceholder.textContent = existingData.commentData.komentar;
+                } else {
+                     // Kosongkan placeholder status & komentar jika commentData null
+>>>>>>> 58f18611fc873b2acc297e72c8b47363e8d23b61
                     if (printStatusPlaceholder) printStatusPlaceholder.textContent = '';
                     if (printKomentarPlaceholder) printKomentarPlaceholder.textContent = '';
                 }
                 
+<<<<<<< HEAD
+=======
+                // Mengisi nilai akhir untuk laporan cetak
+>>>>>>> 58f18611fc873b2acc297e72c8b47363e8d23b61
                 if (printFinalScorePlaceholder) {
                     printFinalScorePlaceholder.textContent = finalScoreEl.textContent;
                 }
 
+<<<<<<< HEAD
                 // submitButton.textContent = 'Update Penilaian'; // HAPUS: Ini sudah ditangani di atas
                 printButton.disabled = false; // Pastikan tombol cetak aktif
                 // reviseButton.disabled = false; // HAPUS: Tidak ada lagi tombol Revisi
+=======
+                reviseButton.disabled = false;
+                printButton.disabled = false;
+                submitButton.textContent = 'Update Penilaian';
+>>>>>>> 58f18611fc873b2acc297e72c8b47363e8d23b61
             }
         } catch (error) {
             console.error('Error fetching existing scores:', error);
             alert(`Terjadi kesalahan: ${error.message}`);
+<<<<<<< HEAD
             setFormDisabled(true); // Nonaktifkan form jika ada error fetch
             clearPrintScoreAndCommentDataAttributes();
+=======
+            setFormDisabled(true);
+            clearPrintScoreAndCommentDataAttributes(); // Kosongkan jika ada error
+>>>>>>> 58f18611fc873b2acc297e72c8b47363e8d23b61
         }
     }
 
@@ -168,10 +258,18 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         finalScoreEl.textContent = totalFinalScore.toFixed(2);
 
+<<<<<<< HEAD
+=======
+        // Update print Final Score placeholder saat nilai berubah di form interaktif
+>>>>>>> 58f18611fc873b2acc297e72c8b47363e8d23b61
         if (printFinalScorePlaceholder) {
             printFinalScorePlaceholder.textContent = finalScoreEl.textContent;
         }
 
+<<<<<<< HEAD
+=======
+        // Update data-attributes skor saat nilai berubah di form interaktif
+>>>>>>> 58f18611fc873b2acc297e72c8b47363e8d23b61
         scoreInputs.forEach(input => {
             const scorePrintCell = document.getElementById(`print-score-${input.dataset.kategoriId}`);
             if (scorePrintCell) {
@@ -191,7 +289,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const scores = {};
         scoreInputs.forEach(input => {
+<<<<<<< HEAD
             scores[input.dataset.kategoriId] = parseFloat(input.value) || 0; // Tetap kirim sebagai float, controller yang parse
+=======
+            scores[input.dataset.kategoriId] = parseFloat(input.value) || 0;
+>>>>>>> 58f18611fc873b2acc297e72c8b47363e8d23b61
         });
 
         const statusSemhas = statusSemhasSelect.value;
@@ -231,7 +333,10 @@ document.addEventListener('DOMContentLoaded', function() {
             alert(`Terjadi kesalahan: ${error.message}`);
         } finally {
             submitButton.disabled = false;
+<<<<<<< HEAD
             submitButton.textContent = 'Kirim Penilaian'; // Pastikan kembali ke teks default
+=======
+>>>>>>> 58f18611fc873b2acc297e72c8b47363e8d23b61
         }
     }
 
@@ -254,7 +359,12 @@ document.addEventListener('DOMContentLoaded', function() {
         finalScoreEl.textContent = '0.00';
         if (statusSemhasSelect) statusSemhasSelect.value = '';
         if (komentarInput) komentarInput.value = '';
+<<<<<<< HEAD
         clearPrintScoreAndCommentDataAttributes();
+=======
+        clearPrintScoreAndCommentDataAttributes(); // Tambahkan ini di reset form
+        // Also clear info placeholders when resetting form
+>>>>>>> 58f18611fc873b2acc297e72c8b47363e8d23b61
         clearPrintPlaceholders();
     }
     
@@ -262,11 +372,19 @@ document.addEventListener('DOMContentLoaded', function() {
         scoreInputs.forEach(input => input.disabled = disabled);
         submitButton.disabled = disabled;
         printButton.disabled = disabled;
+<<<<<<< HEAD
         // reviseButton.disabled = disabled; // HAPUS: Tidak ada lagi tombol Revisi
+=======
+        reviseButton.disabled = disabled;
+>>>>>>> 58f18611fc873b2acc297e72c8b47363e8d23b61
         if (statusSemhasSelect) statusSemhasSelect.disabled = disabled;
         if (komentarInput) komentarInput.disabled = disabled;
     }
 
+<<<<<<< HEAD
+=======
+    // Fungsi untuk membersihkan semua placeholder info laporan (di luar tabel)
+>>>>>>> 58f18611fc873b2acc297e72c8b47363e8d23b61
     function clearPrintPlaceholders() {
         if (printStudentNamePlaceholder) printStudentNamePlaceholder.textContent = '';
         if (printStudentIdPlaceholder) printStudentIdPlaceholder.textContent = '';
@@ -279,15 +397,28 @@ document.addEventListener('DOMContentLoaded', function() {
         if (printCityDatePlaceholder) printCityDatePlaceholder.textContent = '';
     }
 
+<<<<<<< HEAD
     function clearPrintScoreAndCommentDataAttributes() {
+=======
+    // Fungsi baru untuk membersihkan data-attributes di sel tabel cetak
+    function clearPrintScoreAndCommentDataAttributes() {
+        // Bersihkan skor
+>>>>>>> 58f18611fc873b2acc297e72c8b47363e8d23b61
         scoreInputs.forEach(input => {
             const scorePrintCell = document.getElementById(`print-score-${input.dataset.kategoriId}`);
             if (scorePrintCell) {
                 scorePrintCell.dataset.scoreValue = '';
             }
         });
+<<<<<<< HEAD
         if (printStatusPlaceholder) printStatusPlaceholder.textContent = '';
         if (printKomentarPlaceholder) printKomentarPlaceholder.textContent = '';
+=======
+        // Bersihkan status dan komentar
+        if (printStatusPlaceholder) printStatusPlaceholder.textContent = '';
+        if (printKomentarPlaceholder) printKomentarPlaceholder.textContent = '';
+        // Bersihkan nilai akhir
+>>>>>>> 58f18611fc873b2acc297e72c8b47363e8d23b61
         if (printFinalScorePlaceholder) printFinalScorePlaceholder.textContent = '0.00';
     }
 
@@ -299,7 +430,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     scoreInputs.forEach(input => input.addEventListener('input', calculateScores));
-
+    // Update data-attributes untuk status dan komentar saat ada perubahan di form interaktif
     if (statusSemhasSelect) {
         statusSemhasSelect.addEventListener('input', () => {
             if (printStatusPlaceholder) printStatusPlaceholder.textContent = statusSemhasSelect.value;
@@ -311,6 +442,21 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+
+<<<<<<< HEAD
+    if (statusSemhasSelect) {
+        statusSemhasSelect.addEventListener('input', () => {
+            if (printStatusPlaceholder) printStatusPlaceholder.textContent = statusSemhasSelect.value;
+        });
+    }
+    if (komentarInput) {
+        komentarInput.addEventListener('input', () => {
+            if (printKomentarPlaceholder) printKomentarPlaceholder.textContent = komentarInput.value;
+        });
+    }
+
+=======
+>>>>>>> 58f18611fc873b2acc297e72c8b47363e8d23b61
     assessmentForm.addEventListener('submit', submitAssessment);
 
     printButton.addEventListener('click', () => {
@@ -321,6 +467,7 @@ document.addEventListener('DOMContentLoaded', function() {
         window.print();
     });
 
+<<<<<<< HEAD
     // reviseButton.addEventListener('click', () => { // HAPUS: Tidak ada lagi tombol Revisi
     //     if (!studentSelect.value) {
     //         alert('Pilih mahasiswa terlebih dahulu untuk merevisi.');
@@ -340,6 +487,28 @@ document.addEventListener('DOMContentLoaded', function() {
     //     alert('Form penilaian siap untuk direvisi. Silakan ubah nilai atau komentar dan klik "Kirim Penilaian".'); // Ubah teks tombol di alert
     // });
 
+=======
+    reviseButton.addEventListener('click', () => {
+        if (!studentSelect.value) {
+            alert('Pilih mahasiswa terlebih dahulu untuk merevisi.');
+            return;
+        }
+        
+        const confirmRevise = confirm('Anda yakin ingin merevisi penilaian ini? Status seminar akan diubah menjadi "REVISI".');
+        if (!confirmRevise) {
+            return;
+        }
+
+        if (statusSemhasSelect) {
+            statusSemhasSelect.value = 'REVISI';
+            // Pastikan placeholder status juga terupdate
+            if (printStatusPlaceholder) printStatusPlaceholder.textContent = 'REVISI';
+        }
+        
+        alert('Form penilaian siap untuk direvisi. Silakan ubah nilai atau komentar dan klik "Update Penilaian".');
+    });
+
+>>>>>>> 58f18611fc873b2acc297e72c8b47363e8d23b61
     // --- INISIALISASI SAAT HALAMAN DIMUAT ---
     if (studentSelect.value) {
         fetchExistingScores(studentSelect.value);

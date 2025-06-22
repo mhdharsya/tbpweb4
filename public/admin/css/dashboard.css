@@ -347,6 +347,7 @@ body {
     border-radius: 8px;
     background-color: var(--table-header-bg); /* Gunakan variabel, misalnya sedikit berbeda */
     margin-top: 15px;
+    margin-bottom: 15px;
     width: 100%; /* Pastikan mengisi lebar card */
     display: flex; /* Tambahkan: Untuk mengatur ikon, tombol, dan teks file */
     flex-direction: column; /* Tambahkan: Susun vertikal */
@@ -387,7 +388,7 @@ body {
     font-size: 1em;
     transition: background-color 0.3s ease;
     display: inline-block;
-    margin-top: 0; /* Hapus margin top jika sudah ada gap */
+    margin-top: 15px; /* Hapus margin top jika sudah ada gap */
 }
 
 .btn-upload-file:hover {

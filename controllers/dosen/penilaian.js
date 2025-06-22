@@ -1,6 +1,9 @@
 // Lokasi: controllers/dosen/penilaian.js
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
+// const puppeteer = require('puppeteer'); // <-- Tambah ini
+// const path = require('path');           // <-- Tambah ini
+// const ejs = require('ejs');             // <-- Tambah ini
 
 // Definisi Kriteria Penilaian dan Bobotnya (HARDCODED)
 const daftarKriteriaPenilaian = [
@@ -26,7 +29,7 @@ const renderPenilaianPage = async (req, res) => {
         }
 
         const dosenNamaLengkap = req.user.nama_lengkap;
-        const dosenId = req.user.userId;
+        const dosenId = req.user.userId; // NIP Dosen
 
         console.log('DEBUG: Nama Dosen dari JWT:', dosenNamaLengkap);
         console.log('DEBUG: Dosen Login ID:', dosenId);
@@ -40,10 +43,25 @@ const renderPenilaianPage = async (req, res) => {
                 }
             },
             include: {
-                user: { select: { id_user: true, nama_lengkap: true } },
-                jadwal_pendaftaran: { select: { id_jadwal: true, dosen_penguji: true } }
+                user: { // Meng-include data user (mahasiswa) yang terkait dengan pendaftaran ini
+                    select: {
+                        id_user: true,      // ID Mahasiswa
+                        nama_lengkap: true, // Nama Mahasiswa
+                    }
+                },
+                // Include jadwal_pendaftaran untuk mendapatkan id_pendaftaran unik
+                jadwal_pendaftaran: {
+                    select: {
+                        id_jadwal: true, // Perlu id_jadwal untuk filter jika ada relasi di nilai_semhas
+                        dosen_penguji: true // Untuk konfirmasi di loop
+                    }
+                }
             },
-            orderBy: { user: { nama_lengkap: 'asc' } }
+            orderBy: {
+                user: { // Urutkan berdasarkan nama mahasiswa
+                    nama_lengkap: 'asc'
+                }
+            }
         });
 
         console.log('DEBUG: Pendaftaran Records untuk Dosen (dari Prisma query):', JSON.stringify(pendaftaranRecords, null, 2));
@@ -79,7 +97,7 @@ const renderPenilaianPage = async (req, res) => {
             title: 'Penilaian Seminar',
             user: req.user,
             penilaian: daftarKriteriaPenilaian,
-            mahasiswas: finalDaftarMahasiswa
+            mahasiswas: finalDaftarMahasiswa // Kirim data mahasiswa ke EJS
         });
 
     } catch (error) {
