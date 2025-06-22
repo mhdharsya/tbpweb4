@@ -3,12 +3,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function generateCalendar() {
         const now = new Date();
-        const currentMonth = now.getMonth();
+        const currentMonth = now.getMonth(); // 0-indexed (Jan=0, Dec=11)
         const currentYear = now.getFullYear();
-        const today = now.getDate();
+        const actualTodayDate = now.getDate(); // Angka hari ini (1-31)
         
-
-        // SOLUSI 2: Menggunakan Bahasa Indonesia
+        // Menggunakan Bahasa Indonesia untuk nama bulan
         const monthNames = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
                             'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
 
@@ -24,9 +23,10 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        // Hapus hari-hari kalender yang ada (sisakan header)
-        const existingDays = calendarGrid.querySelectorAll('.calendar-day');
-        existingDays.forEach(day => day.remove());
+        // Hapus hari-hari kalender yang ada (sisakan header hari S, M, T, W, T, F, S)
+        // Kita hanya ingin menghapus elemen .calendar-day, bukan .calendar-day-header
+        const existingDayElements = calendarGrid.querySelectorAll('.calendar-day');
+        existingDayElements.forEach(dayElement => dayElement.remove());
 
         // Dapatkan hari pertama dalam sebulan dan jumlah hari dalam sebulan
         const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay(); // 0=Minggu, 1=Senin,..
@@ -45,14 +45,16 @@ document.addEventListener('DOMContentLoaded', function() {
             dayElement.className = 'calendar-day';
             dayElement.textContent = day;
 
-            // SOLUSI 3: Logika 'today' yang lebih aman
-            if (day === today && currentMonth === new Date().getMonth() && currentYear === new Date().getFullYear()) {
+            // Logika 'today' yang lebih aman: bandingkan angka hari, bulan, dan tahun
+            if (day === actualTodayDate && 
+                currentMonth === now.getMonth() && 
+                currentYear === now.getFullYear()) {
                 dayElement.classList.add('today');
             }
 
-            // Tambahkan event click
+            // Tambahkan event click (opsional untuk dashboard, karena data utama dari EJS)
             dayElement.addEventListener('click', function() {
-                if (this.textContent.trim()) {
+                if (this.textContent.trim() !== '') { // Pastikan bukan sel kosong
                     // Hapus seleksi dari hari lain
                     const selectedDay = document.querySelector('.calendar-day.selected');
                     if (selectedDay) {
@@ -60,6 +62,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                     // Tambahkan seleksi ke hari yang diklik
                     this.classList.add('selected');
+                    // Jika Anda ingin menampilkan detail jadwal untuk tanggal yang diklik (bukan hanya hari ini),
+                    // Anda bisa menambahkan logika AJAX call di sini.
                 }
             });
 
@@ -67,7 +71,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // SOLUSI 1: Jalankan kalender HANYA SEKALI saat halaman dimuat.
+    // Jalankan kalender HANYA SEKALI saat halaman dimuat.
     generateCalendar();
 
     // OPSIONAL: Jika Anda ingin kalender update otomatis saat tengah malam
@@ -78,9 +82,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
         setTimeout(() => {
             generateCalendar(); // Buat ulang kalender tepat saat tengah malam
-            setInterval(generateCalendar, 24 * 60 * 60 * 1000); // Lalu ulangi setiap 24 jam
+            // Setelah update pertama di tengah malam, ulangi setiap 24 jam
+            setInterval(generateCalendar, 24 * 60 * 60 * 1000); 
         }, msUntilMidnight);
     }
     
-    scheduleNextCalendarUpdate(); // Panggil penjadwalan update
+    // Panggil penjadwalan update
+    scheduleNextCalendarUpdate(); 
 });

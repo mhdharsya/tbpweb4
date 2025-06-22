@@ -35,6 +35,17 @@ model jadwal_pendaftaran {
   pendaftaran       pendaftaran        @relation(fields: [id_pendaftaran], references: [id_pendaftaran], onUpdate: Restrict, map: "fk_pendaftaran_jadwal_pendaftaran")
   jadwal_dosenDosen jadwal_dosendosen? @relation(fields: [id_jadwal_dosen], references: [id_jadwal_dosen], onUpdate: Restrict, map: "jadwal_dosen_id_jadwal_fkey")
   user              user?              @relation(fields: [id_user], references: [id_user], onDelete: Cascade)
+  id_jadwal         Int               @id @default(autoincrement())
+  id_pendaftaran    Int
+  status            String            @db.VarChar(50)
+  dosen_penguji     String            @db.VarChar(99)
+  id_kuota          String            @db.VarChar(50)
+  id_jadwal_dosen   Int
+  id_user           String            @db.VarChar(50)
+  kuota_semhas      kuota_semhas      @relation(fields: [id_kuota], references: [id_kuota], onDelete: NoAction, onUpdate: NoAction, map: "fk_kuota_semhas_jadwal_pendaftaran")
+  pendaftaran       pendaftaran       @relation(fields: [id_pendaftaran], references: [id_pendaftaran], onUpdate: Restrict, map: "fk_pendaftaran_jadwal_pendaftaran")
+  jadwal_dosenDosen jadwal_dosendosen @relation(fields: [id_jadwal_dosen], references: [id_jadwal_dosen], onUpdate: Restrict, map: "jadwal_dosen_id_jadwal_fkey")
+  user              user              @relation(fields: [id_user], references: [id_user], onDelete: Cascade)
 
   @@index([id_pendaftaran], map: "fk_pendaftaran_jadwal_pendaftaran")
   @@index([id_user], map: "jadwal_pendaftaran_id_user_fkey")
@@ -136,6 +147,7 @@ model user {
   kadep              kadep?
   nilai_semhas       nilai_semhas[]
   pendaftaran        pendaftaran[]
+  jadwal_dosendosen  jadwal_dosendosen[]
 }
 
 model jadwal_dosendosen {
@@ -151,4 +163,9 @@ model jadwal_dosendosen {
   jadwal_pendaftaran jadwal_pendaftaran[]
 
   @@index([id_user], map: "jadwal_dosendosen_id_user_fkey")
+  jadwal_pendaftaran jadwal_pendaftaran[]
+
+  id_user            String            @db.VarChar(50)
+  user               user                 @relation(fields: [id_user], references: [id_user])
+   @@unique([tanggal_data, id_user])
 }

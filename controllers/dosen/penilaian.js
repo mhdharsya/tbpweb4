@@ -1,19 +1,18 @@
 // Lokasi: controllers/dosen/penilaian.js
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
+// const puppeteer = require('puppeteer'); // <-- Tambah ini
+// const path = require('path');           // <-- Tambah ini
+// const ejs = require('ejs');             // <-- Tambah ini
 
 // Definisi Kriteria Penilaian dan Bobotnya (HARDCODED)
 const daftarKriteriaPenilaian = [
     { id: 'pemahaman', nama: 'Pemahaman Materi', bobot: 0.20 },
-    { id: 'dokumenasi', nama: 'Dokumentasi & Laporan', bobot: 0.20 }, // Sudah dikoreksi ejaannya
+    { id: 'dokumenasi', nama: 'Dokumentasi & Laporan', bobot: 0.20 },
     { id: 'presentasi', nama: 'Presentasi', bobot: 0.20 },
     { id: 'ketepatan_waktu', nama: 'Ketepatan Waktu', bobot: 0.20 },
     { id: 'sikap', nama: 'Sikap', bobot: 0.20 }
 ];
-
-// 1. Render halaman penilaian
-// Lokasi: controllers/dosen/penilaian.js
-// ... (bagian atas controller) ...
 
 // 1. Render halaman penilaian
 const renderPenilaianPage = async (req, res) => {
@@ -24,88 +23,88 @@ const renderPenilaianPage = async (req, res) => {
         }
 
         const dosenNamaLengkap = req.user.nama_lengkap;
-        const dosenId = req.user.userId;
+        const dosenId = req.user.userId; // NIP Dosen
 
         console.log('DEBUG: Nama Dosen dari JWT:', dosenNamaLengkap);
         console.log('DEBUG: Dosen Login ID:', dosenId);
 
-        const daftarMahasiswa = await prisma.user.findMany({
+        const pendaftaranRecords = await prisma.pendaftaran.findMany({
             where: {
-                role: "MAHASISWA",
-                pendaftaran: {
+                
+                
+                // Tambahkan filter ini jika hanya ingin pendaftaran yang sudah punya jadwal_pendaftaran
+                jadwal_pendaftaran: {
                     some: {
-                        jadwal_pendaftaran: {
-                            some: {
-                                dosen_penguji: dosenNamaLengkap
-                            }
-                        },
-                        // periode_semhas: { // Ini tetap dikomentari sesuai diskusi sebelumnya
-                        //     tanggal_buka: {
-                        //         lte: new Date()
-                        //     }
-                        // },
+                        dosen_penguji: dosenNamaLengkap // Memastikan dosen yang login adalah penguji di jadwal_pendaftaran
                     }
                 }
             },
-            select: {
-                id_user: true,
-                nama_lengkap: true,
-                pendaftaran: {
+            include: {
+                user: { // Meng-include data user (mahasiswa) yang terkait dengan pendaftaran ini
                     select: {
-                        id_pendaftaran: true,
-                        judul: true,
-                        jadwal_pendaftaran: {
-                            select: {
-                                dosen_penguji: true,
-                                jam_mulai: true,
-                                jam_selesai: true,
-                            }
-                        },
-                        periode_semhas: {
-                            select: {
-                                tanggal_buka: true,
-                                tanggal_tutup: true
-                            }
-                        }
+                        id_user: true,      // ID Mahasiswa
+                        nama_lengkap: true, // Nama Mahasiswa
+                    }
+                },
+                // Include jadwal_pendaftaran untuk mendapatkan id_pendaftaran unik
+                jadwal_pendaftaran: {
+                    select: {
+                        id_jadwal: true, // Perlu id_jadwal untuk filter jika ada relasi di nilai_semhas
+                        dosen_penguji: true // Untuk konfirmasi di loop
                     }
                 }
             },
-            orderBy: { nama_lengkap: 'asc' }
+            orderBy: {
+                user: { // Urutkan berdasarkan nama mahasiswa
+                    nama_lengkap: 'asc'
+                }
+            }
         });
 
-        console.log('DEBUG: Daftar Mahasiswa (dari Prisma query):', JSON.stringify(daftarMahasiswa, null, 2));
+        console.log('DEBUG: Pendaftaran Records untuk Dosen (dari Prisma query):', JSON.stringify(pendaftaranRecords, null, 2));
 
         const finalDaftarMahasiswa = [];
-        for (const mhs of daftarMahasiswa) {
-            const pendaftaran = mhs.pendaftaran[0];
-            if (pendaftaran) {
-                const existingNilai = await prisma.nilai_semhas.findFirst({
-                    where: {
-                        id_pendaftaran: pendaftaran.id_pendaftaran,
-                        id_user: dosenId
-                    }
-                });
-                console.log(`DEBUG: Mahasiswa ${mhs.nama_lengkap} (ID: ${mhs.id_user}) - Pendaftaran ID: ${pendaftaran.id_pendaftaran}. Existing Nilai: ${!!existingNilai}`);
+        const processedPendaftaranIds = new Set(); // Set untuk menghindari duplikasi jika ada beberapa jadwal_pendaftaran untuk satu pendaftaran
 
-                // --- PERUBAHAN UTAMA UNTUK FITUR REVISI ---
-                finalDaftarMahasiswa.push({
-                    id_user: mhs.id_user,
-                    nama_lengkap: mhs.nama_lengkap,
-                    id_pendaftaran: pendaftaran.id_pendaftaran,
-                    judul: pendaftaran.judul,
-                    isDinilai: !!existingNilai // Flag untuk frontend
-                });
-                // --- AKHIR PERUBAHAN ---
-            }
-        }
+        for (const pendaftaran of pendaftaranRecords) {
+            const student = pendaftaran.user; // Ini adalah objek mahasiswa
 
-        console.log('DEBUG: Final Daftar Mahasiswa (setelah filter existingNilai):', JSON.stringify(finalDaftarMahasiswa, null, 2));
+            // Pastikan mahasiswa ada dan pendaftaran ini valid untuk dinilai oleh dosen ini
+            const isDosenPengujiValid = pendaftaran.jadwal_pendaftaran.some(
+                jp => jp.dosen_penguji === dosenNamaLengkap
+            );
+
+            // Pastikan tidak ada duplikasi pendaftaran untuk siswa yang sama
+            if (student && isDosenPengujiValid && !processedPendaftaranIds.has(pendaftaran.id_pendaftaran)) {
+                
+                // Cek apakah nilai untuk pendaftaran ini sudah ada dari dosen yang login
+                 const existingNilai = await prisma.nilai_semhas.findFirst({
+                  where: {
+                        id_pendaftaran: pendaftaran.id_pendaftaran,
+                        id_user: dosenId // Dosen ID (NIP) dari yang login
+                    }
+                });
+
+                finalDaftarMahasiswa.push({
+                    // PERBAIKAN DI SINI: Gunakan 'student' BUKAN 'mhs'
+                    id_user: student.id_user,             // ID Mahasiswa untuk value option
+                    nama_lengkap: student.nama_lengkap,   // Nama Mahasiswa untuk tampilan
+                    id_pendaftaran: pendaftaran.id_pendaftaran, // ID Pendaftaran spesifik
+                    judul: pendaftaran.judul,             // Judul penelitian dari pendaftaran
+                    isDinilai: !!existingNilai            // Status sudah dinilai
+                });
+                processedPendaftaranIds.add(pendaftaran.id_pendaftaran); // Tandai pendaftaran ini sudah diproses
+            }
+        }
+
+
+        console.log('DEBUG: Final Daftar Mahasiswa (yang akan dikirim ke EJS):', JSON.stringify(finalDaftarMahasiswa, null, 2));
 
         res.render('dosen/penilaian', {
             title: 'Penilaian Seminar',
             user: req.user,
             penilaian: daftarKriteriaPenilaian,
-            mahasiswas: finalDaftarMahasiswa
+            mahasiswas: finalDaftarMahasiswa // Kirim data mahasiswa ke EJS
         });
 
     } catch (error) {
@@ -113,7 +112,6 @@ const renderPenilaianPage = async (req, res) => {
         res.status(500).send("Tidak dapat memuat halaman penilaian.");
     }
 };
-
 // ... (fungsi submitPenilaian dan getExistingNilai di bawahnya tetap sama) ...
 
 // 2. Simpan penilaian

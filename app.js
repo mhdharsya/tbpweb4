@@ -25,11 +25,13 @@ var daftarRouter = require('./routes/mahasiswa/pendaftaran');
 var dashboardRouter = require('./routes/mahasiswa/dashboardMhs');
 var uploadRouter = require('./routes/mahasiswa/upload');
 var riwayatSeminarRouter = require('./routes/mahasiswa/riwayatseminar');
-var adminRouter = require('./routes/admin/dashboardAdmin');
-var detailJadwalRouter = require('./routes/mahasiswa/detailJadwal');
-var panduanRouter = require('./routes/mahasiswa/panduan');
-var evaluasiRouter = require('./routes/mahasiswa/evaluasiSisemhas');
-var detailRiwayatRouter = require('./routes/mahasiswa/detailRiwayat')
+var adminRouter = require('./routes/admin/dashboardAdmin')
+var dosenRouter = require('./routes/dosen/dashboardD');
+var mahasiswaseminarRouter = require('./routes/dosen/mahasiswaseminar');
+var penilaianRouter = require('./routes/dosen/penilaian');  
+var riwayatseminarRouter = require('./routes/dosen/riwayatseminar');
+var scheduleRouter = require('./routes/dosen/schedule');
+      
 const userController = require('./controllers/admin/userController');
 const accessRequestController = require('./controllers/admin/accessRequestController');
 var nilaiRouter = require('./routes/mahasiswa/melihatdandownloadnilai');
@@ -109,12 +111,14 @@ app.use('/api', dashboardRouter);
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/dashboardD', dosenRouter);
-app.use('/Dosen/mahasiswaseminar', mahasiswaseminarRouter);
-app.use('/Dosen/penilaian', penilaianRouter);
-app.use('/Dosen/riwayatseminar', riwayatseminarRouter);
+app.use('/dosen/mahasiswaseminar', mahasiswaseminarRouter);
+app.use('/dosen/penilaian', penilaianRouter);
+app.use('/dosen/riwayatseminar', riwayatseminarRouter);
+app.use('/dosen', scheduleRouter); // Pastikan ini sesuai dengan rute yang Anda buat di scheduler.js
 app.use('/evaluasi', evaluasiRouter);
 app.use(cors());
-app.use(express.json());
+// app.use(express.json()
+// );
 app.use('/melihat', melihatRouter);
 
 app.use('/daftar', daftarRouter);
@@ -138,6 +142,7 @@ app.use('/evaluasi', evaluasiRouter); // Route untuk halaman evaluasi sistem
 // app.use('/detail', detailJadwalRouter);
 app.use('/', statusRouter);
 app.use('/tampil', detailJadwalRouter);
+
 
 app.use((req, res, next) => {
   console.log('Request URL:', req.url);  // Log URL
