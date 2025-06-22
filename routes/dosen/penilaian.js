@@ -1,15 +1,13 @@
+// Lokasi: routes/dosen/penilaian.js
 const express = require('express');
 const router = express.Router();
 
-// HANYA UBAH BARIS INI
 const { auth: authMiddleware } = require('../../middleware/authMiddleware');
-// BARIS LAINNYA BIARKAN SAMA
 const dosenMiddleware = require('../../middleware/dosen');
 const penilaianController = require('../../controllers/dosen/penilaian');
 
 
 // Rute untuk menampilkan halaman (view)
-// Tidak perlu ada perubahan di sini, karena variabel `authMiddleware` sekarang sudah benar
 router.get(
     '/',
     authMiddleware,
@@ -32,5 +30,16 @@ router.post(
     dosenMiddleware,
     penilaianController.submitPenilaian
 );
+
+// Catatan: endpoint /api/mahasiswa-bimbingan yang dipanggil di frontend (JS) Anda tidak ada di sini.
+// Jika Anda ingin menggunakannya, Anda harus menambahkannya:
+/*
+router.get(
+    '/api/mahasiswa-bimbingan',
+    authMiddleware,
+    dosenMiddleware,
+    penilaianController.getMahasiswaBimbinganApi // Anda perlu membuat fungsi ini di controller
+);
+*/
 
 module.exports = router;

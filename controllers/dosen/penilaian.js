@@ -5,17 +5,19 @@ const prisma = new PrismaClient();
 // Definisi Kriteria Penilaian dan Bobotnya (HARDCODED)
 const daftarKriteriaPenilaian = [
     { id: 'pemahaman', nama: 'Pemahaman Materi', bobot: 0.20 },
-    { id: 'dokumenasi', nama: 'Dokumentasi & Laporan', bobot: 0.20 }, // Sudah dikoreksi ejaannya
+    { id: 'dokumenasi', nama: 'Dokumenasi & Laporan', bobot: 0.20 }, // TETAP PAKAI EJAAN 'dokumenasi'
     { id: 'presentasi', nama: 'Presentasi', bobot: 0.20 },
     { id: 'ketepatan_waktu', nama: 'Ketepatan Waktu', bobot: 0.20 },
     { id: 'sikap', nama: 'Sikap', bobot: 0.20 }
 ];
 
-// 1. Render halaman penilaian
-// Lokasi: controllers/dosen/penilaian.js
-// ... (bagian atas controller) ...
+// Helper untuk validasi input numerik (tetap sama)
+const isValidScore = (score) => {
+    const num = parseFloat(score);
+    return !isNaN(num) && num >= 0 && num <= 100;
+};
 
-// 1. Render halaman penilaian
+// 1. Render halaman penilaian (tetap sama)
 const renderPenilaianPage = async (req, res) => {
     try {
         if (!req.user || !req.user.userId || !req.user.nama_lengkap || req.user.role !== 'DOSEN') {
@@ -29,77 +31,49 @@ const renderPenilaianPage = async (req, res) => {
         console.log('DEBUG: Nama Dosen dari JWT:', dosenNamaLengkap);
         console.log('DEBUG: Dosen Login ID:', dosenId);
 
-        const daftarMahasiswa = await prisma.user.findMany({
+        const pendaftaranRecords = await prisma.pendaftaran.findMany({
             where: {
-                role: "MAHASISWA",
-                pendaftaran: {
+                jadwal_pendaftaran: {
                     some: {
-                        jadwal_pendaftaran: {
-                            some: {
-                                dosen_penguji: dosenNamaLengkap
-                            }
-                        },
-                        // periode_semhas: { // Ini tetap dikomentari sesuai diskusi sebelumnya
-                        //     tanggal_buka: {
-                        //         lte: new Date()
-                        //     }
-                        // },
+                        dosen_penguji: dosenNamaLengkap
                     }
                 }
             },
-            select: {
-                id_user: true,
-                nama_lengkap: true,
-                pendaftaran: {
-                    select: {
-                        id_pendaftaran: true,
-                        judul: true,
-                        jadwal_pendaftaran: {
-                            select: {
-                                dosen_penguji: true,
-                                jam_mulai: true,
-                                jam_selesai: true,
-                            }
-                        },
-                        periode_semhas: {
-                            select: {
-                                tanggal_buka: true,
-                                tanggal_tutup: true
-                            }
-                        }
-                    }
-                }
+            include: {
+                user: { select: { id_user: true, nama_lengkap: true } },
+                jadwal_pendaftaran: { select: { id_jadwal: true, dosen_penguji: true } }
             },
-            orderBy: { nama_lengkap: 'asc' }
+            orderBy: { user: { nama_lengkap: 'asc' } }
         });
 
-        console.log('DEBUG: Daftar Mahasiswa (dari Prisma query):', JSON.stringify(daftarMahasiswa, null, 2));
+        console.log('DEBUG: Pendaftaran Records untuk Dosen (dari Prisma query):', JSON.stringify(pendaftaranRecords, null, 2));
 
         const finalDaftarMahasiswa = [];
-        for (const mhs of daftarMahasiswa) {
-            const pendaftaran = mhs.pendaftaran[0];
-            if (pendaftaran) {
+        const processedPendaftaranIds = new Set();
+
+        for (const pendaftaran of pendaftaranRecords) {
+            const student = pendaftaran.user;
+            const isDosenPengujiValid = pendaftaran.jadwal_pendaftaran.some(jp => jp.dosen_penguji === dosenNamaLengkap);
+
+            if (student && isDosenPengujiValid && !processedPendaftaranIds.has(pendaftaran.id_pendaftaran)) {
                 const existingNilai = await prisma.nilai_semhas.findFirst({
                     where: {
                         id_pendaftaran: pendaftaran.id_pendaftaran,
                         id_user: dosenId
                     }
                 });
-                console.log(`DEBUG: Mahasiswa ${mhs.nama_lengkap} (ID: ${mhs.id_user}) - Pendaftaran ID: ${pendaftaran.id_pendaftaran}. Existing Nilai: ${!!existingNilai}`);
 
-                // --- PERUBAHAN UTAMA UNTUK FITUR REVISI ---
                 finalDaftarMahasiswa.push({
-                    id_user: mhs.id_user,
-                    nama_lengkap: mhs.nama_lengkap,
+                    id_user: student.id_user,
+                    nama_lengkap: student.nama_lengkap,
                     id_pendaftaran: pendaftaran.id_pendaftaran,
                     judul: pendaftaran.judul,
-                    isDinilai: !!existingNilai // Flag untuk frontend
+                    isDinilai: !!existingNilai
                 });
-                // --- AKHIR PERUBAHAN ---
+                processedPendaftaranIds.add(pendaftaran.id_pendaftaran);
             }
         }
-
-        console.log('DEBUG: Final Daftar Mahasiswa (setelah filter existingNilai):', JSON.stringify(finalDaftarMahasiswa, null, 2));
+        console.log('DEBUG: Final Daftar Mahasiswa (yang akan dikirim ke EJS):', JSON.stringify(finalDaftarMahasiswa, null, 2));
 
         res.render('dosen/penilaian', {
             title: 'Penilaian Seminar',
@@ -114,8 +88,6 @@ const renderPenilaianPage = async (req, res) => {
     }
 };
 
-// ... (fungsi submitPenilaian dan getExistingNilai di bawahnya tetap sama) ...
-
 // 2. Simpan penilaian
 const submitPenilaian = async (req, res) => {
     try {
@@ -127,8 +99,19 @@ const submitPenilaian = async (req, res) => {
         }
         const dosenId = req.user.userId;
 
-        if (!mahasiswaId || !scores) {
-            return res.status(400).json({ message: "Data penilaian tidak lengkap." });
+        if (!mahasiswaId || !scores || !status_semhas) {
+            return res.status(400).json({ message: "Data penilaian tidak lengkap (mahasiswaId, skor, atau status seminar kosong)." });
+        }
+
+        for (const kriteria of daftarKriteriaPenilaian) {
+            const score = scores[kriteria.id];
+            if (!isValidScore(score)) {
+                return res.status(400).json({ message: `Nilai untuk ${kriteria.nama} tidak valid (harus angka 0-100).` });
+            }
+        }
+        
+        if (komentar && komentar.length > 1000) {
+            return res.status(400).json({ message: "Komentar terlalu panjang (maks. 1000 karakter)." });
         }
 
         const pendaftaranMahasiswa = await prisma.pendaftaran.findFirst({
@@ -142,40 +125,43 @@ const submitPenilaian = async (req, res) => {
 
         const id_pendaftaran = pendaftaranMahasiswa.id_pendaftaran;
 
+        // --- Proses Rubik ---
         const rubikData = {
-            pemahaman: String(scores.pemahaman || ''),
-            dokumenasi: String(scores.dokumenasi || ''), // Sudah dikoreksi ejaannya
-            presentasi: String(scores.presentasi || ''),
-            ketepatan_waktu: String(scores.ketepatan_waktu || ''),
-            sikap: String(scores.sikap || ''),
+            pemahaman: String(scores.pemahaman), // Kembali ke String
+            dokumenasi: String(scores.dokumenasi), // Kembali ke String
+            presentasi: String(scores.presentasi), // Kembali ke String
+            ketepatan_waktu: String(scores.ketepatan_waktu), // Kembali ke String
+            sikap: String(scores.sikap), // Kembali ke String
             id_pendaftaran: id_pendaftaran
         };
 
+        let rubikRecord;
         let existingRubik = await prisma.rubik.findFirst({
             where: { id_pendaftaran: id_pendaftaran }
         });
 
-        let rubikIdForComment;
         if (existingRubik) {
-            await prisma.rubik.update({
-                where: { id_rubik: existingRubik.id_rubik },
+            rubikRecord = await prisma.rubik.update({
+                where: { id_rubik: existingRubik.id_rubik }, // Ini benar karena id_rubik adalah PK rubik
                 data: rubikData
             });
-            rubikIdForComment = existingRubik.id_rubik;
         } else {
-            const newRubikId = `rubik-${Date.now()}-${id_pendaftaran}`;
-            const createdRubik = await prisma.rubik.create({
+            // *** PERBAIKAN PENTING DI SINI ***
+            // Karena id_rubik di schema.prisma adalah String @id TANPA @default(uuid()) atau @default(autoincrement())
+            // Anda HARUS membuat ID-nya secara manual saat membuat record baru.
+            const newRubikId = `rubik-${Date.now()}-${id_pendaftaran}`; // Buat ID unik
+            rubikRecord = await prisma.rubik.create({
                 data: {
-                    id_rubik: newRubikId,
+                    id_rubik: newRubikId, // Sertakan ID yang dibuat manual
                     ...rubikData
                 }
             });
-            rubikIdForComment = createdRubik.id_rubik;
         }
+        const rubikIdForComment = rubikRecord.id_rubik; // Pastikan ini mengambil ID yang benar dari record yang dibuat/diupdate
 
+        // --- Proses Nilai Semhas ---
         let existingNilaiSemhas = await prisma.nilai_semhas.findFirst({
             where: {
-                id_rubik: rubikIdForComment,
                 id_pendaftaran: id_pendaftaran,
                 id_user: dosenId
             }
@@ -183,36 +169,42 @@ const submitPenilaian = async (req, res) => {
 
         if (existingNilaiSemhas) {
             await prisma.nilai_semhas.update({
-                where: { id_rubik: existingNilaiSemhas.id_rubik },
+                where: { id_rubik: existingNilaiSemhas.id_rubik }, // Ini HARUS id_rubik karena itu PK di nilai_semhas
                 data: {
                     status_semhas: status_semhas,
                     komentar: komentar,
-                    // HAPUS BARIS INI: waktu_input: new Date(),
-                    id_user: dosenId
+                    // id_rubik tidak perlu diupdate di data jika sudah sama dengan where.
                 }
             });
         } else {
+            // *** PERBAIKAN PENTING DI SINI ***
+            // id_rubik adalah PK untuk nilai_semhas, jadi harus selalu ada
+            // Karena tidak ada @default di schema, kita harus memberikannya.
+            // Gunakan rubikIdForComment yang kita dapatkan dari rubikRecord.
             await prisma.nilai_semhas.create({
                 data: {
-                    id_rubik: rubikIdForComment,
+                    id_rubik: rubikIdForComment, // Pastikan ini adalah ID yang valid
                     id_pendaftaran: id_pendaftaran,
+                    id_user: dosenId,
                     status_semhas: status_semhas,
                     komentar: komentar,
-                    // HAPUS BARIS INI: waktu_input: new Date(),
-                    id_user: dosenId
                 }
             });
         }
 
-        res.status(200).json({ message: 'Penilaian berhasil disimpan.' });
+        res.status(200).json({ message: 'Penilaian berhasil disimpan!' });
 
     } catch (error) {
         console.error('Gagal menyimpan penilaian:', error);
-        res.status(500).json({ message: 'Terjadi kesalahan saat menyimpan penilaian.' });
+        if (error.code === 'P2002') {
+            // Jika ada unique constraint di nilai_semhas ([id_pendaftaran, id_user, id_rubik] misalnya)
+            return res.status(409).json({ message: 'Penilaian untuk mahasiswa ini sudah ada dari dosen ini.' });
+        }
+        res.status(500).json({ message: 'Terjadi kesalahan internal server saat menyimpan penilaian.' });
     }
 };
 
-// 3. Ambil nilai yang sudah pernah dinilai oleh dosen
+// 3. Ambil nilai yang sudah pernah dinilai oleh dosen (tetap sama)
 const getExistingNilai = async (req, res) => {
     try {
         const { mahasiswaId } = req.params;
@@ -233,7 +225,7 @@ const getExistingNilai = async (req, res) => {
         });
 
         if (!pendaftaranMahasiswa) {
-            return res.status(404).json({ error: "Pendaftaran mahasiswa tidak ditemukan." });
+            return res.json({ scores: null, commentData: null });
         }
 
         const id_pendaftaran = pendaftaranMahasiswa.id_pendaftaran;
@@ -242,11 +234,11 @@ const getExistingNilai = async (req, res) => {
             where: { id_pendaftaran: id_pendaftaran },
             select: {
                 pemahaman: true,
-                dokumenasi: true, // Sudah dikoreksi ejaannya
+                dokumenasi: true, // KEMBALI KE EJAAN 'dokumenasi'
                 presentasi: true,
                 ketepatan_waktu: true,
                 sikap: true,
-                id_rubik: true // Sudah dikoreksi
+                id_rubik: true
             }
         });
 
@@ -264,7 +256,7 @@ const getExistingNilai = async (req, res) => {
         res.json({
             scores: scores ? {
                 pemahaman: parseFloat(scores.pemahaman || 0),
-                dokumenasi: parseFloat(scores.dokumenasi || 0), // Sudah dikoreksi ejaannya
+                dokumenasi: parseFloat(scores.dokumenasi || 0), // KEMBALI KE EJAAN 'dokumenasi'
                 presentasi: parseFloat(scores.presentasi || 0),
                 ketepatan_waktu: parseFloat(scores.ketepatan_waktu || 0),
                 sikap: parseFloat(scores.sikap || 0)
@@ -274,7 +266,7 @@ const getExistingNilai = async (req, res) => {
 
     } catch (error) {
         console.error('DEBUG_GET_EXISTING_NILAI: Gagal mengambil nilai:', error);
-        res.status(500).json({ error: 'Terjadi kesalahan saat mengambil nilai.' });
+        res.status(500).json({ error: 'Terjadi kesalahan internal server saat mengambil nilai.' });
     }
 };
 
